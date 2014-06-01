@@ -18,13 +18,13 @@ get_header(); ?>
 
 <?php if (is_search()){ ?>
 	<header class="page-header search-header outer-wrapper">
-		<h1 class="inner-wrapper page-title"><?php printf( __( 'Search Results for: %s', 'twentythirteen' ), get_search_query() ); ?></h1>
+		<h1 class="inner-wrapper page-title"><?php printf( __( 'Search Results for: %s', 'icicle' ), get_search_query() ); ?></h1>
 	</header>
 <?php } ?>	
 
 <?php if (is_archive()){ ?>
 	<header class="page-header archive-header outer-wrapper">
-		<h1 class="inner-wrapper page-title"><?php printf( __( 'Category Archives: %s', 'twentythirteen' ), single_cat_title('', false) ); ?></h1>
+		<h1 class="inner-wrapper page-title"><?php printf( __( 'Category Archives: %s', 'icicle' ), single_cat_title('', false) ); ?></h1>
 	</header>
 <?php } ?>	
 
@@ -36,7 +36,7 @@ get_header(); ?>
 		
 			<article <?php post_class(); ?> itemscope itemtype="http://schema.org/Article">
 	
-				<header class="entry-header">
+				<header class="entry-header accent-shadow">
 
 					<h1 class="entry-title">
 							
@@ -52,6 +52,8 @@ get_header(); ?>
 					
 					</h1>
 		
+					<?php echo icicle_entry_cats(); ?>
+
 					<?php if ( has_post_thumbnail() && ! post_password_required() ) { ?>
 						<div class="entry-thumbnail">
 							<?php the_post_thumbnail(); ?>
@@ -60,7 +62,7 @@ get_header(); ?>
 
 				</header><!-- .entry-header -->
 
-				<section itemprop="articleBody" class="accent-font entry-content">
+				<section itemprop="articleBody" class="entry-content">
 		
 					<?php the_content('<span class="accent-shadow">Read More&hellip;</span>'); ?>
 				
@@ -70,13 +72,18 @@ get_header(); ?>
 
 				<hr class="break break-minor">
 
-				<footer class="entry-meta accent-font accent-shadow">
+				<footer class="entry-meta accent-shadow">
 			
-					<?php twentythirteen_entry_meta(); ?>
+					<div class="tags-byline-wrap clear">
+						<?php echo icicle_entry_tags(); ?>
+
+						<?php echo icicle_entry_byline(); ?>
+
+					</div>
 
 					<?php if( is_single() ) { ?>
 
-						<?php icicle_the_author_bio(); ?>
+						<?php echo icicle_author_bio(); ?>
 		
 					<?php } ?>
 
@@ -88,25 +95,20 @@ get_header(); ?>
 
 	</main> <!-- end #loop-wrapper -->
 
-	<nav id="page-nav" class="outer-wrapper">
+	<section id="post-page-nav" class="outer-wrapper">
 		<div class="inner-wrapper">
 			<?php if ( is_single() ) { ?>
-				<?php twentythirteen_post_nav(); ?>
+				<?php echo icicle_post_nav(); ?>
 			<?php } else { ?>
-				<?php twentythirteen_paging_nav(); ?>
+				<?php echo icicle_paging_nav(); ?>
 			<?php } ?>
-		</div>	
-	</nav>
+		</div>
+	</section>
 
+	
 	<?php if ( is_single() && comments_open() && ! post_password_required() ) { ?>
 
-		<section id="comments" class="outer-wrapper inverted">
-			<div id="comments-inner-wrapper" class="inner-wrapper">
-
-					<?php comments_template(); ?>
-
-			</div>
-		</section><!-- #comments -->
+		<?php comments_template(); ?>
 
 	<?php } ?>
 		

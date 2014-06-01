@@ -26,7 +26,7 @@
 /*
  * Set up the content width value based on the theme's design.
  *
- * @see twentythirteen_content_width() for template-specific adjustments.
+ * @see icicle_content_width() for template-specific adjustments.
  */
 if ( ! isset( $content_width ) )
 	$content_width = 604;
@@ -48,7 +48,7 @@ if ( ! isset( $content_width ) )
  *
  * @return void
  */
-function twentythirteen_setup() {
+function icicle_setup() {
 
 	// Adds RSS feed links to <head> for posts and comments.
 	add_theme_support( 'automatic-feed-links' );
@@ -60,7 +60,7 @@ function twentythirteen_setup() {
 	add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list' ) );
 
 	// This theme uses wp_nav_menu() in one location.
-	register_nav_menu( 'primary', __( 'Navigation Menu', 'twentythirteen' ) );
+	register_nav_menu( 'primary', __( 'Navigation Menu', 'icicle' ) );
 
 	/*
 	 * This theme uses a custom image size for featured images, displayed on
@@ -72,7 +72,7 @@ function twentythirteen_setup() {
 	// This theme uses its own gallery styles.
 	add_filter( 'use_default_gallery_style', '__return_false' );
 }
-add_action( 'after_setup_theme', 'twentythirteen_setup' );
+add_action( 'after_setup_theme', 'icicle_setup' );
 
 
 /**
@@ -82,7 +82,7 @@ add_action( 'after_setup_theme', 'twentythirteen_setup' );
  *
  * @return void
  */
-function twentythirteen_scripts_styles() {
+function icicle_scripts_styles() {
 	/*
 	 * Adds JavaScript to pages with the comment form to support
 	 * sites with threaded comments (when in use).
@@ -91,11 +91,11 @@ function twentythirteen_scripts_styles() {
 		wp_enqueue_script( 'comment-reply' );
 
 	// Loads our main stylesheet.
-	wp_enqueue_style( 'twentythirteen-style', get_stylesheet_uri(), array(), '2013-07-18' );
+	wp_enqueue_style( 'icicle-style', get_stylesheet_uri(), array(), '2013-07-18' );
 	wp_enqueue_script( 'jquery' );
 
 }
-add_action( 'wp_enqueue_scripts', 'twentythirteen_scripts_styles' );
+add_action( 'wp_enqueue_scripts', 'icicle_scripts_styles' );
 
 /**
  * Filter the page title.
@@ -109,7 +109,7 @@ add_action( 'wp_enqueue_scripts', 'twentythirteen_scripts_styles' );
  * @param string $sep   Optional separator.
  * @return string The filtered title.
  */
-function twentythirteen_wp_title( $title, $sep ) {
+function icicle_wp_title( $title, $sep ) {
 	global $paged, $page;
 
 	if ( is_feed() )
@@ -125,11 +125,11 @@ function twentythirteen_wp_title( $title, $sep ) {
 
 	// Add a page number if necessary.
 	if ( $paged >= 2 || $page >= 2 )
-		$title = "$title $sep " . sprintf( __( 'Page %s', 'twentythirteen' ), max( $paged, $page ) );
+		$title = "$title $sep " . sprintf( __( 'Page %s', 'icicle' ), max( $paged, $page ) );
 
 	return $title;
 }
-add_filter( 'wp_title', 'twentythirteen_wp_title', 10, 2 );
+add_filter( 'wp_title', 'icicle_wp_title', 10, 2 );
 
 /**
  * Register two widget areas.
@@ -138,11 +138,11 @@ add_filter( 'wp_title', 'twentythirteen_wp_title', 10, 2 );
  *
  * @return void
  */
-function twentythirteen_widgets_init() {
+function icicle_widgets_init() {
 	register_sidebar( array(
-		'name'          => __( 'Main Widget Area', 'twentythirteen' ),
+		'name'          => __( 'Main Widget Area', 'icicle' ),
 		'id'            => 'sidebar-1',
-		'description'   => __( 'Appears in the footer section of the site.', 'twentythirteen' ),
+		'description'   => __( 'Appears in the footer section of the site.', 'icicle' ),
 		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
 		'after_widget'  => '</aside>',
 		'before_title'  => '<h3 class="widget-title">',
@@ -150,122 +150,174 @@ function twentythirteen_widgets_init() {
 	) );
 
 	register_sidebar( array(
-		'name'          => __( 'Secondary Widget Area', 'twentythirteen' ),
+		'name'          => __( 'Secondary Widget Area', 'icicle' ),
 		'id'            => 'sidebar-2',
-		'description'   => __( 'Appears on posts and pages in the sidebar.', 'twentythirteen' ),
+		'description'   => __( 'Appears on posts and pages in the sidebar.', 'icicle' ),
 		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
 		'after_widget'  => '</aside>',
 		'before_title'  => '<h3 class="widget-title">',
 		'after_title'   => '</h3>',
 	) );
 }
-add_action( 'widgets_init', 'twentythirteen_widgets_init' );
+add_action( 'widgets_init', 'icicle_widgets_init' );
 
-if ( ! function_exists( 'twentythirteen_paging_nav' ) ) :
 /**
  * Display navigation to next/previous set of posts when applicable.
- *
- * @since Twenty Thirteen 1.0
- *
- * @return void
  */
-function twentythirteen_paging_nav() {
-	global $wp_query;
+if ( ! function_exists( 'icicle_paging_nav' ) ) {
+	function icicle_paging_nav() {
+		global $wp_query;
 
-	// Don't print empty markup if there's only one page.
-	if ( $wp_query->max_num_pages < 2 )
-		return;
-	?>
-	<nav class="navigation paging-navigation outer-wrapper" role="navigation">
-		<h1 class="screen-reader-text"><?php _e( 'Posts navigation', 'twentythirteen' ); ?></h1>
-		<div class="nav-links inner-wrapper">
+		// Don't print empty markup if there's only one page.
+		if ( $wp_query->max_num_pages < 2 ) { return false; }
 
-			<?php if ( get_next_posts_link() ) : ?>
-			<div class="nav-previous"><?php next_posts_link( __( '<span class="meta-nav">&larr;</span> Older posts', 'twentythirteen' ) ); ?></div>
-			<?php endif; ?>
+		$out = "";
 
-			<?php if ( get_previous_posts_link() ) : ?>
-			<div class="nav-next"><?php previous_posts_link( __( 'Newer posts <span class="meta-nav">&rarr;</span>', 'twentythirteen' ) ); ?></div>
-			<?php endif; ?>
+		if( get_next_posts_link() ) {
+			$out .= "<span class='next next-posts'>".get_next_posts_link( "<span class='arrow'>&larr;</span> ".esc_html__( 'Older Posts', 'icicle' ) )."</span>";
+		}
 
-		</div><!-- .nav-links -->
-	</nav><!-- .navigation -->
-	<?php
+		if( get_previous_posts_link() ) {
+			$out .= "<span class='prev previous-posts'>".get_previous_posts_link( esc_html__( 'Newer Posts', 'icicle' )." <span class='arrow'>&rarr;</span>" )."</span>";
+		}
+
+
+		if( empty( $out ) ) { return false; }
+
+		$out = "
+			<nav class='accent-font paging-navigation posts-navigation clear' role='navigation'>
+				<h1 class='screen-reader-text'>".esc_html__( 'Posts navigation', 'icicle' )."</h1>
+				$out
+			</nav>
+		";
+
+		return $out;
+
+	}
 }
-endif;
 
-if ( ! function_exists( 'twentythirteen_post_nav' ) ) :
 /**
  * Display navigation to next/previous post when applicable.
-*
-* @since Twenty Thirteen 1.0
-*
-* @return void
-*/
-function twentythirteen_post_nav() {
+ */
+function icicle_post_nav() {
 	global $post;
 
-	// Don't print empty markup if there's nowhere to navigate.
-	$previous = ( is_attachment() ) ? get_post( $post->post_parent ) : get_adjacent_post( false, '', true );
-	$next     = get_adjacent_post( false, '', false );
+	if( get_next_post_link() ) {
+		$out .= "<span class='next next-post'>".get_next_post_link( "%link", "<span class='arrow'>&larr;</span> %title" )."</span>";
+	}
 
-	if ( ! $next && ! $previous )
-		return;
-	?>
-	<nav class="inner_wrapper navigation post-navigation" role="navigation">
-		<h1 class="screen-reader-text"><?php _e( 'Post navigation', 'twentythirteen' ); ?></h1>
-		<div class="nav-links">
+	if( get_previous_post_link() ) {
+		$out .= "<span class='prev previous-post'>".get_previous_post_link( "%link", "%title <span class='arrow'>&rarr;</span>" )."</span>";
+	}
 
-			<?php previous_post_link( '%link', _x( '<span class="meta-nav">&larr;</span> %title', 'Previous post link', 'twentythirteen' ) ); ?>
-			<?php next_post_link( '%link', _x( '%title <span class="meta-nav">&rarr;</span>', 'Next post link', 'twentythirteen' ) ); ?>
+	if( empty( $out ) ) { return false; }
 
-		</div><!-- .nav-links -->
-	</nav><!-- .navigation -->
-	<?php
+	$out = "
+		<nav class='accent-font paging-navigation post-navigation clear' role='navigation'>
+			<h1 class='screen-reader-text'>".esc_html__( 'Post navigation', 'icicle' )."</h1>
+			$out
+		</nav>
+	";
+	return $out;	
 }
-endif;
 
-if ( ! function_exists( 'twentythirteen_entry_meta' ) ) :
 /**
  * Print HTML with meta information for current post: categories, tags, permalink, author, and date.
  *
- * Create your own twentythirteen_entry_meta() to override in a child theme.
+ * Create your own icicle_entry_meta() to override in a child theme.
  *
  * @since Twenty Thirteen 1.0
  *
  * @return void
  */
-function twentythirteen_entry_meta() {
+function icicle_entry_byline() {
 	
-	echo "&mdash; <address class='vcard'><a href='".get_bloginfo('url')."' class='fn url'>By ".get_the_author()."</a></address>, ";
+	$date = icicle_entry_date();
 
-	twentythirteen_entry_date();
-	
-	// Translators: used between list items, there is a space after the comma.
-	$categories_list = get_the_category_list( __( ', ', 'twentythirteen' ) );
+	$out = "
+		<div class='entry-byline'>
+			&mdash; <address class='vcard'><a href='".get_bloginfo('url')."' class='fn url'>By ".get_the_author()."</a></address>,
+			$date
+		</div>
+	";
+	return $out;
+}
+
+
+
+function icicle_entry_cats(){
+
+	$out = '';
+	$categories_list = get_the_category_list( esc_html__( ', ', 'icicle' ) );
 	if ( $categories_list ) {
-		echo ', <span class="categories-links">' . $categories_list . '</span>';
+		$out = "<div class='category-links'>&mdash; $categories_list &mdash;</div>";
 	}
 
+	return $out;
 
 }
-endif;
 
 
 
 
-function icicle_the_author_bio(){
+
+function icicle_entry_tags(){
+
+	$out = '';
+	$tags_list = get_the_tag_list( '', esc_html__( ', ', 'icicle' ), '' );
+	if ( $tags_list ) {
+		$out = "
+			<div class='tag-links'>
+				<span class='tag-label'>".esc_html__( 'Tags:', 'icicle' )."</span>
+				$tags_list
+			</div>";
+	}
+
+	return $out;
+
+}
+
+
+
+function icicle_author_bio(){
 	
-		echo "
-		<div class='author_bio'>
-			<div class='author_description'>";
-				the_author_meta('description');
-			echo "</div>";
+	//global $post;
+
+	$desc = wp_kses_post( get_the_author_meta('description') );
+	if( !empty ( $desc ) ) {
+		$desc = "<div class='content-holder author-description'>$desc</div>";	
+	}
 		
-		echo "<div class='vcard avatar_wrap'><span class='fn'><img class='photo avatar fn'".get_avatar( get_bloginfo('admin_email'), 250, '', esc_attr( get_the_author_meta( 'display_name' ) ) )."</span></div>";
-		echo "</div>";
+	$author_email = sanitize_email( get_the_author_meta( 'user_email' ) );
+	$display_name_attr = esc_attr( get_the_author_meta( 'display_name' ) );
+	$avatar = get_avatar( $author_email, 250, '', $display_name_attr );
 
-	
+	//the fail image from gravatar has the string 'blank.gif' and we don't want to show the fail image
+	if( empty( $avatar ) || stristr( $avatar, 'blank.gif' ) ) {
+		$avatar = "";
+	} else {
+		$avatar ="
+			<div class='vcard avatar-wrap'>
+				<span class='fn'>
+					$avatar
+				</span>
+			</div>
+		";
+	}
+
+	$out = $avatar.$desc;
+
+	if( !empty( $out ) ){
+		$out = "
+			<div class='content-holder author-bio'>
+				$avatar
+				$desc
+			</div>
+			<hr class='break break-minor'>
+		";
+	}
+
+	return $out;
 }
 
 
@@ -277,38 +329,35 @@ function get_avatar_url($author_id, $size){
 }
 
 
-if ( ! function_exists( 'twentythirteen_entry_date' ) ) :
+if ( ! function_exists( 'icicle_entry_date' ) ) :
 /**
  * Print HTML with date information for current post.
  *
- * Create your own twentythirteen_entry_date() to override in a child theme.
+ * Create your own icicle_entry_date() to override in a child theme.
  *
  * @since Twenty Thirteen 1.0
  *
  * @param boolean $echo (optional) Whether to echo the date. Default true.
  * @return string The HTML-formatted post date.
  */
-function twentythirteen_entry_date( $echo = true ) {
+function icicle_entry_date( ) {
 	if ( has_post_format( array( 'chat', 'status' ) ) )
-		$format_prefix = _x( '%1$s on %2$s', '1: post format name. 2: date', 'twentythirteen' );
+		$format_prefix = _x( '%1$s on %2$s', '1: post format name. 2: date', 'icicle' );
 	else
 		$format_prefix = '%2$s';
 
-	$date = sprintf( '<span class="date"><a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s">%4$s</time></a></span>',
+	$out = sprintf( '<span class="date"><a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s">%4$s</time></a></span>',
 		esc_url( get_permalink() ),
-		esc_attr( sprintf( __( 'Permalink to %s', 'twentythirteen' ), the_title_attribute( 'echo=0' ) ) ),
+		esc_attr( sprintf( __( 'Permalink to %s', 'icicle' ), the_title_attribute( 'echo=0' ) ) ),
 		esc_attr( get_the_date( 'c' ) ),
 		esc_html( sprintf( $format_prefix, get_post_format_string( get_post_format() ), get_the_date() ) )
 	);
 
-	if ( $echo )
-		echo $date;
-
-	return $date;
+	return $out;
 }
 endif;
 
-if ( ! function_exists( 'twentythirteen_the_attached_image' ) ) :
+if ( ! function_exists( 'icicle_the_attached_image' ) ) :
 /**
  * Print the attached image with a link to the next attached image.
  *
@@ -316,7 +365,7 @@ if ( ! function_exists( 'twentythirteen_the_attached_image' ) ) :
  *
  * @return void
  */
-function twentythirteen_the_attached_image() {
+function icicle_the_attached_image() {
 	/**
 	 * Filter the image attachment size to use.
 	 *
@@ -327,7 +376,7 @@ function twentythirteen_the_attached_image() {
 	 *     @type int The attachment width in pixels.
 	 * }
 	 */
-	$attachment_size     = apply_filters( 'twentythirteen_attachment_size', array( 724, 724 ) );
+	$attachment_size     = apply_filters( 'icicle_attachment_size', array( 724, 724 ) );
 	$next_attachment_url = wp_get_attachment_url();
 	$post                = get_post();
 
@@ -386,7 +435,7 @@ endif;
  *
  * @return string The Link format URL.
  */
-function twentythirteen_get_link_url() {
+function icicle_get_link_url() {
 	$content = get_the_content();
 	$has_url = get_url_in_content( $content );
 
@@ -406,7 +455,7 @@ function twentythirteen_get_link_url() {
  * @param array $classes A list of existing body class values.
  * @return array The filtered body class list.
  */
-function twentythirteen_body_class( $classes ) {
+function icicle_body_class( $classes ) {
 	if ( ! is_multi_author() ) {$classes[] = 'single-author';}
 
 	if ( is_active_sidebar( 'sidebar-2' ) && ! is_attachment() && ! is_404() ){$classes[] = 'sidebar';}
@@ -415,15 +464,15 @@ function twentythirteen_body_class( $classes ) {
 
 	return $classes;
 }
-add_filter( 'body_class', 'twentythirteen_body_class' );
+add_filter( 'body_class', 'icicle_body_class' );
 
-function twentythirteen_post_class( $classes ) {
+function icicle_post_class( $classes ) {
 
 	$classes[] = 'inner-wrapper';
 
 	return $classes;
 }
-add_filter( 'post_class', 'twentythirteen_post_class' );
+add_filter( 'post_class', 'icicle_post_class' );
 
 
 
@@ -642,7 +691,7 @@ add_shortcode('sjf_string_with_wraps','sjf_string_with_wraps');
 /*
 
 
-function lxb_base_add_menu_parent_class( $items ) {
+function icicle_add_menu_parent_class( $items ) {
 	
 	$parents = array();
 	foreach ( $items as $item ) {
@@ -659,7 +708,7 @@ function lxb_base_add_menu_parent_class( $items ) {
 	
 	return $items;    
 }
-add_filter( 'wp_nav_menu_objects', 'lxb_base_add_menu_parent_class' );
+add_filter( 'wp_nav_menu_objects', 'icicle_add_menu_parent_class' );
 
 */
 
@@ -719,7 +768,7 @@ add_filter('excerpt_more', 'new_excerpt_more');
 if( !function_exists( 'icicle_auto_empty_forms' ) ){
 	function icicle_auto_empty_forms() {
 		$out = <<<EOT
-			<!-- Added by lxb-parent-theme-1-4 -->
+			<!-- Added by icicle -->
 			<script>		
 	
 			jQuery(document).ready(function() {
@@ -766,7 +815,7 @@ function icicle_search_form( $form_class='', $search_input_class='' ) {
 	$search_input_class = sanitize_html_class ( $search_input_class );
 
 	$out ="
-		<form action='".esc_url( home_url( '/' ) )."' class='$form_class accent-font search-form' method='get' role='search'>
+		<form action='".esc_url( home_url( '/' ) )."' class='$form_class search-form' method='get' role='search'>
 			<span class='screen-reader-text'>Search for:</span>
 			<input type='search' title='Search for:' name='s' value='Search' class='search-field shadowed $search_input_class'>
 			<input type='submit' value='Search' class='screen-reader-text search-submit'>
@@ -790,3 +839,319 @@ function icicle_ga(){
 	<?php
 }
 add_action('wp_footer', 'icicle_ga');
+
+
+
+
+
+
+
+
+
+function icicle_gallery_captions() {
+	?>
+		<script>
+			jQuery( '.gallery-item .gallery-caption' ).hide();
+			jQuery( '.gallery-item' ).click( function( event ) {
+				event.preventDefault();
+				jQuery( this ).find( '.gallery-caption' ).fadeToggle();
+			});
+		</script>
+	<?php
+}
+add_action('wp_footer', 'icicle_gallery_captions');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Comment template tags, all of which are pluggable
+ *
+ * @package WordPress
+ * @subpackage icicle
+ */
+
+/**
+ * Returns a link to the comments area for a post
+ *
+ * @param int $post_id The ID of the post we're grabbing from
+ * @param string $icon_slug The slug of a font-awesome icon
+ * @return bool Returns false if comments are closed, or returns a link
+ */
+if (!function_exists('icicle_comments_link')){
+	function icicle_comments_link( $post_id = '', $icon_slug = 'comment' ){
+		
+		// start the output
+		$out = "";
+
+		// determine which post we're grabbing from
+		$post_id = absint( $post_id );
+		if(empty($post_id)) {
+			global $post;
+			$post_id = absint( $post->ID );
+		}
+
+		// get the comment count for this post
+		$comments_count = wp_count_comments( $post_id );
+		$comments_approved = absint( $comments_count->approved );
+
+		// if comments are closed, bail
+		if ( !comments_open( $post_id ) ) { return false; }
+
+		// comments url
+		$comments_url = esc_url( get_permalink( $post_id ).'#comments' );
+
+		// comment_slug
+		$icon_slug = esc_attr($icon_slug);
+
+		// I18n
+		$comments_title = esc_attr__('Join the discussion on this post', 'icicle');
+
+		// the comment link
+		$out='<a title="'.$comments_title.'" class="comments_link icon-'.$icon_slug.' comment_count_'.$comments_approved.'" href="'.$comments_url.'">'.' <span class="comment_count">'.$comments_approved.'</span></a>';
+	
+		return $out;
+
+	}
+}	
+
+/**
+ * Outputs the comments area for a post
+ * 
+ * @param  $post_id The ID of the post we're grabbing from
+ * @return bool|void Will return false if comments closed or PW-protected.  Otherwise, outputs comments
+ */
+if (!function_exists('icicle_the_comments')){
+	function icicle_the_comments( $post_id='' ){
+
+		// determine which post we're grabbing from
+		$post_id = absint( $post_id );
+		if(empty($post_id)) {
+			global $post;
+			$post_id = absint( $post->ID );
+		}
+
+		// don't show comments if pw-protected
+		if ( post_password_required( $post_id ) ) { return false; }
+
+		// if comments are not open for the post, return false
+		if ( ! comments_open( $post_id ) ) {return false;}
+			
+		// if there are comments, this will contain text for the comments section title
+		$comments_title = '';
+		
+		// if there are comments, this will contain them
+		$the_comments = '';
+		
+		// if there are more comments than the pagination setting, this will contain them
+		$comments_pagination = '';
+		
+		// get the comment count for this post
+		$comments_count = wp_count_comments( $post_id );
+		$comments_approved = absint( $comments_count->approved );
+		
+		// are there comments approved for this post?
+		if( !empty ( $comments_approved ) ) {
+				
+			$comments_title = "<div class='inner-wrapper'>".icicle_comments_title( $post_id )."</div>";
+
+			$the_comments = "<div class='inner-wrapper comment-loop'>".icicle_get_post_comments( $post_id )."</div>";
+
+			$comments_pagination = "<div class='inner-wrapper'>".icicle_comments_pagination( $post_id )."</div>";
+
+		}
+
+		// start the output
+		echo '<div id="comments" class="outer-wrapper">'.$comments_title.$the_comments.$comments_pagination;
+
+			// a form for adding a new comment
+			echo '<div class="inner-wrapper">';
+				comment_form( array(), $post_id );
+			echo "</div>";	
+		echo "</div>";
+	}
+}
+
+/**
+ * Returns the comments pagination for a post
+ *
+ * @param int $post_id The id of the post we're grabbing from
+ * @return string The comments pagination for a post
+ */
+if(!function_exists('icicle_comments_pagination')){
+	function icicle_comments_pagination($post_id=''){			
+		
+		// determine which post we're grabbing from
+		$post_id = absint( $post_id );
+		if(empty($post_id)) {
+			global $post;
+			$post_id = absint( $post->ID );
+		}
+
+		// does this blog break comments into pages?
+		$page_comments = get_option( 'page_comments' );
+		if(empty ( $page_comments ) ) { return false; }
+
+		// how many comments per page?
+		$comments_per_page = get_option( 'comments_per_page' );
+				
+		// get the comment count for this post
+		$comments_count = wp_count_comments( $post_id );
+		$comments_approved = absint( $comments_count->approved );
+
+		// are there more comments than can fit on one page?  if so, show pagination
+		if( $comments_approved <= $comments_per_page ) { return false; }
+
+		// the link for newer comments
+		$next_text = "<span class='arrow'>&larr;</span> ".esc_html__( 'Older Comments', 'icicle' );
+					
+		// the link for older comments
+		$prev_text = esc_html__( 'Newer Comments', 'icicle' )." <span class='arrow'>&rarr;</span>";
+
+		// wrap the comments pagination
+		$out = "
+			<nav class='clear paging-navigation comment-navigation accent-font' role='navigation'>
+				<span class='next next-comments'>".get_next_comments_link( $next_text )."</span>
+				<span class='prev previous-comments'>".get_previous_comments_link( $prev_text )."</span>
+			</nav>
+		";
+	
+		return $out;
+
+	}
+}
+
+
+
+
+
+/**
+ * Returns the comments title for a post
+ *
+ * @param int $post_id The id of the post we're grabbing from
+ * @return string The comments title for a post
+ */
+if(!function_exists('icicle_comments_title')){
+	function icicle_comments_title( $post_id='' ){
+
+		// determine which post we're grabbing from
+		$post_id = absint( $post_id );
+		if(empty($post_id)) {
+			global $post;
+			$post_id = absint( $post->ID );
+		}
+
+		// create a title for the comments section depending on how many comments there are
+		$out = sprintf(
+			_nx(
+				'One thought on &ldquo;%2$s&rdquo;',
+				'%1$s thoughts on &ldquo;%2$s&rdquo;',
+				get_comments_number( $post_id ),
+				'comments title',
+				'icicle'
+			),
+			number_format_i18n(
+				get_comments_number( $post_id )
+			),
+			'<em class="comments-title-post-title">' . get_the_title( $post_id ) . '</em>'
+		);
+			
+		// wrap the comments title
+		$out = '<h2 class="comments-title">'.$out.'</h2>';
+
+		return $out;
+
+	}
+}
+
+/**
+ * Returns the comments for a post
+ *
+ * @param int $post_id The id of the post we're grabbing from
+ * @return string The comments for a post
+ */
+if(!function_exists('icicle_get_post_comments')){
+	function icicle_get_post_comments( $post_id='' ){
+
+		// determine which post we're grabbing from
+		$post_id = absint( $post_id );
+		if(empty($post_id)) {
+			global $post;
+			$post_id = absint( $post->ID );
+		}
+
+		//Gather an array of comment objects for a specific page/post 
+		$comments = get_comments( array(
+			'post_id' => $post_id,
+			'status' => 'approve'
+		) );
+
+		// format the comments
+		$out = wp_list_comments( array(
+			'style'       => 'div',
+			'short_ping'  => true,
+			'avatar_size' => 150,
+			'echo' => false,
+			'callback' => 'icicle_comment',
+		), $comments );
+
+		// wrap the comments
+		
+		return $out;
+
+	}
+}
+
+
+
+
+
+function icicle_comment( $comment, $args, $depth ) {
+	$GLOBALS['comment'] = $comment;
+	?>
+	<div <?php comment_class( empty( $args['has_children'] ) ? '' : 'parent' ) ?> id="comment-<?php comment_ID() ?>">
+		
+		<div class="comment-author vcard">
+			<?php if ( $args['avatar_size'] != 0 ) echo get_avatar( $comment, $args['avatar_size'] ); ?>
+			<?php printf( __( '<cite class="fn">%s</cite> ' ), get_comment_author_link() ); ?>
+		</div>
+		
+		<?php if ( $comment->comment_approved == '0' ) { ?>
+			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.' ); ?></em>
+			<br />
+		<?php } ?>
+
+		<div class="comment-meta commentmetadata"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ); ?>">
+			<?php
+				/* translators: 1: date, 2: time */
+				printf( __('%1$s at %2$s'), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)' ), '  ', '' );
+			?>
+		</div>
+
+		<div class="comment-text">
+		<?php comment_text(); ?>
+		</div>
+
+		<div class="reply">
+			<?php comment_reply_link( array_merge( $args, array( 'add_below' => $add_below, 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
+		</div>
+
+
+
+<?php
+
+}
