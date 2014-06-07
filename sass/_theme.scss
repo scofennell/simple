@@ -1,0 +1,175 @@
+/**
+ * Table of Contents:
+ *
+ * 1. Base
+ * * 1.1 - Normalize
+ * * 1.2 - Repeatable Patterns
+ * * 1.3 - Basic Structure
+ * 2. Layout
+ * * 2.1 - Wrapper Box Sizing
+ * 3. Module
+ * * 3.1 Blog Title
+ * 4. State
+ * * 4.1 - Responsive Styles
+ * 5. Theme
+ * * 5.1 - Color
+ * * 5.2 - Inverted Color
+ * ----------------------------------------------------------------------------
+ */
+
+
+/* Color Pallette */
+body {
+	background: #eee;
+}
+
+.accent-color,
+.accent-color a {
+	background: #000; 
+	color: #fff;
+}
+
+.accent-color:hover,
+.accent-color a:hover {color: #ccc;}
+
+a {color: #666;}
+a:hover {color: #000;}
+
+/* Typograhpy */
+label,
+[type='submit'],
+[type='image'],
+.button,
+button,
+.accent-font,
+.entry-content blockquote cite {
+	font-family: helvetica, arial, sans-serif;
+}
+
+.post-format-label,
+.blog-description-link .word_3,
+.blog-description-link .word_5 {
+	font-family: georgia, times, sans-serif;
+}
+
+/* Text Shadowing */
+.shadowed,
+.shadowed .search-field {
+	text-shadow: -1px 1px 0 #000, -2px 2px 0 #fff;
+	padding-left: 2px;
+	letter-spacing: 1px;
+}
+
+.accent-shadow {
+	text-shadow: -1px 1px 0 #fafafa;
+}
+
+/* Active states */
+a:active,
+input:active,
+a:focus,
+input:focus {
+	outline: 1px dotted #000;
+}
+
+.accent-color a:active,
+.accent-color input:active,
+.accent-color a:focus,
+.accent-color input:focus  {
+	outline: 1px dotted #fff;
+}
+
+/* Breaks */
+.comments-loop br,
+.entry-content br,
+.break {
+	border-bottom: 1px solid #fafafa;
+	border-top: 1px solid #ddd;
+}
+
+/* Blockquote */
+.hentry.format-chat .entry-content,
+.comments-loop blockquote,
+.entry-content blockquote {
+	background: #fafafa;
+}
+
+/* Tables */
+.comments-loop table,
+.entry-content table {
+	background: #fafafa;
+}
+
+.comments-loop tr:nth-child(even) > *,
+.entry-content tr:nth-child(even) > * {
+	background: #eee;
+	border-right: 1px solid #fafafa;
+}
+
+.comments-loop tr:nth-child(even) > :last-child,
+.entry-content tr:nth-child(even) > :last-child {
+	border-right: none;
+}
+
+.comments-loop tr:nth-child(odd) > *,
+.entry-content tr:nth-child(odd) > * {
+	border-right: 1px solid #eee;
+}
+
+.comments-loop tr:nth-child(odd) > :last-child,
+.entry-content tr:nth-child(odd) > :last-child {
+	border-right: none;
+}
+
+.comments-loop table thead tr > *,
+.entry-content table thead tr > * {
+	background: #eee;
+}
+
+/* Pre */
+.comments-loop pre,
+.entry-content pre {
+	background: #fafafa;
+}
+
+/* Captions */
+figure,
+.wp-caption {
+	background: #fafafa;
+}
+
+.gallery figure {
+	background: none;
+}
+
+/* Forms */
+#respond,
+form {
+	background: #fafafa;
+}
+
+textarea,
+input {
+	background: #eee;
+}
+
+a.button,
+.button,
+[type='submit'],
+[type='image'],
+button {
+	background: #000;
+	color: #fff;
+	text-decoration: none;
+	line-height: 1.2em;
+}
+
+/* Comments */
+.bypostauthor {
+	background: #fafafa;
+}
+
+/* Archive title */
+.archive-header {
+	background: #fafafa;
+}

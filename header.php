@@ -33,15 +33,13 @@
 	
 	<?php wp_head(); ?>
 
-	<link rel="shortcut icon" type="image/x-icon" href="<?php echo get_template_directory_uri(); ?>/favicon.png">
-
 </head>
 
 <body <?php body_class(); ?>>
 	
 	<div id="body-wrapper">
 
-		<header id="blog-header" class="outer-wrapper accent-color">
+		<header id="blog-header" class="outer-wrapper marquee accent-color">
 			
 			<div id="blog-header-inner-wrapper" class="inner-wrapper inner-wrapper-floater">
 
@@ -53,7 +51,7 @@
 					</a>
 				</h1>
 
-				<?php echo icicle_search_form( "search-form-blog-header", "search-field-blog-header" ); ?>
+				<?php echo icicle_search_form( array( "search-form-blog-header" ), array( "shadowed", "search-field-blog-header" ) ); ?>
 
 			</div>
 

@@ -16,104 +16,190 @@
 
 get_header(); ?>
 
-<?php if (is_search()){ ?>
-	<header class="page-header search-header outer-wrapper">
-		<h1 class="inner-wrapper page-title"><?php printf( __( 'Search Results for: %s', 'icicle' ), get_search_query() ); ?></h1>
-	</header>
-<?php } ?>	
+<?php if( is_archive() || is_search() || is_404() ) { ?>
+	<section class='outer-wrapper'>
+		<div class='inner-wrapper'>
+			<?php echo icicle_archive_header(); ?>
+		</div>
+	</section>
+<?php } ?>
 
-<?php if (is_archive()){ ?>
-	<header class="page-header archive-header outer-wrapper">
-		<h1 class="inner-wrapper page-title"><?php printf( __( 'Category Archives: %s', 'icicle' ), single_cat_title('', false) ); ?></h1>
-	</header>
-<?php } ?>	
+<main id="loop" class="outer-wrapper" role="main">
 
-<?php if ( have_posts() ) : ?>
-	<main id="loop" class="outer-wrapper" role="main">
+	<?php if( is_404() || ! have_posts() ) { ?>
+		
+		<article class='hentry no-posts inner-wrapper'>
 
-	<?php /* The loop */ ?>
+			<?php echo icicle_no_posts(); ?>
+
+		</article>
+
+	<?php } elseif ( have_posts() ) { ?>
+
+		<?php /* The loop */ ?>
+		
 		<?php while ( have_posts() ) : the_post(); ?>
 		
 			<article <?php post_class(); ?> itemscope itemtype="http://schema.org/Article">
+
+				<?php if( ! has_post_format( 'aside' ) && ! has_post_format( 'status' ) ) { ?>
 	
-				<header class="entry-header accent-shadow">
+					<header class="entry-header accent-shadow">
 
-					<h1 class="entry-title">
-							
-						<?php if ( !is_single() ) { ?>
-							<a href="<?php the_permalink(); ?>" rel="bookmark">
+						<?php if (is_page() ) { ?>
+
+							<?php echo icicle_page_ancestors(); ?>
+
 						<?php } ?>
-							
-							<?php the_title(); ?>
+
+						<h1 class="entry-title">
 						
-						<?php if ( !is_single() ) { ?>
-							</a>
-						<?php } ?>
+							<?php echo icicle_get_post_format(); ?>
+
+							<?php if ( has_post_format( 'link' ) ) { ?>
+								<a href="<?php echo get_url_in_content( get_the_content() ); ?>" rel="bookmark">					
+							<?php } elseif ( ! is_singular() ) { ?>
+								<a href="<?php the_permalink(); ?>" rel="bookmark">					
+							<?php } ?>
+						
+							<?php if ( is_home() && is_sticky() ) { ?>
+								<?php echo esc_html__('Sticky:', 'icicle'); ?>
+							<?php } ?>
+
+							<?php the_title(); ?>
 					
-					</h1>
-		
-					<?php echo icicle_entry_cats(); ?>
+							<?php if ( ! is_singular() || has_post_format( 'link' ) ) { ?>
+								</a>
+							<?php } ?>
+				
+						</h1>
+	
+						<?php echo icicle_entry_cats(); ?>
 
-					<?php if ( has_post_thumbnail() && ! post_password_required() ) { ?>
-						<div class="entry-thumbnail">
-							<?php the_post_thumbnail(); ?>
-						</div>
-					<?php } ?>
+						<?php /* if its a post format: image and it does have an image in the content, skip the post thumbnail business. */ ?>
 
-				</header><!-- .entry-header -->
+						<?php if ( has_post_thumbnail() && ! post_password_required() ) { ?>
+					
+							<?php if( ! has_post_format( 'image' ) &&  ! ( icicle_get_first_image() ) ){ ?>
+
+								<div class="entry-thumbnail">
+									<?php the_post_thumbnail(); ?>
+								</div>
+
+							<?php } ?>
+
+						<?php } ?>
+
+					</header><!-- .entry-header -->
+
+				<?php } ?>
 
 				<section itemprop="articleBody" class="entry-content">
-		
-					<?php the_content('<span class="accent-shadow">Read More&hellip;</span>'); ?>
-				
-					<?php if( is_single() ) { wp_link_pages(); } ?>
+	
+					<?php if( has_post_format( 'quote' ) ) { ?>
+						<span class='quote open-quote'>&ldquo;</span>
+					<?php } ?>
+
+					<?php if( has_post_format( 'image' ) ) { ?>
+						<?php echo icicle_get_first_image(); ?>
+					<?php } elseif( has_post_format( 'gallery' ) && get_post_gallery() ) { ?>
+						<?php echo get_post_gallery(); ?>
+					<?php } else { ?>
+						<?php the_content('<span class="accent-shadow">Read More&hellip;</span>'); ?>
+					<?php } ?>
+
+					<?php if( has_post_format( 'audio' ) ) { ?>
+						<?php echo icicle_get_first_media( 'audio' ); ?>
+					<?php } ?>
+
+					<?php if( has_post_format( 'video' ) ) { ?>
+						<?php echo icicle_get_first_media( 'video' ); ?>
+					<?php } ?>
+
+					<?php if( has_post_format( 'status' ) ) { ?>
+						<em class='status-time'>&mdash;
+							<?php echo get_the_time(); ?>
+							<?php echo get_the_date(); ?>
+						</em>
+					<?php } ?>
+
+					<?php if( has_post_format( 'quote' ) ) { ?>
+						<span class='quote close-quote'>&rdquo;</span>
+					<?php } ?>
+
+					<?php if( is_singular() ) { ?>
+						<?php echo icicle_link_pages(); ?>
+					<?php } ?>					
 
 				</section><!-- .entry-content -->
 
 				<hr class="break break-minor">
 
-				<footer class="entry-meta accent-shadow">
-			
-					<div class="tags-byline-wrap clear">
-						<?php echo icicle_entry_tags(); ?>
+				<?php if( ! is_page() ) { ?>
 
-						<?php echo icicle_entry_byline(); ?>
-
-					</div>
-
-					<?php if( is_single() ) { ?>
-
-						<?php echo icicle_author_bio(); ?>
+					<footer class="entry-meta accent-shadow">
 		
-					<?php } ?>
+						<div class="tags-byline-wrap clear">
+					
+							<?php if( ! has_post_format( 'aside' ) && ! has_post_format( 'status' ) ) { ?>
+								<?php echo icicle_entry_tags(); ?>
+								<?php echo icicle_entry_byline(); ?>
+							<?php } ?>
 
-				</footer><!-- .entry-meta -->
+						</div>
+
+						<?php if( is_single() ) { ?>
+
+							<?php if( ! has_post_format( 'aside' ) && ! has_post_format( 'status' ) ) { ?>
+
+								<?php echo icicle_author_bio(); ?>
+
+							<?php } ?>
+		
+						<?php } ?>
+
+					</footer><!-- .entry-meta -->
+
+				<?php } ?>
 
 			</article><!-- #post -->
 
 		<?php endwhile; ?>
 
+	<?php } ?>
+
 	</main> <!-- end #loop-wrapper -->
 
-	<section id="post-page-nav" class="outer-wrapper">
-		<div class="inner-wrapper">
-			<?php if ( is_single() ) { ?>
-				<?php echo icicle_post_nav(); ?>
-			<?php } else { ?>
-				<?php echo icicle_paging_nav(); ?>
-			<?php } ?>
-		</div>
-	</section>
+	<?php if ( have_posts() ) { ?>
 
+		<?php if ( ! is_singular() ) { ?>
+			
+			<section id="post-page-nav" class="outer-wrapper">
+				<div class="inner-wrapper">
+					<?php echo icicle_paging_nav(); ?>
+				</div>
+			</section>
+		
+		<?php } elseif( is_single() ) { ?>
+			
+			<section id="post-page-nav" class="outer-wrapper">
+				<div class="inner-wrapper">				
+					<?php echo icicle_post_nav(); ?>
+				</div>
+			</section>
+		
+		<?php } ?>
+
+		<?php if ( is_singular() && comments_open() ) { ?>
+
+			<?php if ( ! post_password_required() ) { ?>
+			
+				<?php comments_template(); ?>
+
+			<?php } ?>	
 	
-	<?php if ( is_single() && comments_open() && ! post_password_required() ) { ?>
-
-		<?php comments_template(); ?>
+		<?php } ?>	
 
 	<?php } ?>
-		
-	<?php else : ?>
-		<?php get_template_part( 'content', 'none' ); ?>
-	<?php endif; ?>
 
 <?php get_footer(); ?>
