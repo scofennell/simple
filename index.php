@@ -28,7 +28,7 @@ get_header(); ?>
 
 	<?php if( is_404() || ! have_posts() ) { ?>
 		
-		<article class='hentry no-posts inner-wrapper'>
+		<article class='hentry no-posts inner-wrapper entry-content'>
 
 			<?php echo icicle_no_posts(); ?>
 
@@ -44,7 +44,7 @@ get_header(); ?>
 
 				<?php if( ! has_post_format( 'aside' ) && ! has_post_format( 'status' ) ) { ?>
 	
-					<header class="entry-header accent-shadow">
+					<header class="entry-header content-holder">
 
 						<?php if (is_page() ) { ?>
 
@@ -94,7 +94,7 @@ get_header(); ?>
 
 				<?php } ?>
 
-				<section itemprop="articleBody" class="entry-content">
+				<section itemprop="articleBody" class="entry-content editable-content content-holder">
 	
 					<?php if( has_post_format( 'quote' ) ) { ?>
 						<span class='quote open-quote'>&ldquo;</span>
@@ -105,7 +105,7 @@ get_header(); ?>
 					<?php } elseif( has_post_format( 'gallery' ) && get_post_gallery() ) { ?>
 						<?php echo get_post_gallery(); ?>
 					<?php } else { ?>
-						<?php the_content('<span class="accent-shadow">Read More&hellip;</span>'); ?>
+						<?php the_content('<span class="inverse-shadow">Read More&hellip;</span>'); ?>
 					<?php } ?>
 
 					<?php if( has_post_format( 'audio' ) ) { ?>
@@ -137,7 +137,7 @@ get_header(); ?>
 
 				<?php if( ! is_page() ) { ?>
 
-					<footer class="entry-meta accent-shadow">
+					<footer class="entry-meta inverse-shadow content-holder">
 		
 						<div class="tags-byline-wrap clear">
 					

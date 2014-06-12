@@ -39,11 +39,11 @@
 	
 	<div id="body-wrapper">
 
-		<header id="blog-header" class="outer-wrapper marquee accent-color">
+		<header id="blog-header" class="outer-wrapper marquee inverse-color clear">
 			
 			<div id="blog-header-inner-wrapper" class="inner-wrapper inner-wrapper-floater">
 
-				<a class="screen-reader-text skip-link" href="#content"><?php _e( 'Skip to content', 'icicle' ); ?></a>
+				<a class="screen-reader-text skip-link" href="#loop"><?php _e( 'Skip to content', 'icicle' ); ?></a>
 
 				<h1 class="blog-title blog-title-blog-header">
 					<a class="home-link shadowed" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" title="<?php echo esc_attr(get_bloginfo('name')); ?>">
@@ -52,6 +52,10 @@
 				</h1>
 
 				<?php echo icicle_search_form( array( "search-form-blog-header" ), array( "shadowed", "search-field-blog-header" ) ); ?>
+
+				<?php
+					echo icicle_menu( 'primary-menu' );
+				?>
 
 			</div>
 

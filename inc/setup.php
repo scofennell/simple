@@ -29,15 +29,9 @@ function icicle_setup() {
 	// Adds RSS feed links to <head> for posts and comments.
 	add_theme_support( 'automatic-feed-links' );
 
-	/**
-	 * Switches default core markup for search form, comment form,
-	 * and comments to output valid HTML5.
-	 */
-	add_theme_support( 'html5', array( 'search-form', 'comment-form', 'comment-list' ) );
-
 	// This theme uses wp_nav_menu() in two locations.
-	register_nav_menu( 'primary', __( 'Primary Navigation Menu', 'icicle' ) );
-	register_nav_menu( 'secondary', __( 'Secondary Navigation Menu', 'icicle' ) );
+	register_nav_menu( 'primary-menu', __( 'Primary Navigation Menu', 'icicle' ) );
+	register_nav_menu( 'secondary-menu', __( 'Secondary Navigation Menu', 'icicle' ) );
 
 	// Allow for post thumbnails.
 	add_theme_support( 'post-thumbnails' );
@@ -82,7 +76,7 @@ function icicle_scripts_styles() {
 add_action( 'wp_enqueue_scripts', 'icicle_scripts_styles' );
 
 /**
- * Register one widget area.
+ * Register our widget areas.
  *
  * @since Icicle 1.0
  */
@@ -92,8 +86,8 @@ function icicle_widgets_init() {
 		'name'          => __( 'Footer Widget Area', 'icicle' ),
 		'id'            => 'footer-widgets',
 		'description'   => __( 'Appears in the footer section of the site.', 'icicle' ),
-		'before_widget' => '<aside id="%1$s" class="widget footer-widget %2$s">',
-		'after_widget'  => '</aside>',
+		'before_widget' => '<div id="%1$s" class="widget footer-widget content-holder %2$s">',
+		'after_widget'  => '</div>',
 		'before_title'  => '<h3 class="widget-title footer-widget-title">',
 		'after_title'   => '</h3>',
 	) );

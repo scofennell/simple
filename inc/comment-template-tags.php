@@ -58,7 +58,7 @@ if (!function_exists('icicle_the_comments')){
 					// There does not seem to be a way to return instead of echo.
 					comment_form(
 						array(
-							'title_reply'=>'<span class="accent-shadow">'.esc_html__( 'Leave a Comment', 'icicle' ).'</span>' 
+							'title_reply'=>'<span class="inverse-shadow">'.esc_html__( 'Leave a Comment', 'icicle' ).'</span>' 
 						),
 						$post_id
 					);
@@ -103,18 +103,18 @@ if(!function_exists('icicle_comments_pagination')){
 		$next = '';
 		if ( get_next_comments_link() ) {
 			$next_text = "<span class='next-arrow arrow'>&larr;</span>".esc_html__( 'Older Comments', 'icicle' );
-			$next = "<span class='accent-color next button button-minor next-comments'>".get_next_comments_link( $next_text )."</span>";
+			$next = "<span class='inverse-color next button button-minor next-comments'>".get_next_comments_link( $next_text )."</span>";
 		}
 
 		$prev='';
 		if ( get_previous_comments_link() ) {
 			$prev_text = esc_html__( 'Newer Comments', 'icicle' )."<span class='prev-arrow arrow'>&rarr;</span>";
-			$prev = "<span class='accent-color prev button button-minor previous-comments'>".get_previous_comments_link( $prev_text )."</span>";
+			$prev = "<span class='inverse-color prev button button-minor previous-comments'>".get_previous_comments_link( $prev_text )."</span>";
 		}
 		
 		// wrap the comments pagination
 		$out = "
-			<nav class='clear paging-navigation comment-navigation accent-font' role='navigation'>
+			<nav class='clear paging-navigation comment-navigation inverse-font' role='navigation'>
 				$next
 				$prev
 			</nav>
@@ -161,7 +161,7 @@ if(!function_exists('icicle_comments_title')){
 		);
 			
 		// wrap the comments title
-		$out = '<h2 class="accent-color accent-band comments-title"><span class="inner-wrapper">'.$out.'</span></h2>';
+		$out = '<h2 class="inverse-color inverse-band comments-title"><span class="inner-wrapper">'.$out.'</span></h2>';
 
 		return $out;
 
@@ -226,7 +226,7 @@ function icicle_comment( $comment, $args, $depth ) {
 			<span class="comment-author vcard">
 				<?php echo $ping; ?>
 				<?php if ( $args['avatar_size'] != 0 ) echo get_avatar( $comment, $args['avatar_size'] ); ?>
-				<?php echo '<cite class="accent-font fn">'.get_comment_author_link().'</cite>'; ?>
+				<?php echo '<cite class="inverse-font fn">'.get_comment_author_link().'</cite>'; ?>
 			</span>
 
 		</div>
@@ -236,18 +236,18 @@ function icicle_comment( $comment, $args, $depth ) {
 			<br />
 		<?php } ?>
 
-		<div class="comment-text content-holder">
+		<div class="comment-text content-holder editable-content">
 			<?php comment_text(); ?>
 		</div>
 		<hr class="break break-minor">
-		<div class="comment-meta accent-shadow commentmetadata"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ); ?>">
+		<div class="comment-meta inverse-shadow commentmetadata"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ); ?>">
 			<?php
 				/* translators: 1: date, 2: time */
 				printf( __('%1$s at %2$s'), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)' ), '  ', '' );
 			?>
 			&mdash;
 			<span class="comment-reply-wrap">
-				<?php comment_reply_link( array_merge( $args, array( 'reply_text' => 'Respond <span class="arrow">&darr;</span>', 'add_below' => $add_below, 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
+				<?php comment_reply_link( array_merge( $args, array( 'reply_text' => 'Respond <span class="arrow">&darr;</span>', 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
 			</span>
 
 		</div>

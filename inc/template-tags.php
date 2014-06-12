@@ -1,5 +1,66 @@
 <?php
 
+function icicle_menu( $which_menu ) {
+
+	if ( !has_nav_menu( $which_menu ) ) { return false; }
+
+	$args = array(
+		'theme_location'  => $which_menu,
+		'container'       => false,
+		'echo'            => false,
+		'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+		'depth'           => 0,
+
+	);
+
+	$menu = wp_nav_menu( $args );
+
+	$menu_class = sanitize_html_class( $which_menu );
+
+	$label = esc_html__( 'Menu', 'icicle' );
+
+	$arrow = icicle_arrow( 'down', array( 'toggle', 'closed' ), 'span' );
+
+	$out = "
+		<nav class='clear responsive-menu $menu_class'>
+			<a href='#' class='responsive-menu-toggle'>
+				$label
+				$arrow
+			</a>
+			$menu
+		</nav>
+	";
+
+	return $out;
+}
+
+function icicle_arrow( $direction = 'down', $classes = array(), $wrap = 'a' ) {
+
+	if ( $direction == 'left' ) {
+		$out = '&larr; ';
+	} elseif ( $direction == 'up' ) {
+		$out = ' &uarr; ';
+	} elseif ( $direction == 'right' ) {
+		$out = ' &rarr; ';
+	} else {
+		$out = ' &darr; ';
+	}
+
+	$classes = array_map( 'sanitize_html_class', $classes );
+	$classes = implode( ' ', $classes );
+	$classes = " class='$classes arrow' ";
+
+	$out = "&nbsp;$out&nbsp;";
+
+	if( $wrap == 'a' ) {
+		$out = "<a href='#' $classes>$out</a>";
+	} else {
+		$out = "<span $classes>$out</span>";
+	}
+
+	return $out;
+}
+
 /**
  * Returns a WordPress search form.
  *
@@ -23,10 +84,15 @@ function icicle_search_form( $form_classes = array(), $search_input_classes = ar
 	$search_input_classes = array_map( 'sanitize_html_class', $search_input_classes );
 	$search_input_string = implode( ' ', $search_input_classes );
 	
+	$placeholder = esc_attr__( 'Search', 'icicle' );
+	if( isset( $_GET['s'] ) ) {
+		$placeholder = esc_attr( $_GET['s'] );
+	}
+
 	$out ="
 		<form action='".esc_url( home_url( '/' ) )."' class='$form_classes_string search-form' method='get' role='search'>
 			<label for='s'><span class='screen-reader-text'>".esc_html__( 'Search for:', 'icicle' )."</span></label>
-			<input id='s' type='search' title='Search for:' name='s' value='".esc_html__( 'Search', 'icicle' )."' class='search-field $search_input_string'>
+			<input id='s' type='search' title='Search for:' name='s' value='$placeholder' class='search-field $search_input_string'>
 			<input type='submit' value='".esc_html__( 'Submit', 'icicle' )."' class='screen-reader-text search-submit'>
 		</form>
 	";
@@ -286,7 +352,7 @@ function icicle_get_media_meta( $path, $type ) {
 
 	$out="
 		<aside class='media-meta icicle-toggle'>
-			<a class='button-minor button accent-color closed icicle-toggle-link' href='#'>$type ".esc_html__( 'data', 'icicle' )." <span class='arrow'>&darr;</span></a>
+			<a class='button-minor button inverse-color closed icicle-toggle-link' href='#'>$type ".esc_html__( 'data', 'icicle' )." <span class='arrow'>&darr;</span></a>
 			<div class='media-meta-list icicle-toggle-reveal'>$out</div>
 	";
 
@@ -367,7 +433,7 @@ function icicle_the_html_classes() {
 if ( ! function_exists( 'icicle_link_pages' ) ) {
 	function icicle_link_pages() {
 		$args = array(
-			'before'           => '<nav class="paging-navigation numeric-pagination accent-font accent-color button link-pages">' . esc_html__( 'Pages:', 'icicle' ),
+			'before'           => '<nav class="paging-navigation numeric-pagination inverse-font inverse-color button link-pages">' . esc_html__( 'Pages:', 'icicle' ),
 			'after'            => '</nav>',
 			'next_or_number'   => 'number',
 			'echo'             => 0
@@ -375,6 +441,33 @@ if ( ! function_exists( 'icicle_link_pages' ) ) {
 		
 		return wp_link_pages( $args );
 	}
+}
+
+/**
+ * Display navigation to next/previous post when applicable.
+ */
+function icicle_post_nav() {
+	global $post;
+
+	$out = '';
+
+	if( get_next_post_link() ) {
+		$out .= "<span class='inverse-color button button-minor prev previous-post'>".get_next_post_link( "%link", "%title <span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
+	}
+
+	if( get_previous_post_link() ) {
+		$out .= "<span class='inverse-color button button-minor next next-post'>".get_previous_post_link( "%link", "<span class='arrow next-arrow'>&larr;</span> %title" )."</span>";
+	}
+
+	if( empty( $out ) ) { return false; }
+
+	$out = "
+		<nav class='inverse-font paging-navigation post-navigation clear' role='navigation'>
+			<h1 class='screen-reader-text'>".esc_html__( 'Post navigation', 'icicle' )."</h1>
+			$out
+		</nav>
+	";
+	return $out;	
 }
 
 /**
@@ -390,18 +483,18 @@ if ( ! function_exists( 'icicle_paging_nav' ) ) {
 		$out = "";
 
 		if( get_next_posts_link() ) {
-			$out .= "<span class='accent-color button button-minor next next-posts'>".get_next_posts_link( "<span class='arrow next-arrow'>&larr;</span>".esc_html__( 'Older Posts', 'icicle' ) )."</span>";
+			$out .= "<span class='inverse-color button button-minor next next-posts'>".get_next_posts_link( "<span class='arrow next-arrow'>&larr;</span>".esc_html__( 'Older Posts', 'icicle' ) )."</span>";
 		}
 
 		if( get_previous_posts_link() ) {
-			$out .= "<span class='accent-color button button-minor prev previous-posts'>".get_previous_posts_link( esc_html__( 'Newer Posts', 'icicle' )."<span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
+			$out .= "<span class='inverse-color button button-minor prev previous-posts'>".get_previous_posts_link( esc_html__( 'Newer Posts', 'icicle' )."<span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
 		}
 
 
 		if( empty( $out ) ) { return false; }
 
 		$out = "
-			<nav class='accent-font paging-navigation posts-navigation clear' role='navigation'>
+			<nav class='inverse-font paging-navigation posts-navigation clear' role='navigation'>
 				<h1 class='screen-reader-text'>".esc_html__( 'Posts navigation', 'icicle' )."</h1>
 				$out
 			</nav>
@@ -415,39 +508,48 @@ if ( ! function_exists( 'icicle_paging_nav' ) ) {
 function icicle_archive_header(){
 	global $wp_query;
 	
+	$results ='';
+	if ( isset ( $wp_query -> found_posts ) ) {
+		$count = $wp_query -> found_posts;
+		$results = sprintf( _n( '1 post', "%s posts", $count, 'icicle' ), $count );
+	}
+
+	$search = '';
 	if ( is_search() ){
 		
 		if( have_posts() ) {
-			$message = sprintf( esc_html__( 'Search results for %s', 'icicle' ), get_search_query() );
+			$message = sprintf( esc_html__( 'There are %s search results for %s', 'icicle' ), $count, "<mark>".get_search_query()."</mark>" );
 			$class = 'search';
 		} else {
-			$message = sprintf( esc_html__( 'No results found for %s', 'icicle' ), get_search_query() );
+			$message = sprintf( esc_html__( 'No results found for %s', 'icicle' ), "<mark>".get_search_query()."</mark>" );
 			$class = 'search';	
 		}
 
+		$search = icicle_search_form( array(), array() );
+
 	} elseif( is_category() ) {
-		$message = sprintf( esc_html__( 'Category Archives: %s', 'icicle' ), single_cat_title( '', false ) );
+		$message = "$results: ".single_cat_title( '', false );
 		$class = 'category';
 	} elseif( is_tag() ) {
-		$message = sprintf( esc_html__( 'Tag Archives: %s', 'icicle' ), single_tag_title( '', false ) );
+		$message = "$results: ".single_tag_title( '', false );
 		$class = 'tag';
 	} elseif( is_year() ) {
-		$message = sprintf( esc_html__( 'Year Archives: %s', 'icicle' ), get_the_date( 'Y' ) );
+		$message = "$results: ".get_the_date( 'Y' );
 		$class = 'year';
 	} elseif( is_month() ) {
-		$message = sprintf( esc_html__( 'Month Archives: %s', 'icicle' ), get_the_date( 'F Y' ) );
+		$message = "$results: ".get_the_date( 'F Y' );
 		$class = 'month';
 	} elseif( is_day() ) {
-		$message = sprintf( esc_html__( 'Date Archives: %s', 'icicle' ), get_the_date() );
+		$message = "$results: ".get_the_date();
 		$class = 'day';
 	} elseif( is_author() ) {
-		$message = sprintf( esc_html__( 'Author Archives: %s', 'icicle' ), get_the_author() );
+		$message = "$results: ".get_the_author();
 		$class = 'author';
 	} elseif( is_404() ) {
 		$message = esc_html__( 'Your page could not be found.', 'icicle' );
 		$class = '404';
 	} else {
-		$message = esc_html__( 'Archives:', 'icicle' );
+		$message = esc_html__( 'Archives:', 'icicle' )." $results";
 		$class = 'default';
 	}
 
@@ -464,10 +566,11 @@ function icicle_archive_header(){
 	$title_class = "archive-title-$class";
 	
 	$out = "
-		<header class='archive-header $header_class'>
+		<header class='archive-header mild-contrast-color content-holder $header_class'>
 			<h1 class='archive-title $title_class'>
 				$message $paged
 			</h1>
+			$search
 		</header>
 	";
 
@@ -481,89 +584,104 @@ function icicle_no_posts() {
 	$out .= icicle_search_form( array( 'no-posts-searchform' ), array ( 'no-posts-search-input') );
 	$out .="<h3 class='no-posts-header'>".esc_html__( 'Or browse by archive:', 'icicle' )."</h3>";
 	
-	$jump = get_transient( 'icicle_no_posts' );
-	if ( ! empty( $jump ) ) {
-		$out .= $jump;
-	} else {
-
+	$jump = get_transient( 'icicle_jump_menus' );
+	
+	if ( empty( $jump ) ) {
+		
 		$jump = icicle_jump_nav( 'category' );
 		$jump .= icicle_jump_nav( 'tag' );
 		$jump .= icicle_jump_nav( 'author' );
 		$jump .= icicle_jump_nav( 'month' );
 
-		$jump = "
-			<div class='jump-nav-form'>
-				$jump
-			</div>
-		";
+		if( ! empty( $jump ) ) { 
 
-		set_transient( 'icicle_no_posts', $out, DAY_IN_SECONDS );
+			$jump = "
+				<div class='jump-nav-wrapper'>
+					$jump
+				</div>
+			";
+		}
 
-		$out .= $jump;
+		set_transient( 'icicle_jump_menus', $jump, DAY_IN_SECONDS );
+
 	}
+
+	$out .= $jump;
 
 	return $out;
 }
 
 function icicle_jump_nav( $archive_type ) {
 
-
 	$options = '';
+
 
 	if( $archive_type == 'category' ) {
 		$label = esc_attr__( 'Choose a category to jump to that page.', 'icicle' );
 		
-		$categories=get_categories(); 
-		foreach ($categories as $category) {
-			$cat_id = absint($category->cat_ID);
-			$cat_link = esc_url(get_category_link( $cat_id ));
-		  	$option = "<option value='$cat_link'>";
-			$option .= esc_html($category->cat_name);
-			$option .= '</option>';
-			$options.= $option;
-  		}
-
+		$categories = get_categories();
+		if( ! empty( $categories ) ) {
+			foreach ( $categories as $category ) {
+				$cat_id = absint( $category->cat_ID );
+				$cat_link = esc_url( get_category_link( $cat_id ) );
+			  	$option = "<option value='$cat_link'>";
+				$option .= esc_html( $category->cat_name );
+				$option .= '</option>';
+				$options .= $option;
+	  		}
+	  	}
 	
 	} elseif ( $archive_type == 'tag' ) {
 		$label = esc_html__( 'Choose a tag to jump to that page.', 'icicle' );
 
 		$tags = get_tags();
-		foreach ( $tags as $tag ) {
-			$tag_id = absint($tag->term_id);
-			$tag_link = esc_url($tag_link = get_tag_link($tag_id));
-			$option = "<option value='$tag_link'>";
-			$option .= esc_html($tag->name);
-			$option .= '</option>';
-			$options.= $option;
-  		}
-	
+		if( ! empty( $tags ) ) {
+			foreach ( $tags as $tag ) {
+				$tag_id = absint( $tag->term_id );
+				$tag_link = esc_url( $tag_link = get_tag_link( $tag_id ) );
+				$option = "<option value='$tag_link'>";
+				$option .= esc_html( $tag->name );
+				$option .= '</option>';
+				$options .= $option;
+  			}
+		}
+
 	} elseif ( $archive_type == 'author' ) {
 		$label = esc_html__( 'Choose an author to jump to that page.', 'icicle' );
 
-		$args = array(
-			'who'	=> 'authors'
-		);
-		$authors=get_users($args); 
-					
-		foreach($authors as $author){
-			$user_id = absint($author->ID);
+		$args = array( 'who' => 'authors' );
+		$authors = get_users( $args ); 
+		if( ! empty( $authors ) ){
+			foreach($authors as $author){
+				$user_id = absint($author->ID);
 			
-			$post_count = absint(count_user_posts( $user_id ));
-			if( empty( $post_count ) ) { continue; }
-			
-			$display_name = esc_html($author->display_name);
-			$author_url = esc_url( get_author_posts_url( $user_id) );
-			$options.="<option value='$author_url'>$display_name</option>";
-			
+				$post_count = absint(count_user_posts( $user_id ));
+				if( empty( $post_count ) ) { continue; }
+				
+				$display_name = esc_html($author->display_name);
+				$author_url = esc_url( get_author_posts_url( $user_id) );
+				$options.="<option value='$author_url'>$display_name</option>";
+			}	
 		}
 	
 	} elseif ( $archive_type == 'month' ) {
 		$label = esc_html__( 'Choose a month to jump to that page.', 'icicle' );
-		$options = wp_get_archives( array( 'type' => 'monthly', 'format' => 'option', 'echo' => false, 'show_post_count' => 0 ) );
+		$args = array(
+			'type' => 'monthly',
+			'format' => 'option',
+			'echo' => false,
+			'show_post_count' => 0,
+		);
+
+		if( wp_get_archives( $args ) ) {
+			$options = wp_get_archives( $args );
+		}
 	}
+
+	if( empty ( $options ) ) { return false; }
 	
 	$out = "
-		<select title='$label' name='jump-nav' onchange='document.location.href=this.options[this.selectedIndex].value;'>
+		<select class='jump-nav' title='$label' name='jump-nav' onchange='document.location.href=this.options[this.selectedIndex].value;'>
 		<option value=''>$label</option>
 		$options
 		</select>
@@ -598,31 +716,6 @@ function icicle_page_ancestors() {
 
 	return $out;
 
-}
-
-/**
- * Display navigation to next/previous post when applicable.
- */
-function icicle_post_nav() {
-	global $post;
-
-	if( get_next_post_link() ) {
-		$out .= "<span class='accent-color button button-minor next next-post'>".get_next_post_link( "%link", "<span class='arrow next-arrow'>&larr;</span>%title" )."</span>";
-	}
-
-	if( get_previous_post_link() ) {
-		$out .= "<span class='accent-color button button-minor prev previous-post'>".get_previous_post_link( "%link", "%title<span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
-	}
-
-	if( empty( $out ) ) { return false; }
-
-	$out = "
-		<nav class='accent-font paging-navigation post-navigation clear' role='navigation'>
-			<h1 class='screen-reader-text'>".esc_html__( 'Post navigation', 'icicle' )."</h1>
-			$out
-		</nav>
-	";
-	return $out;	
 }
 
 /**

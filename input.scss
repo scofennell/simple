@@ -1,8 +1,88 @@
 /**
  * Refers to smacss.com
  */
+
+/**
+ * Media Query Widths
+ */
+$large_device: 723px;
+$small_device: 421px;
+
+/**
+ * Colors
+ */
+
+$color: #000;
+$mix_color: #666;
+$inverse_color: invert( $color );
+
+$bg_color: mix( $inverse_color, $mix_color, 92% );
+$inverse_bg_color: $color;
+
+$accent_color: mix( $color, $mix_color, 50% );
+$inverse_accent_color: mix( $inverse_color, $mix_color, 50% );
+
+$translucent_color: transparentize( $color, .3 );
+$transparent_color: transparentize( $color, .9 );
+$translucent_inverse_color: transparentize( $inverse_color, .3 );
+$transparent_inverse_color: transparentize( $inverse_color, .9 );
+
+$bottom_shadow_color: rgba( 255, 255, 255, .6 );
+$top_shadow_color: rgba( 0, 0, 0, .05 );
+
+/**
+ * Border Radius
+ */
+$small_border_radius: 3px;
+$medium_border_radius: 13px;
+$large_border_radius: 23px;
+
+/**
+ * Padding
+ */
+$small_padding: 3px;
+$medium_padding: 10px;
+$large_padding: 23px;
+
+/**
+ * Margin
+ */
+$small_margin: 5px;
+$medium_margin: 10px;
+$large_margin: 23px;
+$x_large_margin: 40px;
+
+/**
+ * Transitions
+ */
+$transition: 0.4s ease-in-out;
+
+/**
+ * Keyframes
+ */
+/* Fades */
+@-webkit-keyframes FADEIN {
+	0%   { opacity: 0; }
+	100% { opacity: 1; }
+}
+
+@-moz-keyframes FADEIN {
+	0%   { opacity: 0; }
+	100% { opacity: 1; }
+}
+
+@-o-keyframes FADEIN {
+	0%   { opacity: 0; }
+	100% { opacity: 1; }
+}
+
+@keyframes FADEIN {
+	0%   { opacity: 0; }
+	100% { opacity: 1; }
+}
+
 @import 'sass/_base.scss';
 @import 'sass/_layout.scss';
 @import 'sass/_modules.scss';
-@import 'sass/_state.scss';
 @import 'sass/_theme.scss';
+@import 'sass/_state.scss';

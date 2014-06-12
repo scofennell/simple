@@ -132,3 +132,42 @@ function icicle_add_menu_parent_class( $items ) {
 }
 add_filter( 'wp_nav_menu_objects', 'icicle_add_menu_parent_class' );
 */
+
+function icicle_search_mark( $content ) {
+
+	//global $wp_query;
+
+	if( ! is_search() ) { return $content; }
+	if( ! is_main_query() ) { return $content; }
+	if( is_admin() ) { return $content; }
+
+	$search_term = get_search_query();
+
+	$content = str_replace( $search_term, "<mark>$search_term</mark>", $content );
+
+	return $content;
+
+}
+add_filter( 'the_content', 'icicle_search_mark' );
+add_filter( 'the_title', 'icicle_search_mark' );
+
+
+function icicle_add_toggle_to_parent_menu_items( $items ) {
+
+	$arrow = icicle_arrow( 'down', array( 'toggle', 'closed' ) );
+
+    foreach ($items as $item) {
+
+    	$classes =  $item -> classes ;
+  		if( in_array( 'menu-item-has-children', $classes ) ) {
+
+	    	//wp_die( var_dump($item) );
+    	    
+    		$item->title.= $arrow;        
+        
+      	}
+    }
+	
+	return $items;
+}
+add_filter('wp_nav_menu_objects', 'icicle_add_toggle_to_parent_menu_items' );

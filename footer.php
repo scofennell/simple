@@ -12,22 +12,26 @@
 		
 	
 
-		<footer id="blog-footer" class="accent-color outer-wrapper" role="contentinfo">
+		<footer id="blog-footer" class="inverse-color outer-wrapper" role="contentinfo">
 			<div id="blog-footer-inner-wrapper" class="inner-wrapper">
 
 				<h2 class="blog-description shadowed">
-						<a href="#blog-header" class="blog-description-link" title="Back to Top">
-						<?php echo do_shortcode('[sjf_string_with_wraps string="desc"]'); ?>
+					<a href="#blog-header" class="blog-description-link" title="Back to Top">
+						<?php bloginfo( 'description' ); ?>
 					</a>
 				</h2>		
 
-				<div id="colophon" class="">
-					<a class="colophon-link" href="mailto:scofennell@gmail.com.com">scofennell@gmail.com</a>
-					<a class="colophon-link" href="http://www.scottfennell.com">Dehydrated</a>
-					<a class="colophon-link" href="https://gist.github.com/scofennell/">Gist</a>
-					<a class="colophon-link" href="https://github.com/scofennell">GitHub</a>
-					<a class="colophon-link" href="https://plus.google.com/u/0/+scottfennell123/about?rel=author">G+</a>
-				</div>
+				<?php if ( is_active_sidebar( 'footer-widgets' ) ) { ?>
+					<?php wp_enqueue_script( 'masonry'  ); ?>
+					<?php sjf_icicle_masonry( '.footer-widgets', '.footer-widget' ); ?>
+					<aside id="footer-widgets" class="clear widgets footer-widgets" role="complementary">
+						<?php dynamic_sidebar( 'footer-widgets' ); ?>
+					</aside>
+				<?php } ?>
+
+				<?php
+					echo icicle_menu( 'secondary-menu' );
+				?>
 
 			</div>
 		</footer><!-- #colophon -->

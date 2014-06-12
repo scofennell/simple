@@ -1,23 +1,3 @@
-/**
- * Table of Contents:
- *
- * 1. Base
- * * 1.1 - Normalize
- * * 1.2 - Repeatable Patterns
- * * 1.3 - Basic Structure
- * 2. Layout
- * * 2.1 - Wrapper Box Sizing
- * 3. Module
- * * 3.1 Blog Title
- * 4. State
- * * 4.1 - Responsive Styles
- * 5. Theme
- * * 5.1 - Color
- * * 5.2 - Inverted Color
- * ----------------------------------------------------------------------------
- */
-
-
 
 /*
  * 2. Layout
@@ -41,17 +21,19 @@ body {
 }
 
 .inner-wrapper {
-	padding: 0 23px;
+	padding: 0 $large_padding;
 }
 
 /* Vertical Spacing */
-
+.editable-content label, /* wp core uses labels to wrap inputs */ 
+.gallery-item,
 .content-holder > *,
 .inner-wrapper > * {
-	margin-bottom: 23px;	
+	margin-bottom: $large_margin	
 }
 
 form > :last-child,
+form > :last-child :last-child,
 .wp-caption > :last-child,
 blockquote > :last-child,
 .content-holder > :last-child,
@@ -68,23 +50,16 @@ blockquote > :last-child,
 }
 
 .archive-header,
-.accent-band,
+.inverse-band,
 .outer-wrapper {
-	padding-top: 23px;
-	padding-bottom: 20px;
+	padding: $large_padding 0;
 }
 
-.outer-wrapper.marquee {
-	padding-top: 24px;
-	padding-bottom: 18px;
-
-}
-
-.accent-band {
-	margin-bottom: 40px;
+.inverse-band {
+	margin-bottom: $x_large_margin;
 }
 
 #loop {
-	margin-top: 23px;
-	margin-bottom: 40px;
+	margin-top: $large_margin;
+	margin-bottom: $x_large_margin;
 }

@@ -192,7 +192,51 @@ function sjf_wrap_inline_comments($string){
 
 
 
+/*
 
+@media (max-width: 723px) {
+	.blog-description-link {
+		font-size: 35px; 
+	}
+	.blog-description-link .word_1 {
+		font-size: 52px; 
+	}
+	.blog-description-link .word_6,
+	.blog-description-link .word_7 {
+		font-size: 50px;
+	}
+}
+
+	<h2 class="blog-description shadowed">
+					<a href="#blog-header" class="blog-description-link" title="Back to Top">
+						<?php echo do_shortcode('[sjf_string_with_wraps string="desc"]'); ?>
+					</a>
+				</h2>	
+
+
+.blog-description-link .word_1,
+.blog-description-link .word_5 {
+	display: block;
+}
+
+.blog-description-link .word_1 {
+	font-size: 87px; 
+	text-transform: uppercase;
+}
+
+.blog-description-link .word_6,
+.blog-description-link .word_7 {
+	font-size: 80px;
+}
+
+.blog-description-link .word_2,
+.blog-description-link .word_4,
+.blog-description-link .word_6,
+.blog-description-link .word_7 {
+	font-variant: small-caps;
+}
+
+ */
 
 
 
