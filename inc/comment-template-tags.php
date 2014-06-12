@@ -232,7 +232,7 @@ function icicle_comment( $comment, $args, $depth ) {
 		</div>
 
 		<?php if ( $comment->comment_approved == '0' ) { ?>
-			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.' ); ?></em>
+			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'icicle' ); ?></em>
 			<br />
 		<?php } ?>
 
@@ -243,7 +243,7 @@ function icicle_comment( $comment, $args, $depth ) {
 		<div class="comment-meta inverse-shadow commentmetadata"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ); ?>">
 			<?php
 				/* translators: 1: date, 2: time */
-				printf( __('%1$s at %2$s'), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)' ), '  ', '' );
+				printf( __('%1$s at %2$s', 'icicle' ), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)' ), '  ', '' );
 			?>
 			&mdash;
 			<span class="comment-reply-wrap">
