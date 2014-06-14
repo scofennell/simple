@@ -7,8 +7,8 @@
  * @param  $post_id The ID of the post we're grabbing from
  * @return bool|void Will return false if comments closed or PW-protected.  Otherwise, outputs comments
  */
-if (!function_exists('icicle_the_comments')){
-	function icicle_the_comments( $post_id='' ){
+if (!function_exists('simple_the_comments')){
+	function simple_the_comments( $post_id='' ){
 
 		// determine which post we're grabbing from
 		$post_id = absint( $post_id );
@@ -39,11 +39,11 @@ if (!function_exists('icicle_the_comments')){
 		// are there comments approved for this post?
 		if( !empty ( $comments_approved ) ) {
 				
-			$comments_title = icicle_comments_title( $post_id );
+			$comments_title = simple_comments_title( $post_id );
 
-			$the_comments = icicle_get_post_comments( $post_id );
+			$the_comments = simple_get_post_comments( $post_id );
 
-			$comments_pagination = icicle_comments_pagination( $post_id );
+			$comments_pagination = simple_comments_pagination( $post_id );
 
 		}
 
@@ -58,7 +58,7 @@ if (!function_exists('icicle_the_comments')){
 					// There does not seem to be a way to return instead of echo.
 					comment_form(
 						array(
-							'title_reply'=>'<span class="inverse-shadow">'.esc_html__( 'Leave a Comment', 'icicle' ).'</span>' 
+							'title_reply'=>'<span class="inverse-shadow">'.esc_html__( 'Leave a Comment', 'simple' ).'</span>' 
 						),
 						$post_id
 					);
@@ -75,8 +75,8 @@ if (!function_exists('icicle_the_comments')){
  * @param int $post_id The id of the post we're grabbing from
  * @return string The comments pagination for a post
  */
-if(!function_exists('icicle_comments_pagination')){
-	function icicle_comments_pagination($post_id=''){			
+if(!function_exists('simple_comments_pagination')){
+	function simple_comments_pagination($post_id=''){			
 		
 		// determine which post we're grabbing from
 		$post_id = absint( $post_id );
@@ -102,13 +102,13 @@ if(!function_exists('icicle_comments_pagination')){
 		// the link for newer comments
 		$next = '';
 		if ( get_next_comments_link() ) {
-			$next_text = "<span class='next-arrow arrow'>&larr;</span>".esc_html__( 'Older Comments', 'icicle' );
+			$next_text = "<span class='next-arrow arrow'>&larr;</span>".esc_html__( 'Older Comments', 'simple' );
 			$next = "<span class='inverse-color next button button-minor next-comments'>".get_next_comments_link( $next_text )."</span>";
 		}
 
 		$prev='';
 		if ( get_previous_comments_link() ) {
-			$prev_text = esc_html__( 'Newer Comments', 'icicle' )."<span class='prev-arrow arrow'>&rarr;</span>";
+			$prev_text = esc_html__( 'Newer Comments', 'simple' )."<span class='prev-arrow arrow'>&rarr;</span>";
 			$prev = "<span class='inverse-color prev button button-minor previous-comments'>".get_previous_comments_link( $prev_text )."</span>";
 		}
 		
@@ -135,8 +135,8 @@ if(!function_exists('icicle_comments_pagination')){
  * @param int $post_id The id of the post we're grabbing from
  * @return string The comments title for a post
  */
-if(!function_exists('icicle_comments_title')){
-	function icicle_comments_title( $post_id='' ){
+if(!function_exists('simple_comments_title')){
+	function simple_comments_title( $post_id='' ){
 
 		// determine which post we're grabbing from
 		$post_id = absint( $post_id );
@@ -152,7 +152,7 @@ if(!function_exists('icicle_comments_title')){
 				'%1$s comments on &ldquo;%2$s&rdquo;',
 				get_comments_number( $post_id ),
 				'comments title',
-				'icicle'
+				'simple'
 			),
 			number_format_i18n(
 				get_comments_number( $post_id )
@@ -174,8 +174,8 @@ if(!function_exists('icicle_comments_title')){
  * @param int $post_id The id of the post we're grabbing from
  * @return string The comments for a post
  */
-if(!function_exists('icicle_get_post_comments')){
-	function icicle_get_post_comments( $post_id='' ){
+if(!function_exists('simple_get_post_comments')){
+	function simple_get_post_comments( $post_id='' ){
 
 		// determine which post we're grabbing from
 		$post_id = absint( $post_id );
@@ -196,7 +196,7 @@ if(!function_exists('icicle_get_post_comments')){
 			'short_ping'  => true,
 			'avatar_size' => 150,
 			'echo' => false,
-			'callback' => 'icicle_comment',
+			'callback' => 'simple_comment',
 		), $comments );
 
 		// wrap the comments
@@ -210,7 +210,7 @@ if(!function_exists('icicle_get_post_comments')){
 
 
 
-function icicle_comment( $comment, $args, $depth ) {
+function simple_comment( $comment, $args, $depth ) {
 	$GLOBALS['comment'] = $comment;
 	
 	$ping = "";
@@ -232,7 +232,7 @@ function icicle_comment( $comment, $args, $depth ) {
 		</div>
 
 		<?php if ( $comment->comment_approved == '0' ) { ?>
-			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'icicle' ); ?></em>
+			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'simple' ); ?></em>
 			<br />
 		<?php } ?>
 
@@ -243,7 +243,7 @@ function icicle_comment( $comment, $args, $depth ) {
 		<div class="comment-meta inverse-shadow commentmetadata"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ); ?>">
 			<?php
 				/* translators: 1: date, 2: time */
-				printf( __('%1$s at %2$s', 'icicle' ), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)' ), '  ', '' );
+				printf( __('%1$s at %2$s', 'simple' ), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)' ), '  ', '' );
 			?>
 			&mdash;
 			<span class="comment-reply-wrap">

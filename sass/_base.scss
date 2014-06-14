@@ -146,6 +146,10 @@ a {
 	text-decoration: none;
 }
 
+a:hover {
+	text-decoration: underline;
+}
+
 a,
 a > * {
 	background: transparent;
@@ -403,6 +407,15 @@ textarea {
 	padding: $small_padding;
 }
 
+fieldset {
+	border-radius: $small_border_radius;
+	padding: $large_padding;
+}
+
+legend {
+	font-style: italic;
+}
+
 .button,
 [type='submit'],
 [type='image'],
@@ -414,6 +427,8 @@ button {
 	text-transform: capitalize;
 }
 
+.widget_search [type="submit"],
+.widget_search [type="search"],
 .button-minor {
 	padding: 6px 7px 4px;
 }

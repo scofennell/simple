@@ -5,14 +5,14 @@
  * Displays all of the <head> section and everything up till <div id="main">
  *
  * @package WordPress
- * @subpackage Icicle
- * @since Icicle 1.0
+ * @subpackage simple
+ * @since simple 1.0
  */
 ?><!DOCTYPE html>
 
 <?php
 	//echoes the opening html tag along with classes for different versions of IE
-	echo icicle_the_html_classes();
+	echo simple_the_html_classes();
 ?>
 
 <head>
@@ -40,10 +40,10 @@
 	<div id="body-wrapper">
 
 		<header id="blog-header" class="outer-wrapper marquee inverse-color clear">
-			
-			<div id="blog-header-inner-wrapper" class="inner-wrapper inner-wrapper-floater">
 
-				<a class="screen-reader-text skip-link" href="#loop"><?php _e( 'Skip to content', 'icicle' ); ?></a>
+			<a class="screen-reader-text skip-link" href="#loop"><?php _e( 'Skip to content', 'simple' ); ?></a>
+			
+			<div id="blog-header-inner-wrapper" class="inner-wrapper has-halfs">
 
 				<h1 class="blog-title blog-title-blog-header">
 					<a class="home-link shadowed" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" title="<?php echo esc_attr(get_bloginfo('name')); ?>">
@@ -51,10 +51,10 @@
 					</a>
 				</h1>
 
-				<?php echo icicle_search_form( array( "search-form-blog-header" ), array( "shadowed", "search-field-blog-header" ) ); ?>
+				<?php echo simple_search_form( array( "search-form-blog-header" ), array( "shadowed", "search-field-blog-header" ) ); ?>
 
 				<?php
-					echo icicle_menu( 'primary-menu' );
+					echo simple_menu( 'primary-menu' );
 				?>
 
 			</div>

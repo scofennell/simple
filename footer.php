@@ -5,8 +5,8 @@
  * Contains footer content and the closing of the #main and #page div elements.
  *
  * @package WordPress
- * @subpackage Twenty_Thirteen
- * @since Twenty Thirteen 1.0
+ * @subpackage simple
+ * @since simple 1.0
  */
 ?>
 		
@@ -23,14 +23,14 @@
 
 				<?php if ( is_active_sidebar( 'footer-widgets' ) ) { ?>
 					<?php wp_enqueue_script( 'masonry'  ); ?>
-					<?php sjf_icicle_masonry( '.footer-widgets', '.footer-widget' ); ?>
+					<?php simple_masonry( '.footer-widgets', '.footer-widget' ); ?>
 					<aside id="footer-widgets" class="clear widgets footer-widgets" role="complementary">
 						<?php dynamic_sidebar( 'footer-widgets' ); ?>
 					</aside>
 				<?php } ?>
 
 				<?php
-					echo icicle_menu( 'secondary-menu' );
+					echo simple_menu( 'secondary-menu' );
 				?>
 
 			</div>

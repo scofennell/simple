@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Icicle manifest.
+ * simple manifest.
  *
  * require_once()'s other files for theme functionality.  This file is just a 
  * manifest:  It contains no function definitions, only calls to other files.
  *
  * @package WordPress
- * @subpackage icicle
+ * @subpackage simple
+ * @since simple 1.0
  */
 
 /**
  * Enqueue scripts, establish theme-wide values, setup widgets,
  * call theme-supports.
- * @todo Introduce theme mod framework.
  */
 require_once( get_template_directory()."/inc/setup.php" );
 
@@ -46,6 +46,12 @@ require_once( get_template_directory()."/inc/template-tags.php" );
  * @todo Refactor so that there are no layout #selectors in the template tags
  */
 require_once( get_template_directory()."/inc/comment-template-tags.php" );
+
+/**
+ * Theme modification API.
+ * @todo  over riding sass generated styles from php seems to be too cumbersome
+ */
+require_once( get_template_directory()."/inc/customization.php" );
 
 /**
  * Functions best reserved for a child theme -- not everyone wants to use my

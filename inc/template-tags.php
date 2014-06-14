@@ -1,6 +1,6 @@
 <?php
 
-function icicle_menu( $which_menu ) {
+function simple_menu( $which_menu ) {
 
 	if ( !has_nav_menu( $which_menu ) ) { return false; }
 
@@ -17,9 +17,9 @@ function icicle_menu( $which_menu ) {
 
 	$menu_class = sanitize_html_class( $which_menu );
 
-	$label = esc_html__( 'Menu', 'icicle' );
+	$label = esc_html__( 'Menu', 'simple' );
 
-	$arrow = icicle_arrow( 'down', array( 'toggle', 'closed' ), 'span' );
+	$arrow = simple_arrow( 'down', array( 'toggle', 'closed' ), 'span' );
 
 	$out = "
 		<nav class='clear responsive-menu $menu_class'>
@@ -34,16 +34,21 @@ function icicle_menu( $which_menu ) {
 	return $out;
 }
 
-function icicle_arrow( $direction = 'down', $classes = array(), $wrap = 'a' ) {
+function simple_arrow( $direction = 'down', $classes = array(), $wrap = 'a' ) {
+
+	$left = esc_html( '&larr;', 'simple' );
+	$up = esc_html( '&uarr;', 'simple' );
+	$right = esc_html( '&rarr;', 'simple' );
+	$down = esc_html( '&darr;', 'simple' );
 
 	if ( $direction == 'left' ) {
-		$out = '&larr; ';
+		$out = $left;
 	} elseif ( $direction == 'up' ) {
-		$out = ' &uarr; ';
+		$out = $up;
 	} elseif ( $direction == 'right' ) {
-		$out = ' &rarr; ';
+		$out = $right;
 	} else {
-		$out = ' &darr; ';
+		$out = $down;
 	}
 
 	$classes = array_map( 'sanitize_html_class', $classes );
@@ -72,9 +77,9 @@ function icicle_arrow( $direction = 'down', $classes = array(), $wrap = 'a' ) {
  * @param  array $search_input_class CSS Classes for the search input.
  * @return string A search form.
  *
- * @since  Icicle 1.0
+ * @since  simple 1.0
  */
-function icicle_search_form( $form_classes = array(), $search_input_classes = array() ) {
+function simple_search_form( $form_classes = array(), $search_input_classes = array() ) {
 	
 	// An array of CSS classes for the search form.
 	$form_classes = array_map( 'sanitize_html_class', $form_classes );
@@ -84,16 +89,16 @@ function icicle_search_form( $form_classes = array(), $search_input_classes = ar
 	$search_input_classes = array_map( 'sanitize_html_class', $search_input_classes );
 	$search_input_string = implode( ' ', $search_input_classes );
 	
-	$placeholder = esc_attr__( 'Search', 'icicle' );
+	$placeholder = esc_attr__( 'Search', 'simple' );
 	if( isset( $_GET['s'] ) ) {
 		$placeholder = esc_attr( $_GET['s'] );
 	}
 
 	$out ="
 		<form action='".esc_url( home_url( '/' ) )."' class='$form_classes_string search-form' method='get' role='search'>
-			<label for='s'><span class='screen-reader-text'>".esc_html__( 'Search for:', 'icicle' )."</span></label>
+			<label for='s'><span class='screen-reader-text'>".esc_html__( 'Search for:', 'simple' )."</span></label>
 			<input id='s' type='search' title='Search for:' name='s' value='$placeholder' class='search-field $search_input_string'>
-			<input type='submit' value='".esc_html__( 'Submit', 'icicle' )."' class='screen-reader-text search-submit'>
+			<input type='submit' value='".esc_html__( 'Submit', 'simple' )."' class='screen-reader-text search-submit'>
 		</form>
 	";
 
@@ -106,7 +111,7 @@ function icicle_search_form( $form_classes = array(), $search_input_classes = ar
  *
  * @return string [description]
  */
-function icicle_get_post_format(){
+function simple_get_post_format(){
 	global $post;
 	$post_id = absint( $post->ID );
 	$format = get_post_format( $post_id );
@@ -131,7 +136,7 @@ function icicle_get_post_format(){
  *
  * @return string An HTML img tag for the first image in a post content.
  */
-function icicle_get_first_image() {
+function simple_get_first_image() {
 	
 	// Expose information about the current post.
 	global $post;
@@ -187,10 +192,10 @@ function icicle_get_first_image() {
 
 	// if the file is on the server, grab the exif
 	$exif = '';
-	$path = icicle_file_is_on_server( $src );
+	$path = simple_file_is_on_server( $src );
 	if( ! empty( $path ) ) { 
-		$path = icicle_file_is_on_server( $src );
-		$exif = icicle_get_media_meta( $path, 'image' );
+		$path = simple_file_is_on_server( $src );
+		$exif = simple_get_media_meta( $path, 'image' );
 
 	}
 
@@ -214,7 +219,7 @@ function icicle_get_first_image() {
 }
 
 
-function icicle_uploads_path(){
+function simple_uploads_path(){
 	$dir = wp_upload_dir();
 	$path = $dir['basedir'];
 
@@ -222,7 +227,7 @@ function icicle_uploads_path(){
 
 }
 
-function icicle_uploads_url(){
+function simple_uploads_url(){
 	$dir = wp_upload_dir();
 	$url = $dir['baseurl'];
 
@@ -233,7 +238,7 @@ function icicle_uploads_url(){
 
 
 
-function icicle_get_first_media( $type ){
+function simple_get_first_media( $type ){
 	
 	global $post;
 
@@ -246,13 +251,13 @@ function icicle_get_first_media( $type ){
 		$w = get_url_in_content( $content );
 	}
 
-	$path = icicle_file_is_on_server( $w );	
+	$path = simple_file_is_on_server( $w );	
 
 	if( ! $path ) { return false; }
 
 	if( ( $type == 'audio' ) || ( $type == 'video' ) ) {
 		
-		return icicle_get_media_meta( $path, $type );
+		return simple_get_media_meta( $path, $type );
 
 	} else {
 
@@ -262,7 +267,7 @@ function icicle_get_first_media( $type ){
 
 }
 
-function icicle_get_media_meta( $path, $type ) {
+function simple_get_media_meta( $path, $type ) {
 
 	$out='';
 
@@ -351,27 +356,27 @@ function icicle_get_media_meta( $path, $type ) {
 
 
 	$out="
-		<aside class='media-meta icicle-toggle'>
-			<a class='button-minor button inverse-color closed icicle-toggle-link' href='#'>$type ".esc_html__( 'data', 'icicle' )." <span class='arrow'>&darr;</span></a>
-			<div class='media-meta-list icicle-toggle-reveal'>$out</div>
+		<aside class='media-meta simple-toggle'>
+			<a class='button-minor button inverse-color closed simple-toggle-link' href='#'>$type ".esc_html__( 'data', 'simple' )." <span class='arrow'>&darr;</span></a>
+			<div class='media-meta-list simple-toggle-reveal'>$out</div>
 	";
 
 	return $out;
 }
 
-function icicle_toggle_script(){
+function simple_toggle_script(){
 	?>
 		<script>
 			jQuery( document ).ready(function($) {
-				$( '.icicle-toggle-reveal' ).hide();
-				$( '.icicle-toggle-link' ).click( function( event ) {
+				$( '.simple-toggle-reveal' ).hide();
+				$( '.simple-toggle-link' ).click( function( event ) {
 					event.preventDefault();
-					$( this ).next( '.icicle-toggle-reveal' ).slideToggle();
+					$( this ).next( '.simple-toggle-reveal' ).slideToggle();
 					$( this ).toggleClass( 'closed open' );
 				});
 
 
-				$( '.icicle-toggle-link' ).toggle( function() {
+				$( '.simple-toggle-link' ).toggle( function() {
        				$( this ).find( '.arrow' ).html( '&uarr;' );
     			}, function() {
      				$( this ).find( '.arrow' ).html('&darr;');
@@ -381,13 +386,13 @@ function icicle_toggle_script(){
 		</script>
 	<?php
 }
-add_action( 'wp_footer', 'icicle_toggle_script' );
+add_action( 'wp_footer', 'simple_toggle_script' );
 
-function icicle_file_is_on_server( $src ){
+function simple_file_is_on_server( $src ){
 
-	$uploads_url = icicle_uploads_url();
+	$uploads_url = simple_uploads_url();
 	
-	$uploads_path = icicle_uploads_path();
+	$uploads_path = simple_uploads_path();
 	
 
 	if( esc_url( $src ) != $src ) { return false; }
@@ -408,7 +413,7 @@ function icicle_file_is_on_server( $src ){
 
 
 
-function icicle_the_html_classes() {
+function simple_the_html_classes() {
 	?>
 	<!--[if IE 7]>
 		<html class="ie ie7" <?php language_attributes(); ?>>
@@ -430,10 +435,10 @@ function icicle_the_html_classes() {
 /**
  * Display links to paginated sub pages.
  */
-if ( ! function_exists( 'icicle_link_pages' ) ) {
-	function icicle_link_pages() {
+if ( ! function_exists( 'simple_link_pages' ) ) {
+	function simple_link_pages() {
 		$args = array(
-			'before'           => '<nav class="paging-navigation numeric-pagination inverse-font inverse-color button link-pages">' . esc_html__( 'Pages:', 'icicle' ),
+			'before'           => '<nav class="paging-navigation numeric-pagination inverse-font inverse-color button link-pages">' . esc_html__( 'Pages:', 'simple' ),
 			'after'            => '</nav>',
 			'next_or_number'   => 'number',
 			'echo'             => 0
@@ -446,7 +451,7 @@ if ( ! function_exists( 'icicle_link_pages' ) ) {
 /**
  * Display navigation to next/previous post when applicable.
  */
-function icicle_post_nav() {
+function simple_post_nav() {
 	global $post;
 
 	$out = '';
@@ -463,7 +468,7 @@ function icicle_post_nav() {
 
 	$out = "
 		<nav class='inverse-font paging-navigation post-navigation clear' role='navigation'>
-			<h1 class='screen-reader-text'>".esc_html__( 'Post navigation', 'icicle' )."</h1>
+			<h1 class='screen-reader-text'>".esc_html__( 'Post navigation', 'simple' )."</h1>
 			$out
 		</nav>
 	";
@@ -473,8 +478,8 @@ function icicle_post_nav() {
 /**
  * Display navigation to next/previous set of posts when applicable.
  */
-if ( ! function_exists( 'icicle_paging_nav' ) ) {
-	function icicle_paging_nav() {
+if ( ! function_exists( 'simple_paging_nav' ) ) {
+	function simple_paging_nav() {
 		global $wp_query;
 
 		// Don't print empty markup if there's only one page.
@@ -483,11 +488,11 @@ if ( ! function_exists( 'icicle_paging_nav' ) ) {
 		$out = "";
 
 		if( get_next_posts_link() ) {
-			$out .= "<span class='inverse-color button button-minor next next-posts'>".get_next_posts_link( "<span class='arrow next-arrow'>&larr;</span>".esc_html__( 'Older Posts', 'icicle' ) )."</span>";
+			$out .= "<span class='inverse-color button button-minor next next-posts'>".get_next_posts_link( "<span class='arrow next-arrow'>&larr;</span> ".esc_html__( 'Older Posts', 'simple' ) )."</span>";
 		}
 
 		if( get_previous_posts_link() ) {
-			$out .= "<span class='inverse-color button button-minor prev previous-posts'>".get_previous_posts_link( esc_html__( 'Newer Posts', 'icicle' )."<span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
+			$out .= "<span class='inverse-color button button-minor prev previous-posts'>".get_previous_posts_link( esc_html__( 'Newer Posts', 'simple' )." <span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
 		}
 
 
@@ -495,7 +500,7 @@ if ( ! function_exists( 'icicle_paging_nav' ) ) {
 
 		$out = "
 			<nav class='inverse-font paging-navigation posts-navigation clear' role='navigation'>
-				<h1 class='screen-reader-text'>".esc_html__( 'Posts navigation', 'icicle' )."</h1>
+				<h1 class='screen-reader-text'>".esc_html__( 'Posts navigation', 'simple' )."</h1>
 				$out
 			</nav>
 		";
@@ -505,27 +510,26 @@ if ( ! function_exists( 'icicle_paging_nav' ) ) {
 	}
 }
 
-function icicle_archive_header(){
+function simple_archive_header(){
 	global $wp_query;
 	
 	$results ='';
 	if ( isset ( $wp_query -> found_posts ) ) {
 		$count = $wp_query -> found_posts;
-		$results = sprintf( _n( '1 post', "%s posts", $count, 'icicle' ), $count );
+		$results = sprintf( _n( '1 post', "%s posts", $count, 'simple' ), $count );
 	}
 
 	$search = '';
 	if ( is_search() ){
 		
 		if( have_posts() ) {
-			$message = sprintf( esc_html__( 'There are %s search results for %s', 'icicle' ), $count, "<mark>".get_search_query()."</mark>" );
+			$message = sprintf( esc_html__( 'There are %s search results for %s', 'simple' ), $count, "<mark>".get_search_query()."</mark>" );
 			$class = 'search';
+			$search = simple_search_form( array(), array() );
 		} else {
-			$message = sprintf( esc_html__( 'No results found for %s', 'icicle' ), "<mark>".get_search_query()."</mark>" );
+			$message = sprintf( esc_html__( 'No results found for %s', 'simple' ), "<mark>".get_search_query()."</mark>" );
 			$class = 'search';	
 		}
-
-		$search = icicle_search_form( array(), array() );
 
 	} elseif( is_category() ) {
 		$message = "$results: ".single_cat_title( '', false );
@@ -546,10 +550,10 @@ function icicle_archive_header(){
 		$message = "$results: ".get_the_author();
 		$class = 'author';
 	} elseif( is_404() ) {
-		$message = esc_html__( 'Your page could not be found.', 'icicle' );
+		$message = esc_html__( 'Your page could not be found.', 'simple' );
 		$class = '404';
 	} else {
-		$message = esc_html__( 'Archives:', 'icicle' )." $results";
+		$message = esc_html__( 'Archives:', 'simple' )." $results";
 		$class = 'default';
 	}
 
@@ -578,20 +582,20 @@ function icicle_archive_header(){
 
 }
 
-function icicle_no_posts() {
+function simple_no_posts() {
 
-	$out ="<h3 class='no-posts-header'>".esc_html__( 'Find your way by searching:', 'icicle' )."</h3>";
-	$out .= icicle_search_form( array( 'no-posts-searchform' ), array ( 'no-posts-search-input') );
-	$out .="<h3 class='no-posts-header'>".esc_html__( 'Or browse by archive:', 'icicle' )."</h3>";
+	$out ="<h3 class='no-posts-header'>".esc_html__( 'Find your way by searching:', 'simple' )."</h3>";
+	$out .= simple_search_form( array( 'no-posts-searchform' ), array ( 'no-posts-search-input') );
+	$out .="<h3 class='no-posts-header'>".esc_html__( 'Or browse by archive:', 'simple' )."</h3>";
 	
-	$jump = get_transient( 'icicle_jump_menus' );
+	$jump = get_transient( 'simple_jump_menus' );
 	
 	if ( empty( $jump ) ) {
 		
-		$jump = icicle_jump_nav( 'category' );
-		$jump .= icicle_jump_nav( 'tag' );
-		$jump .= icicle_jump_nav( 'author' );
-		$jump .= icicle_jump_nav( 'month' );
+		$jump = simple_jump_nav( 'category' );
+		$jump .= simple_jump_nav( 'tag' );
+		$jump .= simple_jump_nav( 'author' );
+		$jump .= simple_jump_nav( 'month' );
 
 		if( ! empty( $jump ) ) { 
 
@@ -602,22 +606,26 @@ function icicle_no_posts() {
 			";
 		}
 
-		set_transient( 'icicle_jump_menus', $jump, DAY_IN_SECONDS );
+		set_transient( 'simple_jump_menus', $jump, DAY_IN_SECONDS );
 
 	}
 
 	$out .= $jump;
 
+	$out = "
+		<div class='no-posts-wrapper mild-contrast-color'>$out</div>
+	";
+
 	return $out;
 }
 
-function icicle_jump_nav( $archive_type ) {
+function simple_jump_nav( $archive_type ) {
 
 	$options = '';
 
 
 	if( $archive_type == 'category' ) {
-		$label = esc_attr__( 'Choose a category to jump to that page.', 'icicle' );
+		$label = esc_attr__( 'Choose a category to jump to that page.', 'simple' );
 		
 		$categories = get_categories();
 		if( ! empty( $categories ) ) {
@@ -632,7 +640,7 @@ function icicle_jump_nav( $archive_type ) {
 	  	}
 	
 	} elseif ( $archive_type == 'tag' ) {
-		$label = esc_html__( 'Choose a tag to jump to that page.', 'icicle' );
+		$label = esc_html__( 'Choose a tag to jump to that page.', 'simple' );
 
 		$tags = get_tags();
 		if( ! empty( $tags ) ) {
@@ -647,7 +655,7 @@ function icicle_jump_nav( $archive_type ) {
 		}
 
 	} elseif ( $archive_type == 'author' ) {
-		$label = esc_html__( 'Choose an author to jump to that page.', 'icicle' );
+		$label = esc_html__( 'Choose an author to jump to that page.', 'simple' );
 
 		$args = array( 'who' => 'authors' );
 		$authors = get_users( $args ); 
@@ -665,7 +673,7 @@ function icicle_jump_nav( $archive_type ) {
 		}
 	
 	} elseif ( $archive_type == 'month' ) {
-		$label = esc_html__( 'Choose a month to jump to that page.', 'icicle' );
+		$label = esc_html__( 'Choose a month to jump to that page.', 'simple' );
 		$args = array(
 			'type' => 'monthly',
 			'format' => 'option',
@@ -691,7 +699,7 @@ function icicle_jump_nav( $archive_type ) {
 }
 
 // get page ancestors 
-function icicle_page_ancestors() {
+function simple_page_ancestors() {
 	global $post;
 	$parents = get_post_ancestors( $post->ID );
 
@@ -721,13 +729,13 @@ function icicle_page_ancestors() {
 /**
  * Print HTML with meta information for current post: categories, tags, permalink, author, and date.
  *
- * Create your own icicle_entry_meta() to override in a child theme.
+ * Create your own simple_entry_meta() to override in a child theme.
  *
  * @since Twenty Thirteen 1.0
  */
-function icicle_entry_byline() {
+function simple_entry_byline() {
 	
-	$date = icicle_entry_date();
+	$date = simple_entry_date();
 
 	$out = "
 		<div class='entry-byline'>
@@ -740,10 +748,10 @@ function icicle_entry_byline() {
 
 
 
-function icicle_entry_cats(){
+function simple_entry_cats(){
 
 	$out = '';
-	$categories_list = get_the_category_list( esc_html__( ', ', 'icicle' ) );
+	$categories_list = get_the_category_list( esc_html__( ', ', 'simple' ) );
 	if ( $categories_list ) {
 		$out = "<div class='category-links'>&mdash; $categories_list &mdash;</div>";
 	}
@@ -756,14 +764,14 @@ function icicle_entry_cats(){
 
 
 
-function icicle_entry_tags(){
+function simple_entry_tags(){
 
 	$out = '';
-	$tags_list = get_the_tag_list( '', esc_html__( ', ', 'icicle' ), '' );
+	$tags_list = get_the_tag_list( '', esc_html__( ', ', 'simple' ), '' );
 	if ( $tags_list ) {
 		$out = "
 			<div class='tag-links'>
-				<span class='tag-label'>".esc_html__( 'Tags:', 'icicle' )."</span>
+				<span class='tag-label'>".esc_html__( 'Tags:', 'simple' )."</span>
 				$tags_list
 			</div>";
 	}
@@ -774,7 +782,7 @@ function icicle_entry_tags(){
 
 
 
-function icicle_author_bio(){
+function simple_author_bio(){
 	
 	//global $post;
 
@@ -828,22 +836,22 @@ function get_avatar_url($author_id, $size){
 /**
  * Print HTML with date information for current post.
  *
- * Create your own icicle_entry_date() to override in a child theme.
+ * Create your own simple_entry_date() to override in a child theme.
  *
  * @since Twenty Thirteen 1.0
  *
  * @param boolean $echo (optional) Whether to echo the date. Default true.
  * @return string The HTML-formatted post date.
  */
-function icicle_entry_date( ) {
+function simple_entry_date( ) {
 	if ( has_post_format( array( 'chat', 'status' ) ) )
-		$format_prefix = _x( '%1$s on %2$s', '1: post format name. 2: date', 'icicle' );
+		$format_prefix = _x( '%1$s on %2$s', '1: post format name. 2: date', 'simple' );
 	else
 		$format_prefix = '%2$s';
 
 	$out = sprintf( '<span class="date"><a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s">%4$s</time></a></span>',
 		esc_url( get_permalink() ),
-		esc_attr( sprintf( __( 'Permalink to %s', 'icicle' ), the_title_attribute( 'echo=0' ) ) ),
+		esc_attr( sprintf( __( 'Permalink to %s', 'simple' ), the_title_attribute( 'echo=0' ) ) ),
 		esc_attr( get_the_date( 'c' ) ),
 		esc_html( sprintf( $format_prefix, get_post_format_string( get_post_format() ), get_the_date() ) )
 	);

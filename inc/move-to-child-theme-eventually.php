@@ -1,42 +1,42 @@
 <?php
 
 /**
- * Icicle child theme functions.
+ * simple child theme functions.
  *
  * These are in the parent theme only for convenience pre-release.
  *
  * @package WordPress
- * @subpackage icicle
+ * @subpackage simple
  */
 
 /**
  * My personal GA code.
  *
- * @since icicle 1.0
+ * @since simple 1.0
  */
-function icicle_ga(){
+function simple_ga(){
 	?>
 		<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', 'UA-45817814-1', 'scottfennell.com');ga('send', 'pageview');</script>
 	<?php
 }
-add_action('wp_footer', 'icicle_ga');
+add_action('wp_footer', 'simple_ga');
 
 /**
  * My personal favicon.
  *
- * @since icicle 1.0
+ * @since simple 1.0
  */
-function icicle_favicon() {
+function simple_favicon() {
 	?>
 	<link rel="shortcut icon" type="image/x-icon" href="<?php echo get_template_directory_uri(); ?>/favicon.png">
 	<?php
 }
-add_action( 'wp_head', 'icicle_favicon' );
+add_action( 'wp_head', 'simple_favicon' );
 
 /**
  * A handy function I use to wrap each word in a string.
  *
- * @since icicle 1.0
+ * @since simple 1.0
  */
 function sjf_string_with_wraps($atts){
 	extract( shortcode_atts( array(

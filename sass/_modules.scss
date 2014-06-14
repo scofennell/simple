@@ -102,7 +102,6 @@ img.wp-smiley,
  */
 .blog-title-blog-header,
 .search-form-blog-header {
-	width: 49%;
 	vertical-align: middle;
 	font-size: 45px;
 	line-height: 1.1em;
@@ -121,25 +120,23 @@ img.wp-smiley,
 }
 
 .blog-title-blog-header {
-	float: left;
 	padding-top: 6px;
 }
 
 .search-form-blog-header {
-	float: right;
 	background: none;
 	position: relative;
 }
 
 .search-field-blog-header {
 	width: 100%;
-	text-align: right;
 	padding: 0 5px 2px;
 	top: 0px;
 	line-height: 1.2em;
 	background: none !important;
 	position: relative;
 	border: none !important;
+	box-shadow: none !important;
 }
 
 .search-submit {
@@ -296,8 +293,8 @@ img.wp-smiley,
 .footer-widget {
 	width: 50%;
 	text-align: left;
-	padding: $small_padding $medium_padding $small_padding;
-
+	padding: $small_padding $medium_padding $large_padding;
+	margin-bottom: $small_margin;
 }
 
 .footer-widget:after {
@@ -307,9 +304,36 @@ img.wp-smiley,
 	margin: $medium_margin auto 0;
 }
 
+.footer-widget-title {
+	margin-bottom: $small_margin;
+	padding-bottom: $small_padding;
+}
+
+
 .footer-widget li {
 	list-style-position: inside;
 }
+
+.footer-widget li ul {
+	padding-left: $small_padding;
+	margin-left: $medium_margin;
+}
+
+/**
+ * Widgets
+ */
+
+.widget_search .search-form {
+	background: none;
+}
+
+.widget_search .search-form * {
+	width: 100%;
+	display: block;
+	margin-bottom: $small_margin;
+}
+
+
 
 /** 
  * =============================================================================
@@ -322,6 +346,7 @@ img.wp-smiley,
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
+	border-radius: $small_border-radius;
 }
 .archive-title {
 	font-size: 15px;
@@ -420,6 +445,7 @@ img.wp-smiley,
 
 /* Forms */
 #respond,
+.no-posts-wrapper,
 .editable-content form {
 	padding: $large_padding;
 	clear: both;
@@ -678,9 +704,6 @@ button {
 
 /* Entry Byline */
 .entry-byline {
-	float: right;
-	width: 45%;
-	text-align: right;
 	position: relative;
 	font-style: italic;
 	font-weight: 600;
@@ -692,8 +715,6 @@ button {
 
 /* entry-tags */
 .tag-links {
-	float: left;
-	width: 45%;
 	font-size: 90%;
 }
 
@@ -731,14 +752,6 @@ button {
 .prev {
 	float: right;
 	text-align: right;
-}
-
-.prev-arrow {
-	padding-left: 5px;
-}
-
-.next-arrow {
-	padding-right: 5px;
 }
 
 /**

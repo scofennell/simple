@@ -26,3 +26,38 @@ a > * {
 .screen-reader-text	 {
 	transition: opacity $transition;
 }
+
+/* is_rtl() */
+/* 50/50 elements */
+.rtl {
+
+	.has-halfs >:first-child {
+		padding-left: 5%;
+		padding-right: 0;
+	}
+
+	.has-halfs >:nth-child(2) {
+		padding-right: 5%;
+		padding-left: 0;
+	}
+
+	.has-halfs >:nth-child(2),
+	.has-halfs >:nth-child(2) > * {
+		text-align: left;
+	}
+
+	.menu-item:first-child {
+	    margin-right: 0;
+	    margin-left: $medium_margin;
+	}
+
+	.shadowed,
+	.shadowed .search-field {
+	text-shadow: 1px 1px 0 $color,
+			     2px 2px 0 $inverse_color;
+	padding-left: 0px;
+	padding-right: 2px;
+}
+
+
+}

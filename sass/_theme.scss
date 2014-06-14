@@ -8,7 +8,9 @@ input[type="text"],
 input[type="email"],
 input[type="date"],
 textarea,
-.sub-menu {
+.sub-menu,
+.inverse-color .widget_search input[type="search"],
+.inverse-color .widget_search input[type="submit"] {
 	background: $bg_color;
 	color: $color;
 }

@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Icicle footer scripts.
+ * simple footer scripts.
  *
  * Scripts for minor UX improvements.
  *
  * @package WordPress
- * @subpackage icicle
+ * @subpackage simple
  */
 
 /**
  * Outputs jQuery for gallery caption show/hide.
  *
- * @since Icicle 1.0
+ * @since simple 1.0
  */
-function icicle_gallery_captions() {
+function simple_gallery_captions() {
 	?>
 
-		<!-- Added by icicle to power gallery captions -->
+		<!-- Added by simple to power gallery captions -->
 		<script>
 			
 			jQuery(document).ready(function() {
@@ -33,17 +33,17 @@ function icicle_gallery_captions() {
 
 	<?php
 }
-add_action('wp_footer', 'icicle_gallery_captions');
+add_action('wp_footer', 'simple_gallery_captions');
 
 /**
  * Output some jQuery to auto_empty form fields
  *
- * @since Icicle 1.0
+ * @since simple 1.0
  */
-function icicle_auto_empty_forms() {		
+function simple_auto_empty_forms() {		
 	?>
 
-		<!-- Added by icicle to power form field autoempty -->
+		<!-- Added by simple to power form field autoempty -->
 		<script>		
 	
 			jQuery( document ).ready( function( $ ) {
@@ -69,9 +69,9 @@ function icicle_auto_empty_forms() {
 
 	<?php
 	}
-add_action( 'wp_footer', 'icicle_auto_empty_forms' );
+add_action( 'wp_footer', 'simple_auto_empty_forms' );
 
-function icicle_sub_menu_show_hide() {
+function simple_sub_menu_show_hide() {
 	?>
 	<script>		
 		jQuery( document ).ready( function( $ ) {
@@ -86,13 +86,43 @@ function icicle_sub_menu_show_hide() {
 	</script>
 	<?php
 }
-add_action( 'wp_footer', 'icicle_sub_menu_show_hide' );
+add_action( 'wp_footer', 'simple_sub_menu_show_hide' );
 
-function icicle_responsive_menu_show_hide() {
+function simple_cat_widget_hide() {
+	
+	$arrow = simple_arrow( 'down', array( 'toggle', 'cat-widget-toggle', 'closed' ) );
+
+	?>
+	<script>		
+		jQuery( document ).ready( function( $ ) {
+			$( '.widget .children' ).hide();
+			$("<?php echo $arrow; ?>").insertBefore('.widget .children');
+			//$( '.widget .children' ).parent().find( ' > a:first-child ' ).append( "<?php echo $arrow; ?>" );
+			$( '.widget .children' ).parent().find( '.toggle' ).click( function( event ) {
+				event.preventDefault();
+				$( this ).parent().find( ' > .children' ).slideToggle();
+				$( this ).toggleClass( 'closed open' );
+			});
+			
+
+		});
+	</script>
+	<?php
+}
+add_action( 'wp_footer', 'simple_cat_widget_hide' );
+
+
+function simple_responsive_menu_show_hide() {
 	?>
 	<script>		
 		jQuery( document ).ready( function( $ ) {
 			$( '.responsive-menu-toggle, .responsive-menu-toggle .toggle' ).click( function( event ){
+				event.preventDefault();
+
+    			$('html, body').animate({
+        			scrollTop: $(this).offset().top
+    			});
+
 				$( this ).parent().find('.menu').slideToggle();
 				$( this ).parent().find('.responsive-menu-toggle > .toggle').toggleClass( 'open closed' );
 				if( $( this ).hasClass('toggle') ) {
@@ -103,10 +133,10 @@ function icicle_responsive_menu_show_hide() {
 	</script>
 	<?php
 }
-add_action( 'wp_footer', 'icicle_responsive_menu_show_hide' );
+add_action( 'wp_footer', 'simple_responsive_menu_show_hide' );
 
 // smooth scroll internal links
-function icicle_smooth_scroll() {
+function simple_smooth_scroll() {
 	?>
 	<script>
 		jQuery( document ).ready( function( $ ) {
@@ -126,23 +156,40 @@ function icicle_smooth_scroll() {
 	</script>
 	<?php
 }
-add_action( 'wp_footer', 'icicle_smooth_scroll' );
+add_action( 'wp_footer', 'simple_smooth_scroll' );
 
-function sjf_icicle_masonry( $container = '', $item = '' ) {
+function simple_masonry( $container = '', $item = '' ) {
 	
 	$container = esc_attr( $container );
 	$item = esc_attr( $item );
 	
 	?>
 		<script>
+			
 			jQuery( window ).load( function() {
-				//container = jQuery( "<?php echo $container; ?>" );
+				
 				container = document.querySelector( "<?php echo $container; ?>" );
-				jQuery(container).masonry({
+			
+				var atts = {
 					itemSelector: "<?php echo $item; ?>",
 					columnWidth: container.querySelector( "<?php echo $item; ?>" ),
 					gutter: 0,
+				}
+
+				jQuery( container ).masonry( atts );
+
+				/**
+				 * New items toggling in and out of view could break masonry's absolute positioning,
+				 * so we give them a moment and then redraw masonry.
+				 */
+				jQuery(container).find( '.toggle' ).click( function() {
+					setTimeout(
+						"jQuery(container).masonry();",
+						500
+					);
+					
 				});
+
 			});
 		</script>
 	<?php

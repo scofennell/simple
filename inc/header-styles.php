@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Icicle header styles.
+ * simple header styles.
  *
  * Some styles need to grab dynamic values from php.
  *
  * @package WordPress
- * @subpackage icicle
+ * @subpackage simple
  */

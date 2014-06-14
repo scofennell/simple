@@ -34,6 +34,7 @@ body {
 
 form > :last-child,
 form > :last-child :last-child,
+fieldset > :last-child,
 .wp-caption > :last-child,
 blockquote > :last-child,
 .content-holder > :last-child,
@@ -42,11 +43,31 @@ blockquote > :last-child,
 }
 
 /**
- * For those inner wrappers who have all their children floating,
+ * For those inner wrappers who have all their children inline,
  * their children do not need bottom padding.
  */
-.inner-wrapper-floater > * {
+.has-halfs > * {
 	margin-bottom: 0px;	
+}
+
+/* 50/50 elements */
+.has-halfs >:first-child,
+.has-halfs >:nth-child(2) {
+	display: inline-block;
+	width: 49.4%;
+}
+
+.has-halfs >:first-child {
+	padding-right: 5%;
+}
+
+.has-halfs >:nth-child(2) {
+	padding-left: 5%;
+}
+
+.has-halfs >:nth-child(2),
+.has-halfs >:nth-child(2) > * {
+		text-align: right;
 }
 
 .archive-header,
