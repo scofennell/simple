@@ -1,4 +1,4 @@
-sf-theme
+simple
 ========
 
-Scottfennell.com/wp WordPress Theme
+Scottfennell.com/wp/simple
