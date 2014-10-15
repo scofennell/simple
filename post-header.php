@@ -4,13 +4,13 @@
 
 		<?php if (is_page() ) { ?>
 
-			<?php echo simple_page_ancestors(); ?>
+			<?php echo anchorage_page_ancestors(); ?>
 
 		<?php } ?>
 
 		<h1 class="entry-title">
 		
-			<?php echo simple_get_post_format(); ?>
+			<?php echo anchorage_get_post_format(); ?>
 
 			<?php if ( has_post_format( 'link' ) ) { ?>
 
@@ -24,7 +24,7 @@
 		
 			<?php if ( is_home() && is_sticky() ) { ?>
 			
-				<?php echo esc_html__('Sticky:', 'simple'); ?>
+				<?php echo esc_html__('Sticky:', 'anchorage'); ?>
 			
 			<?php } ?>
 
@@ -38,13 +38,13 @@
 
 		</h1>
 
-		<?php echo simple_entry_cats(); ?>
+		<?php echo anchorage_entry_cats(); ?>
 
 		<?php /* if its a post format: image and it does have an image in the content, skip the post thumbnail business. */ ?>
 
 		<?php if ( has_post_thumbnail() && ! post_password_required() ) { ?>
 	
-			<?php if( ! has_post_format( 'image' ) &&  ! ( simple_get_first_image() ) ){ ?>
+			<?php if( ! has_post_format( 'image' ) &&  ! ( anchorage_get_first_image() ) ){ ?>
 
 				<div class="entry-thumbnail">
 

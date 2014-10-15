@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Template tags for displaying comments and commenting tools.
+ *
+ * @package WordPress
+ * @subpackage anchorage
+ * @since anchorage 1.0
+ */
 
 /**
  * Outputs the comments area for a post
@@ -7,8 +13,8 @@
  * @param  $post_id The ID of the post we're grabbing from
  * @return bool|void Will return false if comments closed or PW-protected.  Otherwise, outputs comments
  */
-if (!function_exists('simple_the_comments')){
-	function simple_the_comments( $post_id='' ){
+if (!function_exists('anchorage_the_comments')){
+	function anchorage_the_comments( $post_id='' ){
 
 		// determine which post we're grabbing from
 		$post_id = absint( $post_id );
@@ -39,11 +45,11 @@ if (!function_exists('simple_the_comments')){
 		// are there comments approved for this post?
 		if( !empty ( $comments_approved ) ) {
 				
-			$comments_title = simple_comments_title( $post_id );
+			$comments_title = anchorage_comments_title( $post_id );
 
-			$the_comments = simple_get_post_comments( $post_id );
+			$the_comments = anchorage_get_post_comments( $post_id );
 
-			$comments_pagination = simple_comments_pagination( $post_id );
+			$comments_pagination = anchorage_comments_pagination( $post_id );
 
 		}
 
@@ -58,10 +64,13 @@ if (!function_exists('simple_the_comments')){
 					// There does not seem to be a way to return instead of echo.
 					comment_form(
 						array(
-							'title_reply'=>'<span class="inverse-shadow">'.esc_html__( 'Leave a Comment', 'simple' ).'</span>' 
+							'title_reply' => '<span class="inverse-shadow">'.esc_html__( 'Leave a Comment', 'anchorage' ).'</span>',
+							'comment_notes_before' => '',
+							'comment_notes_after' => '',
 						),
 						$post_id
 					);
+
 			echo "</div>	
 			</section>
 		";
@@ -75,8 +84,8 @@ if (!function_exists('simple_the_comments')){
  * @param int $post_id The id of the post we're grabbing from
  * @return string The comments pagination for a post
  */
-if(!function_exists('simple_comments_pagination')){
-	function simple_comments_pagination($post_id=''){			
+if(!function_exists('anchorage_comments_pagination')){
+	function anchorage_comments_pagination($post_id=''){			
 		
 		// determine which post we're grabbing from
 		$post_id = absint( $post_id );
@@ -102,13 +111,13 @@ if(!function_exists('simple_comments_pagination')){
 		// the link for newer comments
 		$next = '';
 		if ( get_next_comments_link() ) {
-			$next_text = "<span class='next-arrow arrow'>&larr;</span>".esc_html__( 'Older Comments', 'simple' );
+			$next_text = "<span class='next-arrow arrow'>&larr;</span>".esc_html__( 'Older Comments', 'anchorage' );
 			$next = "<span class='inverse-color next button button-minor next-comments'>".get_next_comments_link( $next_text )."</span>";
 		}
 
 		$prev='';
 		if ( get_previous_comments_link() ) {
-			$prev_text = esc_html__( 'Newer Comments', 'simple' )."<span class='prev-arrow arrow'>&rarr;</span>";
+			$prev_text = esc_html__( 'Newer Comments', 'anchorage' )."<span class='prev-arrow arrow'>&rarr;</span>";
 			$prev = "<span class='inverse-color prev button button-minor previous-comments'>".get_previous_comments_link( $prev_text )."</span>";
 		}
 		
@@ -125,18 +134,14 @@ if(!function_exists('simple_comments_pagination')){
 	}
 }
 
-
-
-
-
 /**
  * Returns the comments title for a post
  *
  * @param int $post_id The id of the post we're grabbing from
  * @return string The comments title for a post
  */
-if(!function_exists('simple_comments_title')){
-	function simple_comments_title( $post_id='' ){
+if(!function_exists('anchorage_comments_title')){
+	function anchorage_comments_title( $post_id='' ){
 
 		// determine which post we're grabbing from
 		$post_id = absint( $post_id );
@@ -152,7 +157,7 @@ if(!function_exists('simple_comments_title')){
 				'%1$s comments on &ldquo;%2$s&rdquo;',
 				get_comments_number( $post_id ),
 				'comments title',
-				'simple'
+				'anchorage'
 			),
 			number_format_i18n(
 				get_comments_number( $post_id )
@@ -174,8 +179,8 @@ if(!function_exists('simple_comments_title')){
  * @param int $post_id The id of the post we're grabbing from
  * @return string The comments for a post
  */
-if(!function_exists('simple_get_post_comments')){
-	function simple_get_post_comments( $post_id='' ){
+if(!function_exists('anchorage_get_post_comments')){
+	function anchorage_get_post_comments( $post_id='' ){
 
 		// determine which post we're grabbing from
 		$post_id = absint( $post_id );
@@ -196,7 +201,7 @@ if(!function_exists('simple_get_post_comments')){
 			'short_ping'  => true,
 			'avatar_size' => 150,
 			'echo' => false,
-			'callback' => 'simple_comment',
+			'callback' => 'anchorage_comment',
 		), $comments );
 
 		// wrap the comments
@@ -210,7 +215,7 @@ if(!function_exists('simple_get_post_comments')){
 
 
 
-function simple_comment( $comment, $args, $depth ) {
+function anchorage_comment( $comment, $args, $depth ) {
 	$GLOBALS['comment'] = $comment;
 	
 	$ping = "";
@@ -232,7 +237,7 @@ function simple_comment( $comment, $args, $depth ) {
 		</div>
 
 		<?php if ( $comment->comment_approved == '0' ) { ?>
-			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'simple' ); ?></em>
+			<em class="comment-awaiting-moderation"><?php _e( 'Your comment is awaiting moderation.', 'anchorage' ); ?></em>
 			<br />
 		<?php } ?>
 
@@ -243,7 +248,7 @@ function simple_comment( $comment, $args, $depth ) {
 		<div class="comment-meta inverse-shadow commentmetadata"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ); ?>">
 			<?php
 				/* translators: 1: date, 2: time */
-				printf( __('%1$s at %2$s', 'simple' ), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)' ), '  ', '' );
+				printf( __('%1$s at %2$s', 'anchorage' ), get_comment_date(),  get_comment_time() ); ?></a><?php edit_comment_link( __( '(Edit)', 'anchorage' ), '  ', '' );
 			?>
 			&mdash;
 			<span class="comment-reply-wrap">

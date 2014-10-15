@@ -1,3 +1,20 @@
+/**
+ * Sass for state rules.
+ *
+ * RTL, transitions, active states, hover states.
+ *
+ * @package WordPress
+ * @subpackage anchorage
+ * @since anchorage 1.0
+ */
+
+.one-eighty {
+	transform: rotate( 180deg );
+	-ms-transform:rotate( 180deg ); /* IE 9 */
+	-webkit-transform:rotate( 180deg );
+	-moz-transform:rotate( 180deg );
+}
+
 /* Active states */
 a:active,
 input:active,
@@ -19,8 +36,8 @@ input:focus {
 input,
 a,
 a > * {
-	transition: color $transition,
-	transform $transition;
+	transition: all $transition;
+	transition-property: color, transform, right, left, top, bottom;
 }
 
 .screen-reader-text	 {
@@ -28,7 +45,6 @@ a > * {
 }
 
 /* is_rtl() */
-/* 50/50 elements */
 .rtl {
 
 	.has-halfs >:first-child {
@@ -53,11 +69,10 @@ a > * {
 
 	.shadowed,
 	.shadowed .search-field {
-	text-shadow: 1px 1px 0 $color,
-			     2px 2px 0 $inverse_color;
-	padding-left: 0px;
-	padding-right: 2px;
-}
-
+		text-shadow: 1px 1px 0 $color,
+			     	 2px 2px 0 $inverse_color;
+		padding-left: 0px;
+		padding-right: 2px;
+	}
 
 }

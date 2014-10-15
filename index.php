@@ -10,8 +10,8 @@
  * @link http://codex.wordpress.org/Template_Hierarchy
  *
  * @package WordPress
- * @subpackage simple
- * @since simple 1.0
+ * @subpackage anchorage
+ * @since anchorage 1.0
  */
 
 get_header(); ?>
@@ -22,7 +22,7 @@ get_header(); ?>
 	
 		<div class='inner-wrapper'>
 	
-			<?php echo simple_archive_header(); ?>
+			<?php echo anchorage_archive_header(); ?>
 	
 		</div>
 	
@@ -36,7 +36,7 @@ get_header(); ?>
 		
 		<article class='hentry no-posts inner-wrapper entry-content'>
 			
-			<?php echo simple_no_posts(); ?>
+			<?php echo anchorage_no_posts(); ?>
 
 		</article>
 
@@ -72,7 +72,7 @@ get_header(); ?>
 			
 				<div class="inner-wrapper">
 			
-					<?php echo simple_paging_nav(); ?>
+					<?php echo anchorage_paging_nav(); ?>
 			
 				</div>
 			
@@ -85,7 +85,7 @@ get_header(); ?>
 			
 				<div class="inner-wrapper">				
 			
-					<?php echo simple_post_nav(); ?>
+					<?php echo anchorage_post_nav(); ?>
 			
 				</div>
 			

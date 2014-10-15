@@ -1,5 +1,11 @@
 /**
- * Refers to smacss.com
+ * Set theme-wide values for SCSS variables, manifest other SCSS files.
+ *
+ * Widths, margins, padding, alignment.
+ *
+ * @package WordPress
+ * @subpackage anchorage
+ * @since anchorage 1.0
  */
 
 /**
@@ -12,7 +18,7 @@ $small_device: 421px;
  * Colors
  */
 $color: #000;
-$mix_color: #666;
+$mix_color: #333;
 $inverse_color: invert( $color );
 
 $bg_color: mix( $inverse_color, $mix_color, 92% );
@@ -26,8 +32,8 @@ $transparent_color: transparentize( $color, .9 );
 $translucent_inverse_color: transparentize( $inverse_color, .3 );
 $transparent_inverse_color: transparentize( $inverse_color, .9 );
 
-$bottom_shadow_color: rgba( 255, 255, 255, .6 );
-$top_shadow_color: rgba( 0, 0, 0, .05 );
+$bottom_shadow_color: transparentize( $inverse_color, .4 );
+$top_shadow_color: transparentize( $color, .95 );
 
 /**
  * Border Radius
@@ -80,8 +86,16 @@ $transition: 0.4s ease-in-out;
 	100% { opacity: 1; }
 }
 
+/**
+	when I find something to fade in, give it this:
+	-webkit-animation: FADEIN 2.5s 1;
+ 	-moz-animation:    FADEIN 3.5s 1;
+	-o-animation:      FADEIN 2.5s 1;
+	animation:         FADEIN 2.5s 1;
+*/
+
 @import 'sass/_base.scss';
-@import 'sass/_layout.scss';
-@import 'sass/_modules.scss';
-@import 'sass/_theme.scss';
 @import 'sass/_state.scss';
+@import 'sass/_layout.scss';
+@import 'sass/_theme.scss';
+@import 'sass/_modules.scss';

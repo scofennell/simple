@@ -1,6 +1,14 @@
 /**
+ * SCSS for modules.
+ *
+ * @package WordPress
+ * @subpackage anchorage
+ * @since anchorage 1.0
+ */
+
+/**
  * =============================================================================
- * WP defualts
+ * WP core modules.
  * =============================================================================
  */
 
@@ -96,173 +104,115 @@ img.wp-smiley,
 	position: relative;
 }
 
-
-/**
- * Marquee
- */
-.blog-title-blog-header,
-.search-form-blog-header {
-	vertical-align: middle;
-	font-size: 45px;
-	line-height: 1.1em;
-
-	-webkit-animation: FADEIN 2.5s 1; /* Safari 4+ */
- 	-moz-animation:    FADEIN 3.5s 1; /* Fx 5+ */
-	-o-animation:      FADEIN 2.5s 1; /* Opera 12+ */
-	animation:         FADEIN 2.5s 1; /* IE 10+ */
-}
-
-@media ( max-width: $large_device ) {
-	.blog-title-blog-header,
-	.search-form-blog-header {
-		font-size: 30px;
-	}
-}
-
-.blog-title-blog-header {
-	padding-top: 6px;
-}
-
-.search-form-blog-header {
-	background: none;
-	position: relative;
-}
-
-.search-field-blog-header {
-	width: 100%;
-	padding: 0 5px 2px;
-	top: 0px;
-	line-height: 1.2em;
-	background: none !important;
-	position: relative;
-	border: none !important;
-	box-shadow: none !important;
-}
-
-.search-submit {
-	right: 0%;
-	bottom: -.65em;
-	padding: 0;
-	font-size: 15px;
-}
-
-.search-submit:focus,
-.search-submit:active {
-	font-size: 15px !important;	
-}
-
 /**
  * Primary Menu
  */
-.primary-menu {
-	clear: both;
-}
 
-.responsive-menu-toggle {
-	display: none;
-	margin: $medium_margin auto 0;
-	padding: $small_padding;
-	text-align: center;
-}
+.primary-menu-toggle {
+	position: fixed;
+	right: $medium_margin;
+	top: $large_margin;
+	z-index: 990;
+	font-size: 45px;
+	font-weight: 600;
 
-@media ( min-width: $small_device ) {
-	.responsive-menu .menu {
-		display: block !important;
-	}
-}
-
-.menu-item {
-	display: inline-block;
-	margin: $medium_margin $medium_margin 0;
-	padding: $small_padding;
-	vertical-align: top;
-	position: relative;
-}
-
-@media (max-width: 420px) {
-	.responsive-menu .menu {
-		display: none;
-	}
-
-	.responsive-menu-toggle {
-		display: block;	
-	}
-
-	.menu-item {
-		display: block;
-		margin: 10px 0;
-	}
+	-webkit-animation: FADEIN 2.5s 1;
+ 	-moz-animation:    FADEIN 3.5s 1;
+	-o-animation:      FADEIN 2.5s 1;
+	animation:         FADEIN 2.5s 1;
 
 }
 
-.sub-menu {
+.primary-menu-toggle.opened {
 	position: absolute;
-	padding: 5px;
-	left: -5px;
-	white-space: nowrap;
-	box-shadow: -1px 1px 0 $inverse_color, -2px 2px 0 $color;
 }
 
-.menu-item-has-children .menu-item-has-children .sub-menu {
-	left: 100%;
-	top: 0;
+.primary-menu-toggle:focus {
+	outline: none;
+}
+
+.admin-bar .primary-menu-toggle {
+	top: 1em;
 }
 
 
-.toggle {
-	font-size: 120%;
-	position: relative;
-	top: 1px;
-	left: 1px;
-	display: inline-block;
-	transition: all $transition
-}
-
-.toggle.open {
-	-webkit-transform:	rotate(-180deg);
-	-moz-transform:		rotate(-180deg);
-	-ms-transform:		rotate(-180deg);
-	-o-transform:		rotate(-180deg);
-	transform:     		rotate(-180deg);
-}
-
-.menu-item .sub-menu .menu-item {
-	display: block;
-	margin: 0 0 $small_margin;
-}
-
-.menu-item .sub-menu .menu-item:last-child {
-	margin-bottom: 0;
+@media ( max-width: $small_device ) {
+	.primary-menu-toggle {
+		z-index: 990;
+		font-size: 30px;
+		right: $small_margin;
+	}
 }
 
 @media ( max-width: $small_device ) {
-	.menu-item-has-children .menu-item-has-children .sub-menu,
-	.sub-menu {
-		position: relative;
-		left: 0;
-		box-shadow: none;
+	.admin-bar .primary-menu-toggle {
+		top: 2em;
 	}
-
-	.menu-item-has-children {
-		padding-left: 30px;
-	}
-
-	.sub-menu-toggle {
-		position: absolute;
-		left: 0;
-		top: 5px;
-	}
-
 }
 
-.menu-item:first-child {
-	margin-left: 0;
+#blog-header {
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	height: 100%;
+	z-index: 980;
+	padding: $large_padding 0 0;
 }
 
-.current-menu-ancestor > a,
-.current-menu-item > a {
-	font-weight: 600;
+#blog-header.open {
+	min-width: 280px;
+}
+
+#blog-header > * {
+	padding-left: $large_padding;
+	padding-right: $large_padding;
+	padding-bottom: $large_padding;
+}
+
+.admin-bar #blog-header {
+	padding-top: 3.75em
+}
+
+#blog-header .blog-title {
+	padding-right: 92px;
+	margin: 0;
+}
+
+@media ( max-width: $large_device ) {
+	#blog-header .blog-title {
+		font-size: 20px;
+		padding-right: 46px;
+	}
+}
+
+.menu-item a:active,
+.menu-item a:hover,
+.current-menu-item a {
 	text-decoration: underline;
+}
+
+.sub-menu {
+	margin-left: $large_margin;
+}
+
+/**
+ * Header Widgets
+ */
+
+.header-widgets {}
+
+.header-widget {
+	padding-bottom: $medium_padding;
+	margin-bottom: $medium_margin;
+}
+
+.header-widget-title {
+	margin-bottom: $medium_margin;
+}
+
+.header-widget > ul {
+	padding-left: $medium_padding;
 }
 
 /** 
@@ -280,7 +230,6 @@ img.wp-smiley,
 	font-size: 65px; 
 	line-height: 1em;
 	display: block;
-	padding-top: $large_padding;
 }
 
 @media ( max-width: $large_device ) {
@@ -323,17 +272,21 @@ img.wp-smiley,
  * Widgets
  */
 
-.widget_search .search-form {
+.widget_search .searchform {
 	background: none;
+	position: relative;
 }
 
-.widget_search .search-form * {
+.widget_search .s {
 	width: 100%;
 	display: block;
-	margin-bottom: $small_margin;
 }
 
-
+.searchform .screen-reader-text {
+	width: auto;
+	right: 0;
+	top: 0;
+}
 
 /** 
  * =============================================================================
@@ -354,7 +307,9 @@ img.wp-smiley,
 	font-style: italic;
 }
 
-.archive-header .search-form {background: none;}
+.archive-header .search-form {
+	background: none;
+}
 
 /**
  * Articles
@@ -381,6 +336,10 @@ img.wp-smiley,
  */
 .entry-title {
 	text-align: center;
+}
+
+.sticky .entry-title {
+	font-style: italic;
 }
 
 .post-format-label {
@@ -444,8 +403,21 @@ img.wp-smiley,
 }
 
 /* Forms */
+
+.editable-content form {
+	> h1:first-child,
+	> h2:first-child,
+	> h3:first-child,
+	> h4:first-child,
+	> h5:first-child,
+	> h6:first-child {
+		padding-top: 0;
+	}
+}
+
 #respond,
 .no-posts-wrapper,
+.inner-wrapper .no-posts-wrapper,
 .editable-content form {
 	padding: $large_padding;
 	clear: both;
@@ -562,6 +534,10 @@ button {
 /* Links */
 .editable-content a {
 	text-decoration: underline;
+}
+
+.editable-content a:hover {
+	text-decoration: none;
 }
 
 /* Lists */
@@ -800,7 +776,8 @@ button {
 	font-style: italic;
 }
 
-/** Tricky way to deal with the fact that even blank avatars get an explicit 
+/**
+ * Tricky way to deal with the fact that even blank avatars get an explicit 
  * height and width in the markup, taking up space even when they shouldn't
  */
 .comments-loop .avatar {
@@ -814,7 +791,7 @@ button {
 	z-index: 1;
 }
 
-.comment:hover .avatar {
+.comment-author:hover .avatar {
 	opacity: 1;
 	left: -60px;
 }
@@ -855,15 +832,55 @@ button {
 	text-indent: $medium_margin;
 }
 
-#respond form {
+.comment-form {
 	padding: 0;
 	margin-bottom: 0;
 	background: none;
 }
 
+.comment-form input,
+.comment-form label {
+	display: block;
+}
+
+.comment-form-author,
+.comment-form-email,
+.comment-form-url {
+	display: inline-block;
+	width: 30.9%;
+	margin-right: 3%;
+}
+
+.comment-form-url {
+	margin-right: 0;
+}
+
+.comment-form-author > *,
+.comment-form-email > *,
+.comment-form-url > * {
+	display: block;
+	width: 100%;
+	min-width: 0;
+}
+
+@media ( max-width: $large_device ) {
+	.comment-form-author,
+	.comment-form-email,
+	.comment-form-url {
+		display: block;
+		margin-right: 0;
+		width: 100%;
+	}
+}
+
 .form-submit {
 	margin-bottom:0;
 }
+
+.form-submit [ type="submit" ] {
+	width: 100%;
+}
+
 
 .logged-in-as {
 	font-style: italic;
@@ -893,5 +910,7 @@ button {
  */
 .arrow {
 	text-decoration: none !important;
+	background: transparent !important;
 	font-family: "Lucida sans unicode";
+	display: inline-block;
 }

@@ -1,6 +1,13 @@
+/**
+ * Styles for the post editor
+ *
+ * @package WordPress
+ * @subpackage anchorage
+ * @since anchorage 1.0
+ */
+
 body {
 	font-family: georgia, times, serif;
-	background: #f2f2f2;
 }
 
 h1,

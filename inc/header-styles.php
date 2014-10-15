@@ -1,10 +1,10 @@
 <?php
 
 /**
- * simple header styles.
+ * anchorage header styles.
  *
  * Some styles need to grab dynamic values from php.
  *
  * @package WordPress
- * @subpackage simple
+ * @subpackage anchorage
  */

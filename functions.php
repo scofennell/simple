@@ -1,14 +1,14 @@
 <?php
 
 /**
- * simple manifest.
+ * anchorage manifest.
  *
  * require_once()'s other files for theme functionality.  This file is just a 
  * manifest:  It contains no function definitions, only calls to other files.
  *
  * @package WordPress
- * @subpackage simple
- * @since simple 1.0
+ * @subpackage anchorage
+ * @since anchorage 1.0
  */
 
 /**
@@ -52,11 +52,3 @@ require_once( get_template_directory()."/inc/comment-template-tags.php" );
  * @todo  over riding sass generated styles from php seems to be too cumbersome
  */
 require_once( get_template_directory()."/inc/customization.php" );
-
-/**
- * Functions best reserved for a child theme -- not everyone wants to use my
- * Google Analytics code, for example.
- * 
- * @todo Move the contents of this file to a chile theme.
- */
-require_once( get_template_directory()."/inc/move-to-child-theme-eventually.php" );

@@ -6,9 +6,9 @@
 	
 			<?php if( ! has_post_format( 'aside' ) && ! has_post_format( 'status' ) ) { ?>
 				
-				<?php echo simple_entry_tags(); ?>
+				<?php echo anchorage_entry_tags(); ?>
 				
-				<?php echo simple_entry_byline(); ?>
+				<?php echo anchorage_entry_byline(); ?>
 			
 			<?php } ?>
 
@@ -18,7 +18,7 @@
 
 			<?php if( ! has_post_format( 'aside' ) && ! has_post_format( 'status' ) ) { ?>
 
-				<?php echo simple_author_bio(); ?>
+				<?php echo anchorage_author_bio(); ?>
 
 			<?php } ?>
 

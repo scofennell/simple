@@ -1,12 +1,12 @@
 <?php
 
 /**
- * simple Theme Modification API
+ * anchorage Theme Modification API
  *
  * Sets up some helper functions for WP's theme-mod api, which then would be used by child themes 
  *
  * @package WordPress
- * @subpackage simple
+ * @subpackage anchorage
  */
 
 /**
@@ -32,142 +32,45 @@
  * @var array
  */
 
-$simple_base_customization_options = array(
+$anchorage_base_customization_options = array(
 
 	'Layout' => array(
-		'label' => 'Layout',
-		'slug' => 'layout',
-		'fields' => array(
+		'label' 	=> 'Layout',
+		'slug' 		=> 'layout',
+		'fields' 	=> array(
 			array(
-				'label' => 'min-width',
-				'slug' => 'min-width',
-				'type' => 'text',
-				'default' => "",
-				'is_style'=> 1,
-				'selector'=> '.outer-wrapper',
-				'property' => 'min-width'
+				'label' 	=> 'min-width',
+				'slug' 		=> 'min-width',
+				'type' 		=> 'text',
+				'default' 	=> "",
+				'is_style'	=> 1,
+				'selector'	=> '.outer-wrapper, body',
+				'property' 	=> 'min-width',
 			),
 			array(
-				'label' => 'max-width',
-				'slug' => 'max-width',
-				'type' => 'text',
-				'default' => "",
-				'is_style'=> 1,
-				'selector'=> '.inner-wrapper',
-				'property' => 'max-width'
+				'label' 	=> 'max-width',
+				'slug' 		=> 'max-width',
+				'type' 		=> 'text',
+				'default' 	=> "",
+				'is_style'	=> 1,
+				'selector'	=> '.inner-wrapper',
+				'property' 	=> 'max-width',
 			),	
 		)
 	),
 
 );
 
-	/*
-	'Universals' => array(
-		'label' => 'Universals',
-		'slug' => 'universals',
-		'fields' => array(
-			array('label' => 'Link Color',							'slug' => 'link_color', 					'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> 'a', 			'property' => 'color'),
-			array('label' => 'Link Hover Color',					'slug' => 'link_hover_color',				'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> 'a:hover',		'property' => 'color'),
-			array('label' => 'Text Color', 							'slug' => 'text_color', 					'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> 'body', 		'property' => 'color'),
-			array('label' => 'Content Header Color', 				'slug' => 'content_header_color', 					'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.main h1, .main h2, .main h3, .main h4, .main h5, .main h6, .main dt', 		'property' => 'color'),
-			array('label' => 'Firm Logo', 			'slug' => 'firm_logo', 			'type' => 'image',		'default' => "",	'is_style'=> 0 ),
-			
-			
-			array('label' => 'Body Font Family', 	'slug' => 'body_font_family', 		'type' => 'select',		'default' => "",	'is_style'=> 1,		'selector'=> 'body, [class^="icon-"] a, [class*=" icon-"] a', 	'property' => 'font-family',
-				'choices' => array(
-					'"futura-pt", Arial, Helvetica, sans-serif' => 'Futura PT (Typekit), Arial, Helvetica, sans-serif',
-					'Georgia, "Times New Roman", Times, serif' => 'Georgia, "Times New Roman", Times, serif',
-					'"Trebuchet MS", Helvetica, sans-serif' => 'Trebuchet MS, Helvetica, sans-serif'
-				)
-			),
-			
-			array('label' => 'Header Font Family', 	'slug' => 'header_font_family', 		'type' => 'select',		'default' => "",	'is_style'=> 1,		'selector'=> 'h1, h2, h3', 	'property' => 'font-family',
-				'choices' => array(
-					'"futura-pt", Arial, Helvetica, sans-serif' => 'Futura PT (Typekit), Arial, Helvetica, sans-serif',
-					'Georgia, "Times New Roman", Times, serif' => 'Georgia, "Times New Roman", Times, serif',
-					'"Trebuchet MS", Helvetica, sans-serif' => 'Trebuchet MS, Helvetica, sans-serif'
-				)
-			),
-			
-			array('label' => 'Body Background',		'slug' => 'body_background', 			'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> 'body', 		'property' => 'background-color'),
-			array('label' => 'Body Tile', 			'slug' => 'body_tile', 			'type' => 'image',		'default' => "",	'is_style'=> 1, 'selector'=> 'body', 'property' => 'background-image', 'is_bg' => '1'),
-				
-				
-		)
-	),
-	
-	'Header'=> array(
-		'label' => 'Header',
-		'slug' => 'header',
-		'fields' => array(
-			
-			array('label' => 'Header BG Image', 			'slug' => 'header_bg_image', 			'type' => 'image',		'default' => "",	'is_style'=> 1, 'selector'=> '.blog-header', 'property' => 'background-image', 'is_bg' => '1'),
-			
-			array('label' => 'Blog Name Color',				'slug' => 'blog_name_color', 			'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> 'h1.blog-title, h1.blog-title a, .blog-header .blog-title a:hover span.word_2, .blog-header .blog-title a:hover span.word_4, .blog-header .blog-title a:hover span.word_6', 									'property' => 'color'),
-			array('label' => 'Alt Blog Name Color',				'slug' => 'alt_blog_name_color', 			'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> 'h1.blog-title:hover, h1.blog-title a:hover, .blog-header .blog-title a span.word_2, .blog-header .blog-title a span.word_4, .blog-header .blog-title a span.word_6', 									'property' => 'color'),
-		
-			array('label' => 'Blog Description Color',				'slug' => 'blog_description_color', 			'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> 'h2.blog-description', 							'property' => 'color'),
-		
-			array('label' => 'Menu Toggle Background Color',				'slug' => 'menu_toggle_background_color', 			'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.menu-toggle', 							'property' => 'background-color'),
-			array('label' => 'Menu Toggle Color',				'slug' => 'menu_toggle_color', 			'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.menu-toggle', 							'property' => 'color'),
-		
-		
-		)
-	),
-	
-	'Sidebar' => array(
-		'label' => 'Sidebar',
-		'slug' => 'sidebar',
-		'fields' => array(
-		
-			array('label' => 'Sidebar Background',					'slug' => 'sidebar_background', 			'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.main-wrapper .sidebar', 		'property' => 'background-color'),
-			array('label' => 'Links Widget Border Color',					'slug' => 'link_widget_border_color', 			'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.links li', 		'property' => 'border-color'),
-				
-			array('label' => 'Links Widget Border Style', 	'slug' => 'links_widget_border_style', 		'type' => 'select',		'default' => "",	'is_style'=> 1,		'selector'=> '.links li', 	'property' => 'border-style',
-				'choices' => array(
-					'Dashed' => 'dashed',
-					'Dotted' => 'dotted',
-					'Solid' => 'solid'
-				)
-			),			
-		)
-	),
-	
-	'Post Content' => array(
-		'label' => 'Post Content',
-		'slug' => 'post-content',
-		'fields' => array(
-			array('label' => 'Author Gravatars',					'slug' => 'author_gravatars', 			'type' => 'checkbox',		'default' => "",	'is_style'=> 0),
-		)
-	),
-	
-	'Footer' => array(
-		'label' => 'Footer',
-		'slug' => 'footer',
-		'fields' => array(
-		
-			array('label' => 'Footer Background Color',					'slug' => 'footer_background', 			'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.blog-footer', 		'property' => 'background-color'),
-			array('label' => 'Footer Text Color',						'slug' => 'footer_text_color', 						'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.blog-footer', 		'property' => 'color'),
-			array('label' => 'Footer Link Color',						'slug' => 'footer_link_color', 						'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.blog-footer a', 		'property' => 'color'),
-			
-			array('label' => 'Footer Top Right BG Color',						'slug' => 'footer_top_right_bg_color', 						'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.footer-right-top', 		'property' => 'background-color'),
-			array('label' => 'Footer Top Right Text Color',						'slug' => 'footer_top_right_text_color', 						'type' => 'color',		'default' => "",	'is_style'=> 1,		'selector'=> '.footer-right-top, .footer-right-top a', 		'property' => 'color'),
-		
-		)
-	)
-	*/
-
-
 /**
  * add various types of inputs to the customization panel, add all registered sections and nodes to the panel, flush the transient cache for theme mods
  */
-function simple_base_themedemo_customize($wp_customize) {
+function anchorage_base_themedemo_customize($wp_customize) {
 		
 	// the parent theme creates this empty array, child themes add nodes to it
-	global $simple_base_customization_options;
+	global $anchorage_base_customization_options;
 	
 	// for each registered section, create a UI for it 
-	foreach ($simple_base_customization_options as $l){
+	foreach ($anchorage_base_customization_options as $l){
 		
 		$wp_customize->add_section( $l['slug'], array(
         	'title'          => $l['label'],
@@ -208,20 +111,22 @@ function simple_base_themedemo_customize($wp_customize) {
     	}
 	}
 }
-add_action('customize_register', 'simple_base_themedemo_customize');
+add_action('customize_register', 'anchorage_base_themedemo_customize');
 
 /**
  * Grab the custom styles from the transient cache
  * 
  * @return string The theme mod styles for this blog, between <style> tags
  */
-function simple_base_get_custom_styles(){
+function anchorage_base_get_custom_styles(){
 	
+	$out='';
+
  	// all of the custom options registered by the child theme
- 	global $simple_base_customization_options;
+ 	global $anchorage_base_customization_options;
 
  	// for each setting section
-	foreach ( $simple_base_customization_options as $l ) {
+	foreach ( $anchorage_base_customization_options as $l ) {
  		
 		// for each setting within this section 
  		foreach($l['fields'] as $f){
@@ -237,7 +142,7 @@ function simple_base_get_custom_styles(){
   	// if there are styles, wrap them
 	if( !empty( $out ) ) {
 		$out = '
-			<style>'.$out.'</script>
+			<style>'.$out.'</style>
 		';
 	}
 	
@@ -247,7 +152,7 @@ function simple_base_get_custom_styles(){
 /**
  * Echoes the theme mod styles in wp_head
  */
-function simple_base_the_custom_styles(){
-	echo simple_base_get_custom_styles();
+function anchorage_base_the_custom_styles(){
+	echo anchorage_base_get_custom_styles();
 }
-add_action('wp_head', 'simple_base_the_custom_styles');
+add_action('wp_head', 'anchorage_base_the_custom_styles');

@@ -1,23 +1,56 @@
-
-/*
- * 2. Layout
+/**
+ * Sass for layout rules.
+ *
+ * Widths, margins, padding, alignment.
+ *
+ * @package WordPress
+ * @subpackage anchorage
+ * @since anchorage 1.0
  */
+
+/* Grid */
+.zero-width {
+	width: 0;
+	overflow: hidden;
+}
+
+.one-of-five {
+	width: 20%;
+}
+
+.two-of-five {
+	width: 40%;
+}
+
+.three-of-five {
+	width: 60%;
+}
+
+.four-of-five {
+	width: 80%;
+}
+
+.full-width {
+	width: 100%;
+}
 
 /* Needs to be about 23px wider than outer wrappers to prevent odd lateral whitespace around full width elements that have a bg color */
 body {
-	min-width: 385px;
+	/*min-width: $small_device;*/
 }
 
 /* Desktop Chrome enforces a 400px min-width anyways. */
 .outer-wrapper {
 	width: 100%;
-	min-width: 365px;
+	/*min-width: $small_device;*/
+	clear: both;
 }
 
 .inner-wrapper {
-	max-width: 723px;
+	max-width: $large_device;
 	margin: 0 auto;
 	display: block;
+	clear: both;
 }
 
 .inner-wrapper {
@@ -32,6 +65,7 @@ body {
 	margin-bottom: $large_margin	
 }
 
+.textwidget > :last-child,
 form > :last-child,
 form > :last-child :last-child,
 fieldset > :last-child,
@@ -40,6 +74,7 @@ blockquote > :last-child,
 .content-holder > :last-child,
 .inner-wrapper > :last-child {
 	margin-bottom: 0px;
+	padding-bottom: 0px;
 }
 
 /**
@@ -67,10 +102,11 @@ blockquote > :last-child,
 
 .has-halfs >:nth-child(2),
 .has-halfs >:nth-child(2) > * {
-		text-align: right;
+	text-align: right;
 }
 
 .archive-header,
+.archive-header.content-holder,
 .inverse-band,
 .outer-wrapper {
 	padding: $large_padding 0;
@@ -83,4 +119,12 @@ blockquote > :last-child,
 #loop {
 	margin-top: $large_margin;
 	margin-bottom: $x_large_margin;
+}
+
+
+
+@media ( max-width: $small_device ) {
+	#loop {
+		margin-top: $medium_margin;
+	}
 }

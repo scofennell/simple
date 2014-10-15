@@ -1,8 +1,16 @@
 <?php
 
-function simple_menu( $which_menu ) {
+/**
+ * anchorage template tags.
+ *
+ * @package WordPress
+ * @subpackage anchorage
+ * @since  anchorage 1.0
+ */
 
-	if ( !has_nav_menu( $which_menu ) ) { return false; }
+function anchorage_menu( $which_menu, $menu_class = '' ) {
+
+	if ( ! has_nav_menu( $which_menu ) ) { return false; }
 
 	$args = array(
 		'theme_location'  => $which_menu,
@@ -17,29 +25,55 @@ function simple_menu( $which_menu ) {
 
 	$menu_class = sanitize_html_class( $which_menu );
 
-	$label = esc_html__( 'Menu', 'simple' );
+	$label = esc_html__( 'Menu', 'anchorage' );
 
-	$arrow = simple_arrow( 'down', array( 'toggle', 'closed' ), 'span' );
-
-	$out = "
-		<nav class='clear responsive-menu $menu_class'>
-			<a href='#' class='responsive-menu-toggle'>
-				$label
-				$arrow
-			</a>
-			$menu
-		</nav>
+	$out = "<nav id='$menu_class' class='$menu_class'>
+				$menu
+			</nav>
 	";
 
 	return $out;
+
 }
 
-function simple_arrow( $direction = 'down', $classes = array(), $wrap = 'a' ) {
+function anchorage_header_menu( $which_menu, $menu_class = '' ) {
 
-	$left = esc_html( '&larr;', 'simple' );
-	$up = esc_html( '&uarr;', 'simple' );
-	$right = esc_html( '&rarr;', 'simple' );
-	$down = esc_html( '&darr;', 'simple' );
+	$menu = anchorage_menu( $which_menu, $menu_class = '' );
+
+	$home_href = esc_url( home_url() );
+
+	$blog_title = wp_kses_post( get_bloginfo( 'name' ) );
+
+	$home_link = "<h1 class='blog-title inverse-color shadowed'><a href='$home_href'>$blog_title</a></h1>";
+
+	echo "
+		<header id='blog-header' class='marquee zero-width closed inverse-color'>
+			$home_link
+			$menu
+	";
+
+	if ( is_active_sidebar( 'header-widgets' ) ) {
+		echo '
+			<aside id="header-widgets" class="widgets content-holder header-widgets inverse-color" role="complementary">
+		';
+			dynamic_sidebar( 'header-widgets' );
+		echo '
+			</aside>
+		';
+	}
+
+	echo '
+		</header>
+	';
+
+}
+
+function anchorage_arrow( $direction = 'down', $classes = array(), $href = '#' ) {
+
+	$left = esc_html( '&larr;', 'anchorage' );
+	$up = esc_html( '&uarr;', 'anchorage' );
+	$right = esc_html( '&rarr;', 'anchorage' );
+	$down = esc_html( '&darr;', 'anchorage' );
 
 	if ( $direction == 'left' ) {
 		$out = $left;
@@ -57,12 +91,10 @@ function simple_arrow( $direction = 'down', $classes = array(), $wrap = 'a' ) {
 
 	$out = "&nbsp;$out&nbsp;";
 
-	if( $wrap == 'a' ) {
-		$out = "<a href='#' $classes>$out</a>";
-	} else {
-		$out = "<span $classes>$out</span>";
-	}
+	$href = esc_attr( $href );
 
+	$out = "<a href='$href' $classes>$out</a>";
+	
 	return $out;
 }
 
@@ -77,9 +109,9 @@ function simple_arrow( $direction = 'down', $classes = array(), $wrap = 'a' ) {
  * @param  array $search_input_class CSS Classes for the search input.
  * @return string A search form.
  *
- * @since  simple 1.0
+ * @since  anchorage 1.0
  */
-function simple_search_form( $form_classes = array(), $search_input_classes = array() ) {
+function anchorage_search_form( $form_classes = array(), $search_input_classes = array() ) {
 	
 	// An array of CSS classes for the search form.
 	$form_classes = array_map( 'sanitize_html_class', $form_classes );
@@ -89,16 +121,16 @@ function simple_search_form( $form_classes = array(), $search_input_classes = ar
 	$search_input_classes = array_map( 'sanitize_html_class', $search_input_classes );
 	$search_input_string = implode( ' ', $search_input_classes );
 	
-	$placeholder = esc_attr__( 'Search', 'simple' );
+	$placeholder = esc_attr__( 'Search', 'anchorage' );
 	if( isset( $_GET['s'] ) ) {
 		$placeholder = esc_attr( $_GET['s'] );
 	}
 
 	$out ="
 		<form action='".esc_url( home_url( '/' ) )."' class='$form_classes_string search-form' method='get' role='search'>
-			<label for='s'><span class='screen-reader-text'>".esc_html__( 'Search for:', 'simple' )."</span></label>
+			<label for='s'><span class='screen-reader-text'>".esc_html__( 'Search for:', 'anchorage' )."</span></label>
 			<input id='s' type='search' title='Search for:' name='s' value='$placeholder' class='search-field $search_input_string'>
-			<input type='submit' value='".esc_html__( 'Submit', 'simple' )."' class='screen-reader-text search-submit'>
+			<input type='submit' value='".esc_html__( 'Submit', 'anchorage' )."' class='screen-reader-text search-submit'>
 		</form>
 	";
 
@@ -111,7 +143,7 @@ function simple_search_form( $form_classes = array(), $search_input_classes = ar
  *
  * @return string [description]
  */
-function simple_get_post_format(){
+function anchorage_get_post_format(){
 	global $post;
 	$post_id = absint( $post->ID );
 	$format = get_post_format( $post_id );
@@ -136,7 +168,7 @@ function simple_get_post_format(){
  *
  * @return string An HTML img tag for the first image in a post content.
  */
-function simple_get_first_image() {
+function anchorage_get_first_image() {
 	
 	// Expose information about the current post.
 	global $post;
@@ -192,10 +224,10 @@ function simple_get_first_image() {
 
 	// if the file is on the server, grab the exif
 	$exif = '';
-	$path = simple_file_is_on_server( $src );
+	$path = anchorage_file_is_on_server( $src );
 	if( ! empty( $path ) ) { 
-		$path = simple_file_is_on_server( $src );
-		$exif = simple_get_media_meta( $path, 'image' );
+		$path = anchorage_file_is_on_server( $src );
+		$exif = anchorage_get_media_meta( $path, 'image' );
 
 	}
 
@@ -219,7 +251,7 @@ function simple_get_first_image() {
 }
 
 
-function simple_uploads_path(){
+function anchorage_uploads_path(){
 	$dir = wp_upload_dir();
 	$path = $dir['basedir'];
 
@@ -227,7 +259,7 @@ function simple_uploads_path(){
 
 }
 
-function simple_uploads_url(){
+function anchorage_uploads_url(){
 	$dir = wp_upload_dir();
 	$url = $dir['baseurl'];
 
@@ -238,7 +270,7 @@ function simple_uploads_url(){
 
 
 
-function simple_get_first_media( $type ){
+function anchorage_get_first_media( $type ){
 	
 	global $post;
 
@@ -251,13 +283,13 @@ function simple_get_first_media( $type ){
 		$w = get_url_in_content( $content );
 	}
 
-	$path = simple_file_is_on_server( $w );	
+	$path = anchorage_file_is_on_server( $w );	
 
 	if( ! $path ) { return false; }
 
 	if( ( $type == 'audio' ) || ( $type == 'video' ) ) {
 		
-		return simple_get_media_meta( $path, $type );
+		return anchorage_get_media_meta( $path, $type );
 
 	} else {
 
@@ -267,7 +299,7 @@ function simple_get_first_media( $type ){
 
 }
 
-function simple_get_media_meta( $path, $type ) {
+function anchorage_get_media_meta( $path, $type ) {
 
 	$out='';
 
@@ -356,27 +388,27 @@ function simple_get_media_meta( $path, $type ) {
 
 
 	$out="
-		<aside class='media-meta simple-toggle'>
-			<a class='button-minor button inverse-color closed simple-toggle-link' href='#'>$type ".esc_html__( 'data', 'simple' )." <span class='arrow'>&darr;</span></a>
-			<div class='media-meta-list simple-toggle-reveal'>$out</div>
+		<aside class='media-meta anchorage-toggle'>
+			<a class='button-minor button inverse-color closed anchorage-toggle-link' href='#'>$type ".esc_html__( 'data', 'anchorage' )." <span class='arrow'>&darr;</span></a>
+			<div class='media-meta-list anchorage-toggle-reveal'>$out</div>
 	";
 
 	return $out;
 }
 
-function simple_toggle_script(){
+function anchorage_toggle_script(){
 	?>
 		<script>
 			jQuery( document ).ready(function($) {
-				$( '.simple-toggle-reveal' ).hide();
-				$( '.simple-toggle-link' ).click( function( event ) {
+				$( '.anchorage-toggle-reveal' ).hide();
+				$( '.anchorage-toggle-link' ).click( function( event ) {
 					event.preventDefault();
-					$( this ).next( '.simple-toggle-reveal' ).slideToggle();
+					$( this ).next( '.anchorage-toggle-reveal' ).slideToggle();
 					$( this ).toggleClass( 'closed open' );
 				});
 
 
-				$( '.simple-toggle-link' ).toggle( function() {
+				$( '.anchorage-toggle-link' ).toggle( function() {
        				$( this ).find( '.arrow' ).html( '&uarr;' );
     			}, function() {
      				$( this ).find( '.arrow' ).html('&darr;');
@@ -386,13 +418,13 @@ function simple_toggle_script(){
 		</script>
 	<?php
 }
-add_action( 'wp_footer', 'simple_toggle_script' );
+add_action( 'wp_footer', 'anchorage_toggle_script' );
 
-function simple_file_is_on_server( $src ){
+function anchorage_file_is_on_server( $src ){
 
-	$uploads_url = simple_uploads_url();
+	$uploads_url = anchorage_uploads_url();
 	
-	$uploads_path = simple_uploads_path();
+	$uploads_path = anchorage_uploads_path();
 	
 
 	if( esc_url( $src ) != $src ) { return false; }
@@ -413,7 +445,7 @@ function simple_file_is_on_server( $src ){
 
 
 
-function simple_the_html_classes() {
+function anchorage_the_html_classes() {
 	?>
 	<!--[if IE 7]>
 		<html class="ie ie7" <?php language_attributes(); ?>>
@@ -435,10 +467,10 @@ function simple_the_html_classes() {
 /**
  * Display links to paginated sub pages.
  */
-if ( ! function_exists( 'simple_link_pages' ) ) {
-	function simple_link_pages() {
+if ( ! function_exists( 'anchorage_link_pages' ) ) {
+	function anchorage_link_pages() {
 		$args = array(
-			'before'           => '<nav class="paging-navigation numeric-pagination inverse-font inverse-color button link-pages">' . esc_html__( 'Pages:', 'simple' ),
+			'before'           => '<nav class="paging-navigation numeric-pagination inverse-font inverse-color button link-pages">' . esc_html__( 'Pages:', 'anchorage' ),
 			'after'            => '</nav>',
 			'next_or_number'   => 'number',
 			'echo'             => 0
@@ -451,7 +483,7 @@ if ( ! function_exists( 'simple_link_pages' ) ) {
 /**
  * Display navigation to next/previous post when applicable.
  */
-function simple_post_nav() {
+function anchorage_post_nav() {
 	global $post;
 
 	$out = '';
@@ -468,7 +500,7 @@ function simple_post_nav() {
 
 	$out = "
 		<nav class='inverse-font paging-navigation post-navigation clear' role='navigation'>
-			<h1 class='screen-reader-text'>".esc_html__( 'Post navigation', 'simple' )."</h1>
+			<h1 class='screen-reader-text'>".esc_html__( 'Post navigation', 'anchorage' )."</h1>
 			$out
 		</nav>
 	";
@@ -478,8 +510,8 @@ function simple_post_nav() {
 /**
  * Display navigation to next/previous set of posts when applicable.
  */
-if ( ! function_exists( 'simple_paging_nav' ) ) {
-	function simple_paging_nav() {
+if ( ! function_exists( 'anchorage_paging_nav' ) ) {
+	function anchorage_paging_nav() {
 		global $wp_query;
 
 		// Don't print empty markup if there's only one page.
@@ -488,11 +520,11 @@ if ( ! function_exists( 'simple_paging_nav' ) ) {
 		$out = "";
 
 		if( get_next_posts_link() ) {
-			$out .= "<span class='inverse-color button button-minor next next-posts'>".get_next_posts_link( "<span class='arrow next-arrow'>&larr;</span> ".esc_html__( 'Older Posts', 'simple' ) )."</span>";
+			$out .= "<span class='inverse-color button button-minor next next-posts'>".get_next_posts_link( "<span class='arrow next-arrow'>&larr;</span> ".esc_html__( 'Older Posts', 'anchorage' ) )."</span>";
 		}
 
 		if( get_previous_posts_link() ) {
-			$out .= "<span class='inverse-color button button-minor prev previous-posts'>".get_previous_posts_link( esc_html__( 'Newer Posts', 'simple' )." <span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
+			$out .= "<span class='inverse-color button button-minor prev previous-posts'>".get_previous_posts_link( esc_html__( 'Newer Posts', 'anchorage' )." <span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
 		}
 
 
@@ -500,7 +532,7 @@ if ( ! function_exists( 'simple_paging_nav' ) ) {
 
 		$out = "
 			<nav class='inverse-font paging-navigation posts-navigation clear' role='navigation'>
-				<h1 class='screen-reader-text'>".esc_html__( 'Posts navigation', 'simple' )."</h1>
+				<h1 class='screen-reader-text'>".esc_html__( 'Posts navigation', 'anchorage' )."</h1>
 				$out
 			</nav>
 		";
@@ -510,24 +542,24 @@ if ( ! function_exists( 'simple_paging_nav' ) ) {
 	}
 }
 
-function simple_archive_header(){
+function anchorage_archive_header(){
 	global $wp_query;
 	
 	$results ='';
 	if ( isset ( $wp_query -> found_posts ) ) {
 		$count = $wp_query -> found_posts;
-		$results = sprintf( _n( '1 post', "%s posts", $count, 'simple' ), $count );
+		$results = sprintf( _n( '1 post', "%s posts", $count, 'anchorage' ), $count );
 	}
 
 	$search = '';
 	if ( is_search() ){
 		
 		if( have_posts() ) {
-			$message = sprintf( esc_html__( 'There are %s search results for %s', 'simple' ), $count, "<mark>".get_search_query()."</mark>" );
+			$message = sprintf( esc_html__( 'There are %s search results for %s', 'anchorage' ), $count, "<mark>".get_search_query()."</mark>" );
 			$class = 'search';
-			$search = simple_search_form( array(), array() );
+			$search = anchorage_search_form( array(), array() );
 		} else {
-			$message = sprintf( esc_html__( 'No results found for %s', 'simple' ), "<mark>".get_search_query()."</mark>" );
+			$message = sprintf( esc_html__( 'No results found for %s', 'anchorage' ), "<mark>".get_search_query()."</mark>" );
 			$class = 'search';	
 		}
 
@@ -550,10 +582,10 @@ function simple_archive_header(){
 		$message = "$results: ".get_the_author();
 		$class = 'author';
 	} elseif( is_404() ) {
-		$message = esc_html__( 'Your page could not be found.', 'simple' );
+		$message = esc_html__( 'Your page could not be found.', 'anchorage' );
 		$class = '404';
 	} else {
-		$message = esc_html__( 'Archives:', 'simple' )." $results";
+		$message = esc_html__( 'Archives:', 'anchorage' )." $results";
 		$class = 'default';
 	}
 
@@ -582,20 +614,20 @@ function simple_archive_header(){
 
 }
 
-function simple_no_posts() {
+function anchorage_no_posts() {
 
-	$out ="<h3 class='no-posts-header'>".esc_html__( 'Find your way by searching:', 'simple' )."</h3>";
-	$out .= simple_search_form( array( 'no-posts-searchform' ), array ( 'no-posts-search-input') );
-	$out .="<h3 class='no-posts-header'>".esc_html__( 'Or browse by archive:', 'simple' )."</h3>";
+	$out ="<h3 class='no-posts-header'>".esc_html__( 'Find your way by searching:', 'anchorage' )."</h3>";
+	$out .= anchorage_search_form( array( 'no-posts-searchform' ), array ( 'no-posts-search-input') );
+	$out .="<h3 class='no-posts-header'>".esc_html__( 'Or browse by archive:', 'anchorage' )."</h3>";
 	
-	$jump = get_transient( 'simple_jump_menus' );
+	$jump = get_transient( 'anchorage_jump_menus' );
 	
 	if ( empty( $jump ) ) {
 		
-		$jump = simple_jump_nav( 'category' );
-		$jump .= simple_jump_nav( 'tag' );
-		$jump .= simple_jump_nav( 'author' );
-		$jump .= simple_jump_nav( 'month' );
+		$jump = anchorage_jump_nav( 'category' );
+		$jump .= anchorage_jump_nav( 'tag' );
+		$jump .= anchorage_jump_nav( 'author' );
+		$jump .= anchorage_jump_nav( 'month' );
 
 		if( ! empty( $jump ) ) { 
 
@@ -606,7 +638,7 @@ function simple_no_posts() {
 			";
 		}
 
-		set_transient( 'simple_jump_menus', $jump, DAY_IN_SECONDS );
+		set_transient( 'anchorage_jump_menus', $jump, DAY_IN_SECONDS );
 
 	}
 
@@ -619,13 +651,13 @@ function simple_no_posts() {
 	return $out;
 }
 
-function simple_jump_nav( $archive_type ) {
+function anchorage_jump_nav( $archive_type ) {
 
 	$options = '';
 
 
 	if( $archive_type == 'category' ) {
-		$label = esc_attr__( 'Choose a category to jump to that page.', 'simple' );
+		$label = esc_attr__( 'Choose a category to jump to that page.', 'anchorage' );
 		
 		$categories = get_categories();
 		if( ! empty( $categories ) ) {
@@ -640,7 +672,7 @@ function simple_jump_nav( $archive_type ) {
 	  	}
 	
 	} elseif ( $archive_type == 'tag' ) {
-		$label = esc_html__( 'Choose a tag to jump to that page.', 'simple' );
+		$label = esc_html__( 'Choose a tag to jump to that page.', 'anchorage' );
 
 		$tags = get_tags();
 		if( ! empty( $tags ) ) {
@@ -655,7 +687,7 @@ function simple_jump_nav( $archive_type ) {
 		}
 
 	} elseif ( $archive_type == 'author' ) {
-		$label = esc_html__( 'Choose an author to jump to that page.', 'simple' );
+		$label = esc_html__( 'Choose an author to jump to that page.', 'anchorage' );
 
 		$args = array( 'who' => 'authors' );
 		$authors = get_users( $args ); 
@@ -673,7 +705,7 @@ function simple_jump_nav( $archive_type ) {
 		}
 	
 	} elseif ( $archive_type == 'month' ) {
-		$label = esc_html__( 'Choose a month to jump to that page.', 'simple' );
+		$label = esc_html__( 'Choose a month to jump to that page.', 'anchorage' );
 		$args = array(
 			'type' => 'monthly',
 			'format' => 'option',
@@ -699,7 +731,7 @@ function simple_jump_nav( $archive_type ) {
 }
 
 // get page ancestors 
-function simple_page_ancestors() {
+function anchorage_page_ancestors() {
 	global $post;
 	$parents = get_post_ancestors( $post->ID );
 
@@ -729,29 +761,27 @@ function simple_page_ancestors() {
 /**
  * Print HTML with meta information for current post: categories, tags, permalink, author, and date.
  *
- * Create your own simple_entry_meta() to override in a child theme.
+ * Create your own anchorage_entry_meta() to override in a child theme.
  *
  * @since Twenty Thirteen 1.0
  */
-function simple_entry_byline() {
+function anchorage_entry_byline() {
 	
-	$date = simple_entry_date();
+	$date = anchorage_entry_date();
 
 	$out = "
 		<div class='entry-byline'>
-			&mdash; <address class='vcard'><a href='".get_bloginfo('url')."' class='fn url'>By ".get_the_author()."</a></address>,
+			&mdash; <address class='vcard'><a href='" . esc_url( home_url() ) . "' class='fn url'>By " . get_the_author() . "</a></address>,
 			$date
 		</div>
 	";
 	return $out;
 }
 
-
-
-function simple_entry_cats(){
+function anchorage_entry_cats(){
 
 	$out = '';
-	$categories_list = get_the_category_list( esc_html__( ', ', 'simple' ) );
+	$categories_list = get_the_category_list( esc_html__( ', ', 'anchorage' ) );
 	if ( $categories_list ) {
 		$out = "<div class='category-links'>&mdash; $categories_list &mdash;</div>";
 	}
@@ -760,18 +790,14 @@ function simple_entry_cats(){
 
 }
 
-
-
-
-
-function simple_entry_tags(){
+function anchorage_entry_tags(){
 
 	$out = '';
-	$tags_list = get_the_tag_list( '', esc_html__( ', ', 'simple' ), '' );
+	$tags_list = get_the_tag_list( '', esc_html__( ', ', 'anchorage' ), '' );
 	if ( $tags_list ) {
 		$out = "
 			<div class='tag-links'>
-				<span class='tag-label'>".esc_html__( 'Tags:', 'simple' )."</span>
+				<span class='tag-label'>".esc_html__( 'Tags:', 'anchorage' )."</span>
 				$tags_list
 			</div>";
 	}
@@ -780,13 +806,11 @@ function simple_entry_tags(){
 
 }
 
-
-
-function simple_author_bio(){
+function anchorage_author_bio(){
 	
 	//global $post;
 
-	$desc = wp_kses_post( get_the_author_meta('description') );
+	$desc = wp_kses_post( get_the_author_meta( 'description' ) );
 	if( !empty ( $desc ) ) {
 		$desc = "<div class='content-holder author-description'>$desc</div>";	
 	}
@@ -823,35 +847,32 @@ function simple_author_bio(){
 	return $out;
 }
 
-
 // Get src URL from avatar <img> tag (add to functions.php)
-function get_avatar_url($author_id, $size){
+function get_avatar_url( $author_id, $size ) {
     $get_avatar = get_avatar( $author_id, $size );
-    preg_match("/src='(.*?)'/i", $get_avatar, $matches);
+    preg_match( "/src='(.*?)'/i", $get_avatar, $matches );
     return ( $matches[1] );
 }
-
-
 
 /**
  * Print HTML with date information for current post.
  *
- * Create your own simple_entry_date() to override in a child theme.
+ * Create your own anchorage_entry_date() to override in a child theme.
  *
  * @since Twenty Thirteen 1.0
  *
  * @param boolean $echo (optional) Whether to echo the date. Default true.
  * @return string The HTML-formatted post date.
  */
-function simple_entry_date( ) {
+function anchorage_entry_date( ) {
 	if ( has_post_format( array( 'chat', 'status' ) ) )
-		$format_prefix = _x( '%1$s on %2$s', '1: post format name. 2: date', 'simple' );
+		$format_prefix = _x( '%1$s on %2$s', '1: post format name. 2: date', 'anchorage' );
 	else
 		$format_prefix = '%2$s';
 
 	$out = sprintf( '<span class="date"><a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s">%4$s</time></a></span>',
 		esc_url( get_permalink() ),
-		esc_attr( sprintf( __( 'Permalink to %s', 'simple' ), the_title_attribute( 'echo=0' ) ) ),
+		esc_attr( sprintf( __( 'Permalink to %s', 'anchorage' ), the_title_attribute( 'echo=0' ) ) ),
 		esc_attr( get_the_date( 'c' ) ),
 		esc_html( sprintf( $format_prefix, get_post_format_string( get_post_format() ), get_the_date() ) )
 	);

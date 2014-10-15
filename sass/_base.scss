@@ -1,4 +1,12 @@
 /**
+ * SCSS for base elements.
+ *
+ * @package WordPress
+ * @subpackage anchorage
+ * @since anchorage 1.0
+ */
+
+/**
  * Star defaults.
  */
 * {
@@ -16,8 +24,14 @@
 html {
 	-ms-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%; /* Prevent iOS text size adjust after orientation change, without disabling user zoom. */
-	font-size: 15px;
-	line-height: 1.65em;
+	font-size: 16px;
+	line-height: 1.68em;
+}
+
+@media ( max-width: $small_device ) {
+	html {
+		font-size: 12px;
+	}
 }
 
 /**
@@ -63,6 +77,20 @@ h5 {
 h6 {
 	font-size: 15px;
 	line-height: 1.35em;
+}
+
+@media ( max-width: $small_device ) {
+	h1 { font-size: 24px; }
+
+	h2 { font-size: 22px; }
+
+	h3 { font-size: 20px; }
+
+	h4 { font-size: 16px; }
+
+	h5 { font-size: 14px; }
+
+	h6 { font-size: 12px; }
 }
 
 /* Margin Defaults */
@@ -186,7 +214,8 @@ i {
  * Address styling not present in IE 8/9.
  */
 mark {
-	background: $inverse_accent_color;
+	font-style: italic;
+	background-color: transparent;
 }
 
 /**
@@ -402,6 +431,7 @@ input[type="tel"],
 input[type="text"],
 input[type="email"],
 input[type="date"],
+input[type="password"],
 textarea {
 	border-radius: $small_border_radius;
 	padding: $small_padding;
@@ -501,5 +531,14 @@ iframe,
 object,
 video {
 	max-width: 100%;
+}
+
+img,
+figure,
+embed,
+object,
+video {
 	height: auto;
 }
+
+
