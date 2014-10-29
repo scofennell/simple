@@ -15,40 +15,37 @@
  * Enqueue scripts, establish theme-wide values, setup widgets,
  * call theme-supports.
  */
-require_once( get_template_directory()."/inc/setup.php" );
+require_once( get_template_directory() . '/inc/setup.php' );
 
 /**
  * Body classes, posts classes, wp_title, etc.
- * @todo See if the menu item filter is still necessary in recent wordpress 
- * versions.
  */
-require_once( get_template_directory()."/inc/misc-filters.php" );
-
-/**
- * Styles that need to be able to pass php variables to selectors.
- * @todo Right now, there are none.  Remember to remove this is there end up
- * not being any use cases.
- */
-// require_once( get_template_directory()."/inc/header-styles.php" );
+require_once( get_template_directory() . '/inc/misc-filters.php' );
 
 /**
  * jQuery snippets for minor UX improvements.
  */
-require_once( get_template_directory()."/inc/footer-scripts.php" );
+require_once( get_template_directory() . '/inc/footer-scripts.php' );
 
 /**
  * Custom template tags used in theme template files.
  */
-require_once( get_template_directory()."/inc/template-tags.php" );
+require_once( get_template_directory() . '/inc/template-tags.php' );
+
+/**
+ * Helper functions to do things like make arrows or build file paths.
+ */
+require_once( get_template_directory() . '/inc/helper-functions.php' );
+
 
 /**
  * Custom template tags related to displaying the post comment area.
- * @todo Refactor so that there are no layout #selectors in the template tags
+ * @todo Refactor so that there are no layout #selectors in the template tags.
  */
-require_once( get_template_directory()."/inc/comment-template-tags.php" );
+require_once( get_template_directory() . '/inc/comment-template-tags.php' );
 
 /**
  * Theme modification API.
- * @todo  over riding sass generated styles from php seems to be too cumbersome
+ * @todo Overriding sass generated styles from php seems to be too cumbersome.
  */
-require_once( get_template_directory()."/inc/customization.php" );
+require_once( get_template_directory() . '/inc/customization.php' );

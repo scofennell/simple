@@ -35,18 +35,6 @@ html {
 }
 
 /**
- * Word wrap defaults
- */
-.entry-title,
-.button {
-	-ms-word-wrap: break-word;
-	word-wrap: break-word;
-	-webkit-hyphens: auto;
-	-moz-hyphens: auto;
-    hyphens: auto;
-}
-
-/**
  * Header defaults
  */
 h1 {
@@ -446,6 +434,9 @@ legend {
 	font-style: italic;
 }
 
+form.post-password-form input[type='submit'],
+form > input.button,
+.content-holder nav.button,
 .button,
 [type='submit'],
 [type='image'],

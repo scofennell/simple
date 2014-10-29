@@ -7,6 +7,7 @@
  *
  * @package WordPress
  * @subpackage anchorage
+ * @since  anchorage 1.0
  */
 
 /**
@@ -30,8 +31,9 @@
  * * * fields[choices] - Used with <select> elements to create <option>'s.  Expects an associative array of key=>value pairs.
  *
  * @var array
+ *
+ * @since  anchorage 1.0
  */
-
 $anchorage_base_customization_options = array(
 
 	'Layout' => array(
@@ -56,103 +58,115 @@ $anchorage_base_customization_options = array(
 				'selector'	=> '.inner-wrapper',
 				'property' 	=> 'max-width',
 			),	
-		)
+		),
 	),
 
 );
 
 /**
- * add various types of inputs to the customization panel, add all registered sections and nodes to the panel, flush the transient cache for theme mods
+ * Adds various types of inputs to the customization panel, adds all registered sections and nodes to the panel.
+ *
+ * @see http://codex.wordpress.org/Class_Reference/WP_Customize_Manager/add_control
+ * @param object $wp_customize The WP_Cusomization API.
+ *
+ * @since  anchorage 1.0
  */
-function anchorage_base_themedemo_customize($wp_customize) {
+if( ! function_exists( 'anchorage_base_customize' ) ) {
+	function anchorage_base_customize( $wp_customize ) {
+			
+		// The parent theme creates this nearly empty array, while themes add nodes to it.
+		global $anchorage_base_customization_options;
 		
-	// the parent theme creates this empty array, child themes add nodes to it
-	global $anchorage_base_customization_options;
-	
-	// for each registered section, create a UI for it 
-	foreach ($anchorage_base_customization_options as $l){
-		
-		$wp_customize->add_section( $l['slug'], array(
-        	'title'          => $l['label'],
-        	'priority'       => 35,
-    	) );
-    	
-    	// within that section, create form inputs
-    	foreach($l['fields'] as $f){
-    		
-    		// establish a default value for the input
-    		$wp_customize->add_setting( $f['slug'], array(
-        		'default'        => $f['default'],
-    		) );
-    		
-    		// establish which type of form input to use
-    		if($f['type'] == 'color'){
-	    		$wp_customize->add_control( new WP_Customize_Color_Control( $wp_customize, $f['slug'], array(
-	   	 			'label'   => $f['label'],
-	   	     		'section' => $l['slug'],
-	   	     		'settings'   => $f['slug'],
-	   	 		) ) );
-    		
-    		} elseif($f['type'] == 'select'){
-    		    $wp_customize->add_control( $f['slug'], array(
-        			'label'   => $f['label'],
-        			'section' => $l['slug'],
-        			'type'    => 'select',
-        			'choices' => $f['choices']
-				) );
-        
-    		} else {
-				$wp_customize->add_control( $f['slug'], array(
-        			'label'   => $f['label'],
-        			'section' => $l['slug'],
-        			'type'    => 'text',
- 				) );
-    		}
-    	}
+		// For each registered section, create a UI for it.
+		foreach ( $anchorage_base_customization_options as $l ) {
+			
+			$wp_customize -> add_section( $l['slug'], array(
+	        	'title'          => $l['label'],
+	        	'priority'       => 35,
+	    	) );
+	    	
+	    	// Within that section, create form inputs.
+	    	foreach( $l['fields'] as $f ) {
+	    		
+	    		// Establish a default value for the input.
+	    		$wp_customize -> add_setting( $f['slug'], array(
+	        		'default'        	=> $f['default'],
+	        		'sanitize_callback' => 'sanitize_text_field',
+	    		) );
+	    		
+	    		// Establish which type of form input to use.
+	    		if( $f['type'] == 'color' ) {
+		    		$wp_customize -> add_control( new WP_Customize_Color_Control( $wp_customize, $f['slug'], array(
+		   	 			'label'   	 => $f['label'],
+		   	     		'section' 	 => $l['slug'],
+		   	     		'settings'   => $f['slug'],
+		   	 		) ) );
+	    		
+	    		} elseif( $f['type'] == 'select' ) {
+	    		    $wp_customize -> add_control( $f['slug'], array(
+	        			'label'   => $f['label'],
+	        			'section' => $l['slug'],
+	        			'type'    => 'select',
+	        			'choices' => $f['choices']
+					) );
+	        
+	    		} else {
+					$wp_customize -> add_control( $f['slug'], array(
+	        			'label'   => $f['label'],
+	        			'section' => $l['slug'],
+	        			'type'    => 'text',
+	 				) );
+	    		}
+	    	}
+		}
 	}
 }
-add_action('customize_register', 'anchorage_base_themedemo_customize');
+add_action( 'customize_register', 'anchorage_base_customize' );
 
 /**
- * Grab the custom styles from the transient cache
+ * Grab the custom styles from the database.
  * 
  * @return string The theme mod styles for this blog, between <style> tags
+ *
+ * @since  anchorage 1.0
  */
-function anchorage_base_get_custom_styles(){
-	
-	$out='';
+if( ! function_exists( 'anchorage_base_get_custom_styles' ) ) {
+	function anchorage_base_get_custom_styles() {
+		
+		$out = '';
 
- 	// all of the custom options registered by the child theme
- 	global $anchorage_base_customization_options;
+	 	// all of the custom options registered by the child theme
+	 	global $anchorage_base_customization_options;
 
- 	// for each setting section
-	foreach ( $anchorage_base_customization_options as $l ) {
- 		
-		// for each setting within this section 
- 		foreach($l['fields'] as $f){
-    	
-				$out.= $f['selector'].' {'.$f['property'].': '.get_theme_mod( $f['slug'], '' ).';}';
-			
-		} 
-  	}
+	 	// for each setting section
+		foreach ( $anchorage_base_customization_options as $l ) {
+	 		
+			// for each setting within this section, create a style rule.
+	 		foreach( $l['fields'] as $f ) {
+	    		$selector = $f['selector'];
+	    		$property = $f['property'];
+	    		$value    = get_theme_mod( $f['slug'], '' );
+				$out     .= "$selector { $property : $value ; }";
+			} 
+	  	}
 
-	// sanitize the output
-	//$out = esc_html( $out, '<style>' );
-  
-  	// if there are styles, wrap them
-	if( !empty( $out ) ) {
-		$out = '
-			<style>'.$out.'</style>
-		';
+	  	// If there are styles, wrap them.
+		if( ! empty( $out ) ) {
+			$out = "<style>$out</style>";
+		}
+		
+		return $out;
 	}
-	
-	return $out;
 }
 
 /**
- * Echoes the theme mod styles in wp_head
+ * Echoes the theme mod styles in wp_head.
+ *
+ * @since  anchorage 1.0
  */
-function anchorage_base_the_custom_styles(){
-	echo anchorage_base_get_custom_styles();
+if( ! function_exists( 'anchorage_base_the_custom_styles' ) ) {
+	function anchorage_base_the_custom_styles() {
+		echo anchorage_base_get_custom_styles();
+	}
 }
-add_action('wp_head', 'anchorage_base_the_custom_styles');
+add_action( 'wp_head', 'anchorage_base_the_custom_styles' );

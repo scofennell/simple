@@ -3,99 +3,154 @@
 /**
  * anchorage template tags.
  *
+ * These functions are used in template files susch as header.php or index.php.
+ *
  * @package WordPress
  * @subpackage anchorage
- * @since  anchorage 1.0
+ * @since anchorage 1.0
  */
 
-function anchorage_menu( $which_menu, $menu_class = '' ) {
-
-	if ( ! has_nav_menu( $which_menu ) ) { return false; }
-
-	$args = array(
-		'theme_location'  => $which_menu,
-		'container'       => false,
-		'echo'            => false,
-		'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-		'depth'           => 0,
-
-	);
-
-	$menu = wp_nav_menu( $args );
-
-	$menu_class = sanitize_html_class( $which_menu );
-
-	$label = esc_html__( 'Menu', 'anchorage' );
-
-	$out = "<nav id='$menu_class' class='$menu_class'>
-				$menu
-			</nav>
-	";
-
-	return $out;
-
+/**
+ * Outputs the opening HTML tag, to include classes for ie in general, and ie 7 through 9.
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_the_html_classes' ) ) {
+	function anchorage_the_html_classes() {
+		?>
+			<!--[if IE 7]>
+				<html class="ie ie7" <?php language_attributes(); ?>>
+			<![endif]-->
+			<!--[if IE 8]>
+				<html class="ie ie8" <?php language_attributes(); ?>>
+			<![endif]-->
+			<!--[if IE 9]>
+				<html class="ie ie9" <?php language_attributes(); ?>>
+			<![endif]-->
+			<!--[if !(IE 7) | !(IE 8) | !(IE 9)  ]><!-->
+				<html <?php language_attributes(); ?>>
+			<!--<![endif]-->
+		<?php
+	}
 }
 
-function anchorage_header_menu( $which_menu, $menu_class = '' ) {
-
-	$menu = anchorage_menu( $which_menu, $menu_class = '' );
-
-	$home_href = esc_url( home_url() );
-
-	$blog_title = wp_kses_post( get_bloginfo( 'name' ) );
-
-	$home_link = "<h1 class='blog-title inverse-color shadowed'><a href='$home_href'>$blog_title</a></h1>";
-
-	echo "
-		<header id='blog-header' class='marquee zero-width closed inverse-color'>
-			$home_link
-			$menu
-	";
-
-	if ( is_active_sidebar( 'header-widgets' ) ) {
-		echo '
-			<aside id="header-widgets" class="widgets content-holder header-widgets inverse-color" role="complementary">
-		';
-			dynamic_sidebar( 'header-widgets' );
-		echo '
-			</aside>
-		';
+/**
+ * Get the read-more text for our theme.  Used in the_content().
+ * 
+ * @return  The read-more text for our theme.
+ * 
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_more_text' ) ) {
+	function anchorage_get_more_text() {
+		
+		$visible_text = esc_html__( 'more&hellip;', 'anchorage' );
+		
+		$post_title = esc_html( get_the_title() );
+		$screen_reader_text = "<span class='screen-reader-text'>$post_title</span>";
+		
+		$out = "<span class='inverse-shadow read-more'> $visible_text $screen_reader_text </span>";
+		return $out;
 	}
-
-	echo '
-		</header>
-	';
-
 }
 
-function anchorage_arrow( $direction = 'down', $classes = array(), $href = '#' ) {
-
-	$left = esc_html( '&larr;', 'anchorage' );
-	$up = esc_html( '&uarr;', 'anchorage' );
-	$right = esc_html( '&rarr;', 'anchorage' );
-	$down = esc_html( '&darr;', 'anchorage' );
-
-	if ( $direction == 'left' ) {
-		$out = $left;
-	} elseif ( $direction == 'up' ) {
-		$out = $up;
-	} elseif ( $direction == 'right' ) {
-		$out = $right;
-	} else {
-		$out = $down;
-	}
-
-	$classes = array_map( 'sanitize_html_class', $classes );
-	$classes = implode( ' ', $classes );
-	$classes = " class='$classes arrow' ";
-
-	$out = "&nbsp;$out&nbsp;";
-
-	$href = esc_attr( $href );
-
-	$out = "<a href='$href' $classes>$out</a>";
+/**
+ * Get a skip-to-content link.  Used in the_content().
+ *
+ * @param string $skip_to The HTML ID for the element to which we'll skip.
+ * @return  A skip-to-content link.
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_skip_to_content_link' ) ) {
+	function anchorage_get_skip_to_content_link( $skip_to = '#loop' ) {
 	
-	return $out;
+		$skip = esc_html__( 'Skip to content', 'anchorage' );
+		$skip_to = esc_attr( $skip_to );
+		$out = "<a class='screen-reader-text skip-link' href='$skip_to'>$skip</a>";
+		return $out;
+	}
+}
+
+/**
+ * Get a WordPress custom menu.
+ *
+ * @param  string $which_menu The theme location for a menu.
+ * @param  string $menu_class A css class for the menu.
+ * @return string A WordPress custom menu.
+ * 
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_menu' ) ) {
+	function anchorage_get_menu( $which_menu, $menu_class = '' ) {
+
+		if ( ! has_nav_menu( $which_menu ) ) { return false; }
+
+		$args = array(
+			'theme_location'  => $which_menu,
+			'container'       => false,
+			'echo'            => false,
+			'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+			'depth'           => 0,
+
+		);
+
+		$menu = wp_nav_menu( $args );
+
+		$menu_class = sanitize_html_class( $which_menu );
+
+		$out = "<nav id='$menu_class' class='$menu_class'>$menu</nav>";
+
+		return $out;
+
+	}
+}
+
+/**
+ * Output the header menu for our theme along with a toggle arrow to show/hide it.
+ *
+ * @param string which_menu The theme location for the menu.
+ * @param string $menu_class A CSS class for the menu.
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_header_menu' ) ) {
+	function anchorage_header_menu( $which_menu, $menu_class = '' ) {
+
+		$menu = anchorage_get_menu( $which_menu, $menu_class = '' );
+
+		// Grab the url of the homepage and the blogname to build a link to the homepage.
+		$home_href = esc_url( home_url() );
+		$blog_title = wp_kses_post( get_bloginfo( 'name' ) );
+		$home_link = "<h1 class='blog-title inverse-color shadowed'><a href='$home_href'>$blog_title</a></h1>";
+
+		// Start the menu.
+		echo "
+			<header id='blog-header' class='marquee zero-width closed inverse-color'>
+				$home_link
+				$menu
+		";
+
+		// Grab the header widget area.
+		if ( is_active_sidebar( 'header-widgets' ) ) {
+			echo '
+				<aside id="header-widgets" class="widgets content-holder header-widgets inverse-color" role="complementary">
+			';
+					dynamic_sidebar( 'header-widgets' );
+			echo '
+				</aside>
+			';
+		}
+
+		// Close the menu.
+		echo '
+			</header>
+		';
+
+		// Grab the toggle arrow.
+		echo anchorage_get_arrow( 'left', array( 'toggle', 'shadowed', 'primary-menu-toggle' ), '#blog-header' );
+
+	}
 }
 
 /**
@@ -111,369 +166,215 @@ function anchorage_arrow( $direction = 'down', $classes = array(), $href = '#' )
  *
  * @since  anchorage 1.0
  */
-function anchorage_search_form( $form_classes = array(), $search_input_classes = array() ) {
-	
-	// An array of CSS classes for the search form.
-	$form_classes = array_map( 'sanitize_html_class', $form_classes );
-	$form_classes_string = implode( ' ', $form_classes );
-	
-	// An array of CSS classes for the search input.
-	$search_input_classes = array_map( 'sanitize_html_class', $search_input_classes );
-	$search_input_string = implode( ' ', $search_input_classes );
-	
-	$placeholder = esc_attr__( 'Search', 'anchorage' );
-	if( isset( $_GET['s'] ) ) {
-		$placeholder = esc_attr( $_GET['s'] );
+if( ! function_exists( 'anchorage_get_search_form' ) ) {
+	function anchorage_get_search_form( $form_classes = array(), $search_input_classes = array( 'search-field' ) ) {
+		
+		// An array of CSS classes for the search form.
+		$form_classes = array_map( 'sanitize_html_class', $form_classes );
+		$form_classes_string = implode( ' ', $form_classes );
+		
+		// An array of CSS classes for the search input.
+		$search_input_classes = array_map( 'sanitize_html_class', $search_input_classes );
+		$search_input_string = implode( ' ', $search_input_classes );
+		
+		// Grab the search term to use as a watermark.
+		$placeholder = esc_attr__( 'Search', 'anchorage' );
+		if( isset( $_GET['s'] ) ) {
+			$placeholder = esc_attr( $_GET['s'] );
+		}
+
+		$action = esc_url( home_url( '/' ) );
+		$search_for = esc_html__( 'Search for:', 'anchorage' );
+		$search_for_attr = esc_attr__( 'Search for:', 'anchorage' );
+		$submit = esc_html__( 'Submit', 'anchorage' );
+
+		$out ="
+			<form action='$action' class='$form_classes_string search-form' method='get' role='search'>
+				<label for='s'><span class='screen-reader-text'>$search_for</span></label>
+				<input id='s' type='search' title='$search_for_attr' name='s' value='$placeholder' class='search-field $search_input_string'>
+				<input type='submit' value='$submit' class='screen-reader-text search-submit button'>
+			</form>
+		";
+
+		return $out;
+
 	}
-
-	$out ="
-		<form action='".esc_url( home_url( '/' ) )."' class='$form_classes_string search-form' method='get' role='search'>
-			<label for='s'><span class='screen-reader-text'>".esc_html__( 'Search for:', 'anchorage' )."</span></label>
-			<input id='s' type='search' title='Search for:' name='s' value='$placeholder' class='search-field $search_input_string'>
-			<input type='submit' value='".esc_html__( 'Submit', 'anchorage' )."' class='screen-reader-text search-submit'>
-		</form>
-	";
-
-	return $out;
-
 }
 
 /**
- * Return a string to denote the post format, if not standard.
+ * Return a string to denote the post format.
  *
- * @return string [description]
+ * @return string A string to denote the post format, or false if there is no post format.
+ *
+ * @since anchorage 1.0
  */
-function anchorage_get_post_format(){
-	global $post;
-	$post_id = absint( $post->ID );
-	$format = get_post_format( $post_id );
+if( ! function_exists( 'anchorage_get_post_format' ) ) {
+	function anchorage_get_post_format( $arrow_direction = false ){
+		
+		// Grab the post format.
+		global $post;
+		$post_id = absint( $post -> ID );
+		$format = get_post_format( $post_id );
+		$format = esc_html( $format );
 
-	$format = esc_html( $format );
+		if ( empty( $format ) ) {
+			return false;
+		}
 
-	if ( empty( $format ) ) {
-		return false;
+		// Grab an arrow.
+		$arrow = '';
+		if( $arrow_direction ) {
+			$arrow = anchorage_get_arrow( $arrow_direction, array( 'post-format-arrow' ), false );
+		}
+		
+		$out = "<span class='post-format-label'>$format$arrow</span>";
+
+		return $out;
+
 	}
-
-	$out = "<span class='post-format-label'>$format &rarr;</span>";
-
-	return $out;
-
 }
-
-
 
 /**
  * Return an HTML img tag for the first image in a post content. Used to draw
  * the content for posts of the "image" format.
  *
  * @return string An HTML img tag for the first image in a post content.
+ *
+ * @since anchorage 1.0
  */
-function anchorage_get_first_image() {
-	
-	// Expose information about the current post.
-	global $post;
-	
-	// We'll trap to see if this stays empty later in the function.
-	$src = '';
-	
-	// Grab all img src's in the post content
-	$output = preg_match_all( '/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches );
-	
-	// Grab the first img src returned by our regex.
-	if( ! isset ( $matches[1][0] ) ) { return false; }
-	$src = $matches[1][0];
-
-	// Sanitize for output
-	$src = esc_url( $src );
-
-	// Make sure there's still something worth outputting after sanitization.
-	if( empty( $src ) ) { return false; }
-	
-	// Grab and sanitize the post title as an alt.
-	$alt = esc_attr( $post->post_title );
-
-	$out = "<img class='first-image' alt='$alt' src='$src'>";
-
-	// Trap to see if the post has a caption shortcode
-	$caption = '';
-	if( has_shortcode( $post->post_content, 'caption' ) ) {
+if( ! function_exists( 'anchorage_get_first_image' ) ) {
+	function anchorage_get_first_image() {
 		
-		$output = preg_match_all( '/caption=(.*)\]/smU', $post->post_content, $matches );
-		if($output){
-			$caption = $matches[1][0];
-			$caption = trim($caption, '"');
-			$caption = trim($caption, "'");
-		} else {
+		// Expose information about the current post.
+		global $post;
+		
+		// We'll trap to see if this stays empty later in the function.
+		$src = '';
+		
+		// Grab all img src's in the post content
+		$output = preg_match_all( '/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post -> post_content, $matches );
+		
+		// Grab the first img src returned by our regex.
+		if( ! isset ( $matches[1][0] ) ) { return false; }
+		$src = $matches[1][0];
 
-			// Grab the content of the first caption
-			preg_match_all( '/\[caption\s?.*\](.*)\[\/caption\]/smU', $post->post_content, $matches );
+		// Sanitize for output
+		$src = esc_url( $src );
+
+		// Make sure there's still something worth outputting after sanitization.
+		if( empty( $src ) ) { return false; }
+		
+		// Grab and sanitize the post title as an alt.
+		$alt = esc_attr( $post -> post_title );
+
+		$out = "<img class='first-image' alt='$alt' src='$src'>";
+
+		// Trap to see if the post has a caption shortcode
+		$caption = '';
+		if( has_shortcode( $post -> post_content, 'caption' ) ) {
 			
-			$caption = strip_tags( $matches[1][0], '<a><b><br><em><i><p><span><strong>' );
+			$output = preg_match_all( '/caption=(.*)\]/smU', $post -> post_content, $matches );
+			if( $output ) {
+				$caption = $matches[1][0];
+				$caption = trim( $caption, '"' );
+				$caption = trim( $caption, "'" );
+			} else {
+
+				// Grab the content of the first caption
+				preg_match_all( '/\[caption\s?.*\](.*)\[\/caption\]/smU', $post -> post_content, $matches );
+				
+				$caption = strip_tags( $matches[1][0], '<a><b><br><em><i><p><span><strong>' );
+			}
+			
 		}
+
+		// Link the image to the first url before the image.
+		$href = '';
+		$content_before_first_image = explode( '<img', $post->post_content );
+		$content_before_first_image = $content_before_first_image[0];
 		
-	}
+		$href = get_url_in_content( $content_before_first_image );
 
-	// Trap to see if the first image is linked
-	$href = '';
-	$content_before_first_image = explode( '<img', $post->post_content );
-	$content_before_first_image = $content_before_first_image[0];
-	
-	$href = get_url_in_content( $content_before_first_image );
+		if( ! empty( $content_before_first_image ) ) { $out = "<a href='$href'>$out</a>"; }
 
-	if( ! empty( $content_before_first_image ) ) { $out = "<a href='$href'>$out</a>"; }
+		// If there is a caption, return a figure.
+		if( ! empty( $caption ) ) {
+			$out = "
+				<figure class='first-image-figure'>
+					$out
+					<figcaption class='first-image-caption'>$caption</figcaption>
+				</figure>
+			";
+		}
 
-	// if the file is on the server, grab the exif
-	$exif = '';
-	$path = anchorage_file_is_on_server( $src );
-	if( ! empty( $path ) ) { 
+		// If the file is on the server, grab the exif.
 		$path = anchorage_file_is_on_server( $src );
-		$exif = anchorage_get_media_meta( $path, 'image' );
-
-	}
-
-
-//	wp_die( var_dump( $src ) );
-
-	// If there is a caption, return a figure
-	if( ! empty( $caption ) ) {
-		$out = "
-			<figure class='first-image-figure'>
-				$out
-				<figcaption class='first-image-caption'>$caption</figcaption>
-			</figure>
-		";
-	}
-
-	$out.=$exif;
-
-	return $out;
-
-}
-
-
-function anchorage_uploads_path(){
-	$dir = wp_upload_dir();
-	$path = $dir['basedir'];
-
-	return $path;
-
-}
-
-function anchorage_uploads_url(){
-	$dir = wp_upload_dir();
-	$url = $dir['baseurl'];
-
-	return $url;
-
-}
-
-
-
-
-function anchorage_get_first_media( $type ){
-	
-	global $post;
-
-	$content = get_media_embedded_in_content( $post->post_content );
-	if ( get_url_in_content( $content ) ) {
-		$content = get_media_embedded_in_content( $content );
-		$w = get_url_in_content( $content );
-	} else {
-		$content = $post->post_content;
-		$w = get_url_in_content( $content );
-	}
-
-	$path = anchorage_file_is_on_server( $w );	
-
-	if( ! $path ) { return false; }
-
-	if( ( $type == 'audio' ) || ( $type == 'video' ) ) {
-		
-		return anchorage_get_media_meta( $path, $type );
-
-	} else {
-
-		return "$type";
-
-	}
-
-}
-
-function anchorage_get_media_meta( $path, $type ) {
-
-	$out='';
-
-	$fields = false;
-	if( $type == 'audio' ) {
-
-		require_once( ABSPATH . 'wp-admin/includes/media.php' );
-		$media = wp_read_audio_metadata( $path );
-
-		$fields = array(
-			'bitrate',
-			'year',
-			'artist',
-			'genre',
-			'title',
-			'album',
-			'length_formatted',
-		);
-
-	} elseif( $type == 'video' ) {
-
-		require_once( ABSPATH . 'wp-admin/includes/media.php' );
-		$media = wp_read_video_metadata( $path );
-
-		$fields = array(
-			'length_formatted',
-			'fileformat',
-			'dataformat',
-			'mime_type',
-			'codec',
-		);
-
-	} elseif( $type == 'image' ) {
-
-		require_once( ABSPATH . 'wp-admin/includes/image.php' );
-		$media = exif_read_data( $path );
-
-		$fields = array(
-			'ExposureTime',
-			array( 'COMPUTED', 'ApertureFNumber' ),
-			'Model',
-			'DateTimeOriginal'
-		);
-
-	}
-
-	if( !is_array( $fields ) ) { return false; }
-
-	$meta = array();	
-	foreach( $fields as $f ) {
-
-		if( is_string( $f ) ) {
-			if( isset( $media[$f] ) ){
-				$meta[$f] = $media[$f]; 
-			}
-
-		} elseif( is_array( $f ) ) {
-
-			$first = $f[0];
-			$second = $f[1];
-			
-			if( isset( $media[$first][$second] ) ) {
-				$meta[$second] = $media[$first][$second];
-			}
-		}
-	}
-
-	foreach( $meta as $k => $v ) {
-
-		$k = str_replace( '_', ' ', $k );
-
-		if(stristr( $k, 'Date' ) ) {
-			$format = get_option( 'date_format' );
-			$v = strtotime( $v );
-			$v = date( $format, $v );
+		if( ! empty( $path ) ) { 
+			$path = anchorage_file_is_on_server( $src );
+			$exif = anchorage_get_media_meta( $path, 'image' );
+			$out .= $exif;
 		}
 
-		if( empty( $v ) ) { continue; }
-		
-		$out .= "<p class='media-meta-key-value-pair'><span class='media-meta-key'>$k: </span><span class='media-meta-value'>$v</span></p>";
-	
+		return $out;
+
 	}
-
-	if( empty( $out ) ) { return false; }
-
-
-
-	$out="
-		<aside class='media-meta anchorage-toggle'>
-			<a class='button-minor button inverse-color closed anchorage-toggle-link' href='#'>$type ".esc_html__( 'data', 'anchorage' )." <span class='arrow'>&darr;</span></a>
-			<div class='media-meta-list anchorage-toggle-reveal'>$out</div>
-	";
-
-	return $out;
 }
-
-function anchorage_toggle_script(){
-	?>
-		<script>
-			jQuery( document ).ready(function($) {
-				$( '.anchorage-toggle-reveal' ).hide();
-				$( '.anchorage-toggle-link' ).click( function( event ) {
-					event.preventDefault();
-					$( this ).next( '.anchorage-toggle-reveal' ).slideToggle();
-					$( this ).toggleClass( 'closed open' );
-				});
-
-
-				$( '.anchorage-toggle-link' ).toggle( function() {
-       				$( this ).find( '.arrow' ).html( '&uarr;' );
-    			}, function() {
-     				$( this ).find( '.arrow' ).html('&darr;');
-				});
-
-			});
-		</script>
-	<?php
-}
-add_action( 'wp_footer', 'anchorage_toggle_script' );
-
-function anchorage_file_is_on_server( $src ){
-
-	$uploads_url = anchorage_uploads_url();
-	
-	$uploads_path = anchorage_uploads_path();
-	
-
-	if( esc_url( $src ) != $src ) { return false; }
-
-	if( ! stristr( $src, $uploads_url ) ) { return false; }
-					
-	$relative_url = str_replace( $uploads_url, '', $src); 
-
-	$path = strtok( $uploads_path.$relative_url, '?' );
-
-	if( ! file_exists( $path ) ) { return false; }
-
-	return $path;
-		
-}
-
-
-
-
-
-function anchorage_the_html_classes() {
-	?>
-	<!--[if IE 7]>
-		<html class="ie ie7" <?php language_attributes(); ?>>
-	<![endif]-->
-	<!--[if IE 8]>
-		<html class="ie ie8" <?php language_attributes(); ?>>
-	<![endif]-->
-	<!--[if IE 9]>
-		<html class="ie ie9" <?php language_attributes(); ?>>
-	<![endif]-->
-	<!--[if !(IE 7) | !(IE 8) | !(IE 9)  ]><!-->
-		<html <?php language_attributes(); ?>>
-	<!--<![endif]-->
-	
-	<?php
-}
-
 
 /**
- * Display links to paginated sub pages.
+ * Given a chunk of content, grab the media meta for the first piece of media in that content.
+ * 
+ * @param  string $type The type of media for which we're sniffing.
+ * @return string The media meta for the first piece of media in content.
+ *
+ * @since anchorage 1.0
  */
-if ( ! function_exists( 'anchorage_link_pages' ) ) {
-	function anchorage_link_pages() {
+if( ! function_exists( 'anchorage_get_first_media' ) ) {
+	function anchorage_get_first_media( $type ){
+		
+		// We only sniff for audio or video.
+		if( ( $type != 'audio' ) && ( $type != 'video' ) ) { return false; }
+
+		global $post;
+
+		$content = $post -> post_content;
+
+		//  Look for an embed in the content.
+		$embed = get_media_embedded_in_content( $content );
+		
+		//  If there is a url in the embed, use it.
+		if ( get_url_in_content( $embed ) ) {
+			$href = get_url_in_content( $embed );
+		
+		// If not, see if there is a url in the content.
+		} else {
+			$href = get_url_in_content( $content );
+		}
+
+		// Do we own this file?
+		$path = anchorage_file_is_on_server( $href );	
+		if( ! $path ) { return false; }
+		
+		// If so, grab the media meta.
+		return anchorage_get_media_meta( $path, $type );
+
+	}
+}
+
+/**
+ * Get links to paginated sub pages.
+ *
+ * @return string Links to paginated sub-pages.
+ *
+ * @since anchorage 1.0
+ */
+if ( ! function_exists( 'anchorage_get_link_pages' ) ) {
+	function anchorage_get_link_pages() {
+		$pages = esc_html__( 'Pages:', 'anchorage' );
 		$args = array(
-			'before'           => '<nav class="paging-navigation numeric-pagination inverse-font inverse-color button link-pages">' . esc_html__( 'Pages:', 'anchorage' ),
+			'before'           => "<nav class='paging-navigation numeric-pagination inverse-font inverse-color button link-pages'>$pages",
 			'after'            => '</nav>',
 			'next_or_number'   => 'number',
-			'echo'             => 0
+			'echo'             => 0,
 		);
 		
 		return wp_link_pages( $args );
@@ -481,58 +382,79 @@ if ( ! function_exists( 'anchorage_link_pages' ) ) {
 }
 
 /**
- * Display navigation to next/previous post when applicable.
+ * Get navigation links to next/previous post when applicable.
+ *
+ * @return string Navigation links to next/previous post when applicable.
+ *
+ * @since anchorage 1.0
  */
-function anchorage_post_nav() {
-	global $post;
+if( ! function_exists( 'anchorage_get_post_nav' ) ) {
+	function anchorage_get_post_nav() {
+		global $post;
 
-	$out = '';
+		$out = '';
 
-	if( get_next_post_link() ) {
-		$out .= "<span class='inverse-color button button-minor prev previous-post'>".get_next_post_link( "%link", "%title <span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
-	}
-
-	if( get_previous_post_link() ) {
-		$out .= "<span class='inverse-color button button-minor next next-post'>".get_previous_post_link( "%link", "<span class='arrow next-arrow'>&larr;</span> %title" )."</span>";
-	}
-
-	if( empty( $out ) ) { return false; }
-
-	$out = "
-		<nav class='inverse-font paging-navigation post-navigation clear' role='navigation'>
-			<h1 class='screen-reader-text'>".esc_html__( 'Post navigation', 'anchorage' )."</h1>
-			$out
-		</nav>
-	";
-	return $out;	
-}
-
-/**
- * Display navigation to next/previous set of posts when applicable.
- */
-if ( ! function_exists( 'anchorage_paging_nav' ) ) {
-	function anchorage_paging_nav() {
-		global $wp_query;
-
-		// Don't print empty markup if there's only one page.
-		if ( $wp_query->max_num_pages < 2 ) { return false; }
-
-		$out = "";
-
-		if( get_next_posts_link() ) {
-			$out .= "<span class='inverse-color button button-minor next next-posts'>".get_next_posts_link( "<span class='arrow next-arrow'>&larr;</span> ".esc_html__( 'Older Posts', 'anchorage' ) )."</span>";
+		if( get_previous_post_link() ) {
+			$arrow = anchorage_get_arrow( 'right', array(), false );
+			$prev_post_link = get_previous_post_link( "%link", "%title&nbsp;$arrow" );
+			$out .= "<span class='inverse-color button button-minor next next-post'>$prev_post_link</span>";
 		}
 
-		if( get_previous_posts_link() ) {
-			$out .= "<span class='inverse-color button button-minor prev previous-posts'>".get_previous_posts_link( esc_html__( 'Newer Posts', 'anchorage' )." <span class='arrow prev-arrow'>&rarr;</span>" )."</span>";
+		if( get_next_post_link() ) {
+			$arrow = anchorage_get_arrow( 'left', array(), false );
+			$next_post_link = get_next_post_link( "%link", "$arrow&nbsp;%title" );
+			$out .= "<span class='inverse-color button button-minor prev previous-post'>$next_post_link</span>";
 		}
-
 
 		if( empty( $out ) ) { return false; }
 
+		$post_navigation = esc_html__( 'Post navigation', 'anchorage' );
+
+		$out = "
+			<nav class='inverse-font paging-navigation post-navigation clear' role='navigation'>
+				<h1 class='screen-reader-text'>$post_navigation</h1>
+				$out
+			</nav>
+		";
+		return $out;	
+	}
+}
+
+/**
+ * Get navigation to next/previous set of posts when applicable.
+ *
+ * @return string Navigation to next/previous set of posts when applicable.
+ *
+ * @since anchorage 1.0
+ */
+if ( ! function_exists( 'anchorage_get_paging_nav' ) ) {
+	function anchorage_get_paging_nav() {
+		global $wp_query;
+
+		// Don't print empty markup if there's only one page.
+		if ( $wp_query -> max_num_pages < 2 ) { return false; }
+
+		$out = "";
+
+		if( get_previous_posts_link() ) {
+			$arrow = anchorage_get_arrow( 'left', array(), false );
+			$prev_link = get_previous_posts_link( $arrow . '&nbsp;' . esc_html__( 'Newer Posts', 'anchorage' ) );
+			$out .= "<span class='inverse-color button button-minor prev previous-posts'> $prev_link </span>";
+		}
+
+		if( get_next_posts_link() ) {
+			$arrow = anchorage_get_arrow( 'right', array(), false );
+			$next_link = get_next_posts_link( esc_html__( 'Older Posts', 'anchorage' ) . '&nbsp;' . $arrow );
+			$out .= "<span class='inverse-color button button-minor next next-posts'> $next_link </span>";
+		}
+
+		if( empty( $out ) ) { return false; }
+
+		$posts_navigation = esc_html__( 'Posts navigation', 'anchorage' );
+
 		$out = "
 			<nav class='inverse-font paging-navigation posts-navigation clear' role='navigation'>
-				<h1 class='screen-reader-text'>".esc_html__( 'Posts navigation', 'anchorage' )."</h1>
+				<h1 class='screen-reader-text'>$posts_navigation</h1>
 				$out
 			</nav>
 		";
@@ -542,341 +464,328 @@ if ( ! function_exists( 'anchorage_paging_nav' ) ) {
 	}
 }
 
-function anchorage_archive_header(){
-	global $wp_query;
-	
-	$results ='';
-	if ( isset ( $wp_query -> found_posts ) ) {
-		$count = $wp_query -> found_posts;
-		$results = sprintf( _n( '1 post', "%s posts", $count, 'anchorage' ), $count );
-	}
-
-	$search = '';
-	if ( is_search() ){
+/**
+ * Get an HTML header for the current archive page.
+ *
+ * @return string An HTML header for the current archive page.
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_archive_header' ) ) {
+	function anchorage_get_archive_header() {
 		
-		if( have_posts() ) {
-			$message = sprintf( esc_html__( 'There are %s search results for %s', 'anchorage' ), $count, "<mark>".get_search_query()."</mark>" );
+		// Grab the number of posts found by the current query.
+		global $wp_query;
+		$post_count ='';
+		if ( isset ( $wp_query -> found_posts ) ) {
+			$found_posts = $wp_query -> found_posts;
+			$post_count = sprintf( _n( '1 post', "%s posts", $found_posts, 'anchorage' ), $found_posts );
+		}
+
+		// If it was a search query, grab the search form.
+		$search = '';
+		if ( is_search() ){
+
+			$query = get_search_query();
+			
+			// If the search query returned results, announce how many and add a search form.
+			if( have_posts() ) {
+
+				$message = sprintf( esc_html__( 'There are %s search results for %s', 'anchorage' ), $found_posts, "<mark class='archive-term'>$query</mark>" );
+				$search = anchorage_get_search_form( array(), array() );
+			
+			// If there were no search results, say so.  No need to add a search form, as our no-posts handler will add one.
+			} else {
+				$message = sprintf( esc_html__( 'No results found for %s', 'anchorage' ), "<mark class='archive-term'>$query</mark>" );	
+			}
 			$class = 'search';
-			$search = anchorage_search_form( array(), array() );
+
+		} elseif( is_category() ) {
+			$title = single_cat_title( '', false );
+			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$class = 'category';
+		} elseif( is_tag() ) {
+			$title = single_tag_title( '', false );
+			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$class = 'tag';
+		} elseif( is_year() ) {
+			$title = get_the_date( 'Y' );
+			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$class = 'year';
+		} elseif( is_month() ) {
+			$title = get_the_date( 'F Y' );
+			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$class = 'month';
+		} elseif( is_day() ) {
+			$title = get_the_date();
+			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$class = 'day';
+		} elseif( is_author() ) {
+			$title = get_the_author();
+			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$class = 'author';
+		} elseif( is_404() ) {
+			$message = esc_html__( 'Your page could not be found.', 'anchorage' );
+			$class = '404';
 		} else {
-			$message = sprintf( esc_html__( 'No results found for %s', 'anchorage' ), "<mark>".get_search_query()."</mark>" );
-			$class = 'search';	
+			$message = esc_html__( 'Archives:', 'anchorage' ) . " $post_count";
+			$class = 'default';
 		}
 
-	} elseif( is_category() ) {
-		$message = "$results: ".single_cat_title( '', false );
-		$class = 'category';
-	} elseif( is_tag() ) {
-		$message = "$results: ".single_tag_title( '', false );
-		$class = 'tag';
-	} elseif( is_year() ) {
-		$message = "$results: ".get_the_date( 'Y' );
-		$class = 'year';
-	} elseif( is_month() ) {
-		$message = "$results: ".get_the_date( 'F Y' );
-		$class = 'month';
-	} elseif( is_day() ) {
-		$message = "$results: ".get_the_date();
-		$class = 'day';
-	} elseif( is_author() ) {
-		$message = "$results: ".get_the_author();
-		$class = 'author';
-	} elseif( is_404() ) {
-		$message = esc_html__( 'Your page could not be found.', 'anchorage' );
-		$class = '404';
-	} else {
-		$message = esc_html__( 'Archives:', 'anchorage' )." $results";
-		$class = 'default';
-	}
-
-	$paged = '';
-	if ( is_paged() ) {
-		$paged = get_query_var( 'paged' );
-		$paged = absint( $paged );
-		if( $paged > 1 ) {
-			$paged = " &mdash; ".esc_html__('Page')." $paged";
+		// Grab a message to denote the page number we're on.
+		$paged = '';
+		if ( is_paged() ) {
+			$paged = get_query_var( 'paged' );
+			$paged = absint( $paged );
+			if( $paged > 1 ) {
+				$page = esc_html__('Page');
+				$paged = " &mdash; $page $paged";
+			}
 		}
+
+		$header_class = "archive-header-$class";
+		$title_class = "archive-title-$class";
+		
+		$out = "
+			<header class='archive-header mild-contrast-color content-holder $header_class'>
+				<h1 class='archive-title $title_class'>
+					$message $paged
+				</h1>
+				$search
+			</header>
+		";
+
+		return $out;
+
 	}
-
-	$header_class = "archive-header-$class";
-	$title_class = "archive-title-$class";
-	
-	$out = "
-		<header class='archive-header mild-contrast-color content-holder $header_class'>
-			<h1 class='archive-title $title_class'>
-				$message $paged
-			</h1>
-			$search
-		</header>
-	";
-
-	return $out;
-
 }
 
-function anchorage_no_posts() {
+/**
+ * Get an apology message and some navigation for 404's and empty archive pages.
+ * 
+ * @return string An apology message and some navigation for 404's and empty archive pages.
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_no_posts' ) ) {
+	function anchorage_get_no_posts() {
 
-	$out ="<h3 class='no-posts-header'>".esc_html__( 'Find your way by searching:', 'anchorage' )."</h3>";
-	$out .= anchorage_search_form( array( 'no-posts-searchform' ), array ( 'no-posts-search-input') );
-	$out .="<h3 class='no-posts-header'>".esc_html__( 'Or browse by archive:', 'anchorage' )."</h3>";
-	
-	$jump = get_transient( 'anchorage_jump_menus' );
-	
-	if ( empty( $jump ) ) {
+		$find_your_way = esc_html__( 'Find your way by searching:', 'anchorage' );
+		$or_browse = esc_html__( 'Or browse by archive:', 'anchorage' );
+
+		$out  = "<h3 class='no-posts-header'>$find_your_way</h3>";
+		$out .= anchorage_get_search_form( array( 'no-posts-searchform' ), array ( 'no-posts-search-input' ) );
+		$out .= "<h3 class='no-posts-header'>$or_browse</h3>";
 		
-		$jump = anchorage_jump_nav( 'category' );
-		$jump .= anchorage_jump_nav( 'tag' );
-		$jump .= anchorage_jump_nav( 'author' );
-		$jump .= anchorage_jump_nav( 'month' );
+		// The jump menus are a lot of querying, so see if we have it as a transient first.
+		$jump = get_transient( 'anchorage_get_jump_menus' );
+		
+		// If we don't have it, build it.
+		if ( empty( $jump ) ) {
+			
+			$jump  = anchorage_get_jump_nav( 'category' );
+			$jump .= anchorage_get_jump_nav( 'tag' );
+			$jump .= anchorage_get_jump_nav( 'author' );
+			$jump .= anchorage_get_jump_nav( 'month' );
+			$jump .= anchorage_get_jump_nav( 'page' );
 
-		if( ! empty( $jump ) ) { 
+			if( ! empty( $jump ) ) { 
 
-			$jump = "
-				<div class='jump-nav-wrapper'>
-					$jump
+				$jump = "
+					<div class='jump-nav-wrapper'>
+						$jump
+					</div>
+				";
+			}
+
+			// Now that we have it, save it for next time.
+			set_transient( 'anchorage_get_jump_menus', $jump, DAY_IN_SECONDS );
+
+		}
+
+		$out .= $jump;
+
+		$out = "
+			<div class='no-posts-wrapper mild-contrast-color'>$out</div>
+		";
+
+		return $out;
+	}
+}
+
+/**
+ * Get a breadcrumb nav for hierarchical post types.
+ * 
+ * @return string A breadcrumb nav for hierarchical post types.
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_page_ancestors' ) ) {
+		function anchorage_get_page_ancestors() {
+		
+		// Make sure the current post has ancestors.
+		global $post;
+		$parents = get_post_ancestors( $post -> ID );
+		if( ! is_array( $parents ) ) {
+			return false;
+		}
+
+		// We want the most distant ancestors first.
+		$parents = array_reverse( $parents );
+
+		$out = '';
+
+		// For each parent, output a breacrumb link, to include microformat.
+		foreach ( $parents as $p ) {
+			$parent_title = get_the_title( $p );
+			$parent_link = get_permalink( $p );
+			$out.= " &mdash; <a href='$parent_link' class='ancestor'  itemprop='url'><span itemprop='title'>$parent_title</span></a>";
+		}
+
+		if( empty ( $out ) ) { return false; }
+
+		$out = "<nav itemscope itemtype='http://data-vocabulary.org/Breadcrumb' rel='navigation' class='ancestors'>$out</nav>";
+
+		return $out;
+
+	}
+}
+
+/**
+ * Get the byline for the current post.
+ *
+ * @return string The byline for the current post.
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_entry_byline' ) ) {
+	function anchorage_get_entry_byline() {
+		
+		// The date on which the post was published.
+		$date = anchorage_get_entry_date();
+		
+		// The display name of the author.
+		$display_name = get_the_author();
+		
+		// The website field in the user bio, if it exists.
+		$href = esc_url( get_the_author_meta( 'user_url' ) );
+		
+		// If there is no website field, grab the archives page for the author.
+		if( empty( $href ) ) {
+			$href = esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) );
+		}
+
+		$by = sprintf( esc_html__( 'By %s', 'anchorage' ), $display_name );
+
+		$out = "
+			<div class='entry-byline'>
+				&mdash; <address class='vcard'><a href='$href' class='fn url'>$by</a></address>, $date
+			</div>
+		";
+		return $out;
+	}
+}
+
+/**
+ * Get the categories for the current post.
+ * 
+ * @return string The categories for the current post
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_entry_cats' ) ) {
+	function anchorage_get_entry_cats() {
+
+		$out = '';
+
+		// Get all the category links for this post, comma-sep.
+		$categories_list = get_the_category_list( esc_html__( ', ', 'anchorage' ) );
+		if ( $categories_list ) {
+			$out = "<div class='category-links'>&mdash; $categories_list &mdash;</div>";
+		}
+
+		return $out;
+
+	}
+}
+
+/**
+ * Get the tags for the current post.
+ * 
+ * @return string The tags for the current post.
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_entry_tags' ) ) {
+	function anchorage_get_entry_tags() {
+
+		$out = '';
+		
+		// Get links to all the tags for this post, comma-sep.
+		$tags_list = get_the_tag_list( '', esc_html__( ', ', 'anchorage' ), '' );
+		
+		if ( $tags_list ) {
+			$tags_label = esc_html__( 'Tags:', 'anchorage' );
+			$out = "
+				<div class='tag-links'>
+					<span class='tag-label'>$tags_label</span>
+					$tags_list
 				</div>
 			";
 		}
 
-		set_transient( 'anchorage_jump_menus', $jump, DAY_IN_SECONDS );
-
+		return $out;
 	}
-
-	$out .= $jump;
-
-	$out = "
-		<div class='no-posts-wrapper mild-contrast-color'>$out</div>
-	";
-
-	return $out;
 }
 
-function anchorage_jump_nav( $archive_type ) {
-
-	$options = '';
-
-
-	if( $archive_type == 'category' ) {
-		$label = esc_attr__( 'Choose a category to jump to that page.', 'anchorage' );
+/**
+ * Get a biography paragraph for the post author.
+ * 
+ * @return string A biography paragraph for the post author.
+ *
+ * @since anchorage 1.0
+ */
+if( ! function_exists( 'anchorage_get_author_bio' ) ) {
+	function anchorage_get_author_bio() {
 		
-		$categories = get_categories();
-		if( ! empty( $categories ) ) {
-			foreach ( $categories as $category ) {
-				$cat_id = absint( $category->cat_ID );
-				$cat_link = esc_url( get_category_link( $cat_id ) );
-			  	$option = "<option value='$cat_link'>";
-				$option .= esc_html( $category->cat_name );
-				$option .= '</option>';
-				$options .= $option;
-	  		}
-	  	}
-	
-	} elseif ( $archive_type == 'tag' ) {
-		$label = esc_html__( 'Choose a tag to jump to that page.', 'anchorage' );
-
-		$tags = get_tags();
-		if( ! empty( $tags ) ) {
-			foreach ( $tags as $tag ) {
-				$tag_id = absint( $tag->term_id );
-				$tag_link = esc_url( $tag_link = get_tag_link( $tag_id ) );
-				$option = "<option value='$tag_link'>";
-				$option .= esc_html( $tag->name );
-				$option .= '</option>';
-				$options .= $option;
-  			}
+		// Grab the author bio.
+		$desc = wp_kses_post( get_the_author_meta( 'description' ) );
+		if( ! empty ( $desc ) ) {
+			$desc = "<div class='content-holder author-description'>$desc</div>";	
 		}
-
-	} elseif ( $archive_type == 'author' ) {
-		$label = esc_html__( 'Choose an author to jump to that page.', 'anchorage' );
-
-		$args = array( 'who' => 'authors' );
-		$authors = get_users( $args ); 
-		if( ! empty( $authors ) ){
-			foreach($authors as $author){
-				$user_id = absint($author->ID);
 			
-				$post_count = absint(count_user_posts( $user_id ));
-				if( empty( $post_count ) ) { continue; }
-				
-				$display_name = esc_html($author->display_name);
-				$author_url = esc_url( get_author_posts_url( $user_id) );
-				$options.="<option value='$author_url'>$display_name</option>";
-			}	
+		// Grab the author avatar.
+		$author_email = sanitize_email( get_the_author_meta( 'user_email' ) );
+		$display_name_attr = esc_attr( get_the_author_meta( 'display_name' ) );
+		$avatar = get_avatar( $author_email, 250, '', $display_name_attr );
+
+		// The fail image from gravatar has the string 'blank.gif' and we don't want to show the fail image
+		if( empty( $avatar ) || stristr( $avatar, 'blank.gif' ) ) {
+			$avatar = "";
+		} else {
+			$avatar ="
+				<div class='vcard avatar-wrap'>
+					<span class='fn'>
+						$avatar
+					</span>
+				</div>
+			";
 		}
-	
-	} elseif ( $archive_type == 'month' ) {
-		$label = esc_html__( 'Choose a month to jump to that page.', 'anchorage' );
-		$args = array(
-			'type' => 'monthly',
-			'format' => 'option',
-			'echo' => false,
-			'show_post_count' => 0,
-		);
 
-		if( wp_get_archives( $args ) ) {
-			$options = wp_get_archives( $args );
-		}
-	}
+		$out = $avatar . $desc;
 
-	if( empty ( $options ) ) { return false; }
-	
-	$out = "
-		<select class='jump-nav' title='$label' name='jump-nav' onchange='document.location.href=this.options[this.selectedIndex].value;'>
-		<option value=''>$label</option>
-		$options
-		</select>
-	";
+		$break = anchorage_get_hard_rule( array( 'break-minor' ) );
 
-	return $out;
-}
-
-// get page ancestors 
-function anchorage_page_ancestors() {
-	global $post;
-	$parents = get_post_ancestors( $post->ID );
-
-	if( !is_array( $parents ) ) {
-		return false;
-	}
-
-	$parents = array_reverse( $parents );
-
-	$out = '';
-
-	foreach ( $parents as $p ) {
-		//$parent = get_post( $p );
-		$parent_title = get_the_title( $p );
-		$parent_link = get_permalink( $p );
-		$out.= " &mdash; <a href='$parent_link' class='ancestor'>$parent_title</a>";
-	}
-
-	if( empty ( $out ) ) { return false; }
-
-	$out = "<nav rel='navigation' class='ancestors'>$out</nav>";
-
-	return $out;
-
-}
-
-/**
- * Print HTML with meta information for current post: categories, tags, permalink, author, and date.
- *
- * Create your own anchorage_entry_meta() to override in a child theme.
- *
- * @since Twenty Thirteen 1.0
- */
-function anchorage_entry_byline() {
-	
-	$date = anchorage_entry_date();
-
-	$out = "
-		<div class='entry-byline'>
-			&mdash; <address class='vcard'><a href='" . esc_url( home_url() ) . "' class='fn url'>By " . get_the_author() . "</a></address>,
-			$date
-		</div>
-	";
-	return $out;
-}
-
-function anchorage_entry_cats(){
-
-	$out = '';
-	$categories_list = get_the_category_list( esc_html__( ', ', 'anchorage' ) );
-	if ( $categories_list ) {
-		$out = "<div class='category-links'>&mdash; $categories_list &mdash;</div>";
-	}
-
-	return $out;
-
-}
-
-function anchorage_entry_tags(){
-
-	$out = '';
-	$tags_list = get_the_tag_list( '', esc_html__( ', ', 'anchorage' ), '' );
-	if ( $tags_list ) {
-		$out = "
-			<div class='tag-links'>
-				<span class='tag-label'>".esc_html__( 'Tags:', 'anchorage' )."</span>
-				$tags_list
-			</div>";
-	}
-
-	return $out;
-
-}
-
-function anchorage_author_bio(){
-	
-	//global $post;
-
-	$desc = wp_kses_post( get_the_author_meta( 'description' ) );
-	if( !empty ( $desc ) ) {
-		$desc = "<div class='content-holder author-description'>$desc</div>";	
-	}
-		
-	$author_email = sanitize_email( get_the_author_meta( 'user_email' ) );
-	$display_name_attr = esc_attr( get_the_author_meta( 'display_name' ) );
-	$avatar = get_avatar( $author_email, 250, '', $display_name_attr );
-
-	//the fail image from gravatar has the string 'blank.gif' and we don't want to show the fail image
-	if( empty( $avatar ) || stristr( $avatar, 'blank.gif' ) ) {
-		$avatar = "";
-	} else {
-		$avatar ="
-			<div class='vcard avatar-wrap'>
-				<span class='fn'>
+		if( ! empty( $out ) ) {
+			$out = "
+				<div class='content-holder author-bio'>
 					$avatar
-				</span>
-			</div>
-		";
+					$desc
+				</div>
+				$break
+			";
+		}
+
+		return $out;
 	}
-
-	$out = $avatar.$desc;
-
-	if( !empty( $out ) ){
-		$out = "
-			<div class='content-holder author-bio'>
-				$avatar
-				$desc
-			</div>
-			<hr class='break break-minor'>
-		";
-	}
-
-	return $out;
 }
-
-// Get src URL from avatar <img> tag (add to functions.php)
-function get_avatar_url( $author_id, $size ) {
-    $get_avatar = get_avatar( $author_id, $size );
-    preg_match( "/src='(.*?)'/i", $get_avatar, $matches );
-    return ( $matches[1] );
-}
-
-/**
- * Print HTML with date information for current post.
- *
- * Create your own anchorage_entry_date() to override in a child theme.
- *
- * @since Twenty Thirteen 1.0
- *
- * @param boolean $echo (optional) Whether to echo the date. Default true.
- * @return string The HTML-formatted post date.
- */
-function anchorage_entry_date( ) {
-	if ( has_post_format( array( 'chat', 'status' ) ) )
-		$format_prefix = _x( '%1$s on %2$s', '1: post format name. 2: date', 'anchorage' );
-	else
-		$format_prefix = '%2$s';
-
-	$out = sprintf( '<span class="date"><a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s">%4$s</time></a></span>',
-		esc_url( get_permalink() ),
-		esc_attr( sprintf( __( 'Permalink to %s', 'anchorage' ), the_title_attribute( 'echo=0' ) ) ),
-		esc_attr( get_the_date( 'c' ) ),
-		esc_html( sprintf( $format_prefix, get_post_format_string( get_post_format() ), get_the_date() ) )
-	);
-
-	return $out;
-}
-

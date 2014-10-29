@@ -12,9 +12,10 @@
  * =============================================================================
  */
 
-/* Override the Twitter embed fixed width. */
+/* Tweets */
 .entry-content .twitter-tweet-rendered {
 	max-width: 100% !important;
+	margin: 0 auto !important;
 }
 
 /* Images */
@@ -56,6 +57,20 @@ img.alignnone {
 	margin: $small_margin 0;
 }
 
+@media ( max-width: $small_device ) {
+	.wp-caption.alignleft,
+	.wp-caption.alignright,
+	img.alignleft,
+	img.alignright,
+	.alignleft,
+	.alignright {
+		float: none;
+		display: block;
+		margin: 0 auto $large_margin;
+	}
+}
+
+.first-image-caption,
 figure,
 .wp-caption,
 .entry-caption,
@@ -277,7 +292,7 @@ img.wp-smiley,
 	position: relative;
 }
 
-.widget_search .s {
+.widget_search .search-field {
 	width: 100%;
 	display: block;
 }
@@ -336,6 +351,11 @@ img.wp-smiley,
  */
 .entry-title {
 	text-align: center;
+	-ms-word-wrap: break-word;
+	word-wrap: break-word;
+	-moz-hyphens: auto;
+	-webkit-hyphens: auto;
+	hyphens: auto;
 }
 
 .sticky .entry-title {
@@ -418,7 +438,8 @@ img.wp-smiley,
 #respond,
 .no-posts-wrapper,
 .inner-wrapper .no-posts-wrapper,
-.editable-content form {
+.editable-content form,
+.editable-content form:last-child {
 	padding: $large_padding;
 	clear: both;
 	border-radius: $small_border-radius;
@@ -429,7 +450,9 @@ img.wp-smiley,
 }
 
 /* Buttons */
+.editable-content a.button,
 a.button,
+input.button,
 .button,
 [type='submit'],
 [type='image'],
@@ -600,6 +623,7 @@ button {
 	font-style: normal;	
 	padding-left: 20%;
 	line-height: 1.2em;
+	margin-top: $large_margin;
 }
 
 .editable-content q {
@@ -678,6 +702,16 @@ button {
  * =============================================================================
  */
 
+.comments-link {
+	font-size: 90%;
+	text-align: right;
+	display: block;
+}
+
+.tags-byline-wrap > * {
+	vertical-align: top;
+}
+
 /* Entry Byline */
 .entry-byline {
 	position: relative;
@@ -725,10 +759,11 @@ button {
 	float: left;
 }
 
-.prev {
+.next {
 	float: right;
 	text-align: right;
 }
+
 
 /**
  * ============================================================================= 
@@ -863,6 +898,12 @@ button {
 	min-width: 0;
 }
 
+#cancel-comment-reply-link {
+	display: block;
+	font-weight: 400;
+	font-style: italic;
+}
+
 @media ( max-width: $large_device ) {
 	.comment-form-author,
 	.comment-form-email,
@@ -886,6 +927,10 @@ button {
 	font-style: italic;
 }
 
+.logged-in-as a {
+	font-weight: 600;
+}
+
 /**
  * 404
  */
@@ -899,10 +944,17 @@ button {
 .entry-content .no-posts-searchform {
 	background: none;
 	padding: 0;
+	position: relative;
 }
 
 .no-posts-search-input {
 	border: none;
+}
+
+.no-posts-searchform [type='submit'] {
+	position: absolute;
+	right: 0;
+	top: 0;
 }
 
 /**

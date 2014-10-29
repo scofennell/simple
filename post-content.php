@@ -1,3 +1,13 @@
+<?php
+/**
+ * anchorage post-content.
+ *
+ * @package WordPress
+ * @subpackage anchorage
+ * @since  anchorage 1.0
+ */
+?>
+
 <section itemprop="articleBody" class="entry-content editable-content content-holder">
 	
 	<?php if( has_post_format( 'quote' ) ) { ?>
@@ -18,7 +28,7 @@
 	
 	<?php } else { ?>
 	
-		<?php the_content('<span class="inverse-shadow read-more">'.sprintf( esc_html__( 'Continue reading%s', 'anchorage' ), '<span class="screen-reader-text"> '.get_the_title().'</span>' ).'&hellip;</span>'); ?>
+		<?php the_content( anchorage_get_more_text() ); ?>
 	
 	<?php } ?>
 
@@ -39,7 +49,7 @@
 		<em class='status-time'>
 
 			<?php echo esc_html__( '&mdash;', 'anchorage'); ?>
-	
+
 			<?php echo get_the_time(); ?>
 	
 			<?php echo get_the_date(); ?>
@@ -51,16 +61,14 @@
 	<?php if( has_post_format( 'quote' ) ) { ?>
 	
 		<span class='quote close-quote'>
-
 			<?php echo esc_html__( '&rdquo;', 'anchorage'); ?>
-
 		</span>
 	
 	<?php } ?>
 
 	<?php if( is_singular() ) { ?>
 	
-		<?php echo anchorage_link_pages(); ?>
+		<?php echo anchorage_get_link_pages(); ?>
 	
 	<?php } ?>					
 

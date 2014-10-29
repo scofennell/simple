@@ -1,6 +1,6 @@
 <?php
 /**
- * The main template file
+ * The main template file.
  *
  * This is the most generic template file in a WordPress theme and one of the
  * two required files for a theme (the other being style.css).
@@ -16,27 +16,19 @@
 
 get_header(); ?>
 
-<?php if( is_archive() || is_search() || is_404() ) { ?>
-	
-	<section class='outer-wrapper'>
-	
-		<div class='inner-wrapper'>
-	
-			<?php echo anchorage_archive_header(); ?>
-	
-		</div>
-	
-	</section>
-
-<?php } ?>
-
 <main id="loop" class="outer-wrapper" role="main">
+
+	<?php
+		/**
+		 * This applies to 404's empty archive pages.
+		 */
+	?>
 
 	<?php if( is_404() || ! have_posts() ) { ?>
 		
 		<article class='hentry no-posts inner-wrapper entry-content'>
 			
-			<?php echo anchorage_no_posts(); ?>
+			<?php echo anchorage_get_no_posts(); ?>
 
 		</article>
 
@@ -51,8 +43,6 @@ get_header(); ?>
 				<?php get_template_part( 'post', 'header' ); ?>
 				
 				<?php get_template_part( 'post', 'content' ); ?>
-				
-				<hr class="break break-minor">
 
 				<?php get_template_part( 'post', 'footer' ); ?>
 				
@@ -68,11 +58,17 @@ get_header(); ?>
 
 		<?php if ( ! is_singular() ) { ?>
 			
+			<?php
+				/**
+				 * Anything other than single posts getsget next/prev posts links.
+				 */
+			?>
+
 			<section id="post-page-nav" class="outer-wrapper">
 			
 				<div class="inner-wrapper">
 			
-					<?php echo anchorage_paging_nav(); ?>
+					<?php echo anchorage_get_paging_nav(); ?>
 			
 				</div>
 			
@@ -80,12 +76,17 @@ get_header(); ?>
 		
 		<?php } elseif( is_single() ) { ?>
 			
-			
+			<?php
+				/**
+				 * Single posts getsget next/prev post links.
+				 */
+			?>
+
 			<section id="post-page-nav" class="outer-wrapper">
 			
 				<div class="inner-wrapper">				
 			
-					<?php echo anchorage_post_nav(); ?>
+					<?php echo anchorage_get_post_nav(); ?>
 			
 				</div>
 			
