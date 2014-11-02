@@ -167,7 +167,7 @@ if( ! function_exists( 'anchorage_header_menu' ) ) {
  * @since  anchorage 1.0
  */
 if( ! function_exists( 'anchorage_get_search_form' ) ) {
-	function anchorage_get_search_form( $form_classes = array(), $search_input_classes = array( 'search-field' ) ) {
+	function anchorage_get_search_form( $form_classes = array(), $search_input_classes = array( 'search-field' ), $header = '' ) {
 		
 		// An array of CSS classes for the search form.
 		$form_classes = array_map( 'sanitize_html_class', $form_classes );
@@ -188,8 +188,14 @@ if( ! function_exists( 'anchorage_get_search_form' ) ) {
 		$search_for_attr = esc_attr__( 'Search for:', 'anchorage' );
 		$submit = esc_html__( 'Submit', 'anchorage' );
 
+		if( ! empty( $header ) ) {
+			$header = esc_html( $header );
+			$header = "<h3 class='search-header'>$header</h3>";
+		}
+
 		$out ="
 			<form action='$action' class='$form_classes_string search-form' method='get' role='search'>
+				$header
 				<label for='s'><span class='screen-reader-text'>$search_for</span></label>
 				<input id='s' type='search' title='$search_for_attr' name='s' value='$placeholder' class='search-field $search_input_string'>
 				<input type='submit' value='$submit' class='screen-reader-text search-submit button'>
@@ -396,13 +402,13 @@ if( ! function_exists( 'anchorage_get_post_nav' ) ) {
 
 		if( get_previous_post_link() ) {
 			$arrow = anchorage_get_arrow( 'right', array(), false );
-			$prev_post_link = get_previous_post_link( "%link", "%title&nbsp;$arrow" );
+			$prev_post_link = get_previous_post_link( "%link", "%title" . $arrow );
 			$out .= "<span class='inverse-color button button-minor next next-post'>$prev_post_link</span>";
 		}
 
 		if( get_next_post_link() ) {
 			$arrow = anchorage_get_arrow( 'left', array(), false );
-			$next_post_link = get_next_post_link( "%link", "$arrow&nbsp;%title" );
+			$next_post_link = get_next_post_link( "%link", $arrow . "%title" );
 			$out .= "<span class='inverse-color button button-minor prev previous-post'>$next_post_link</span>";
 		}
 
@@ -444,7 +450,7 @@ if ( ! function_exists( 'anchorage_get_paging_nav' ) ) {
 
 		if( get_next_posts_link() ) {
 			$arrow = anchorage_get_arrow( 'right', array(), false );
-			$next_link = get_next_posts_link( esc_html__( 'Older Posts', 'anchorage' ) . '&nbsp;' . $arrow );
+			$next_link = get_next_posts_link( esc_html__( 'Older Posts', 'anchorage' ) . $arrow );
 			$out .= "<span class='inverse-color button button-minor next next-posts'> $next_link </span>";
 		}
 
@@ -474,6 +480,8 @@ if ( ! function_exists( 'anchorage_get_paging_nav' ) ) {
 if( ! function_exists( 'anchorage_get_archive_header' ) ) {
 	function anchorage_get_archive_header() {
 		
+		if( is_single() || is_page() || is_singular() ) { return false; }
+
 		// Grab the number of posts found by the current query.
 		global $wp_query;
 		$post_count ='';
@@ -501,28 +509,29 @@ if( ! function_exists( 'anchorage_get_archive_header' ) ) {
 			$class = 'search';
 
 		} elseif( is_category() ) {
+
 			$title = single_cat_title( '', false );
-			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$message = "<mark class='archive-term'>$title</mark>: $post_count";
 			$class = 'category';
 		} elseif( is_tag() ) {
 			$title = single_tag_title( '', false );
-			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$message = "<mark class='archive-term'>$title</mark>: $post_count";
 			$class = 'tag';
 		} elseif( is_year() ) {
 			$title = get_the_date( 'Y' );
-			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$message = "<mark class='archive-term'>$title</mark>: $post_count";
 			$class = 'year';
 		} elseif( is_month() ) {
 			$title = get_the_date( 'F Y' );
-			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$message = "<mark class='archive-term'>$title</mark>: $post_count";
 			$class = 'month';
 		} elseif( is_day() ) {
 			$title = get_the_date();
-			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$message = "<mark class='archive-term'>$title</mark>: $post_count";
 			$class = 'day';
 		} elseif( is_author() ) {
 			$title = get_the_author();
-			$message = "$post_count: <mark class='archive-term'>$title</mark>";
+			$message = "<mark class='archive-term'>$title</mark>: $post_count";
 			$class = 'author';
 		} elseif( is_404() ) {
 			$message = esc_html__( 'Your page could not be found.', 'anchorage' );
@@ -547,7 +556,7 @@ if( ! function_exists( 'anchorage_get_archive_header' ) ) {
 		$title_class = "archive-title-$class";
 		
 		$out = "
-			<header class='archive-header mild-contrast-color content-holder $header_class'>
+			<header class='archive-header mild-contrast-color content-holder accent-block $header_class'>
 				<h1 class='archive-title $title_class'>
 					$message $paged
 				</h1>
@@ -571,12 +580,10 @@ if( ! function_exists( 'anchorage_get_no_posts' ) ) {
 	function anchorage_get_no_posts() {
 
 		$find_your_way = esc_html__( 'Find your way by searching:', 'anchorage' );
-		$or_browse = esc_html__( 'Or browse by archive:', 'anchorage' );
-
-		$out  = "<h3 class='no-posts-header'>$find_your_way</h3>";
-		$out .= anchorage_get_search_form( array( 'no-posts-searchform' ), array ( 'no-posts-search-input' ) );
-		$out .= "<h3 class='no-posts-header'>$or_browse</h3>";
 		
+		$search_header  = "$find_your_way";
+		$out .= anchorage_get_search_form( array( 'no-posts-searchform' ), array ( 'no-posts-search-input' ), $search_header );
+
 		// The jump menus are a lot of querying, so see if we have it as a transient first.
 		$jump = get_transient( 'anchorage_get_jump_menus' );
 		
@@ -590,11 +597,14 @@ if( ! function_exists( 'anchorage_get_no_posts' ) ) {
 			$jump .= anchorage_get_jump_nav( 'page' );
 
 			if( ! empty( $jump ) ) { 
+		
+				$or_browse = esc_html__( 'Or browse by archive:', 'anchorage' );
 
 				$jump = "
-					<div class='jump-nav-wrapper'>
+					<form class='jump-nav-wrapper'>
+						<h3 class='no-posts-header'>$or_browse</h3>
 						$jump
-					</div>
+					</form>
 				";
 			}
 
@@ -603,10 +613,12 @@ if( ! function_exists( 'anchorage_get_no_posts' ) ) {
 
 		}
 
+		$br = anchorage_get_hard_rule();
+
 		$out .= $jump;
 
 		$out = "
-			<div class='no-posts-wrapper mild-contrast-color'>$out</div>
+			<div class='no-posts-wrapper accent-block mild-contrast-color'>$out</div>
 		";
 
 		return $out;
@@ -614,38 +626,264 @@ if( ! function_exists( 'anchorage_get_no_posts' ) ) {
 }
 
 /**
- * Get a breadcrumb nav for hierarchical post types.
+ * Get a breadcrumb nav.
  * 
- * @return string A breadcrumb nav for hierarchical post types.
+ * @return string A breadcrumb nav.
  *
  * @since anchorage 1.0
  */
-if( ! function_exists( 'anchorage_get_page_ancestors' ) ) {
-		function anchorage_get_page_ancestors() {
-		
-		// Make sure the current post has ancestors.
-		global $post;
-		$parents = get_post_ancestors( $post -> ID );
-		if( ! is_array( $parents ) ) {
-			return false;
-		}
-
-		// We want the most distant ancestors first.
-		$parents = array_reverse( $parents );
+if( ! function_exists( 'anchorage_get_breadcrumbs' ) ) {
+	function anchorage_get_breadcrumbs() {
 
 		$out = '';
 
-		// For each parent, output a breacrumb link, to include microformat.
-		foreach ( $parents as $p ) {
-			$parent_title = get_the_title( $p );
-			$parent_link = get_permalink( $p );
-			$out.= " &mdash; <a href='$parent_link' class='ancestor'  itemprop='url'><span itemprop='title'>$parent_title</span></a>";
+		/**
+		 * Determine what sort of page view this is.
+		 * Based on that, we might grab parent posts, parent terms, or just a home link.
+		 */
+
+		// If we're viewing a term archive, denote that resource type.
+		if( anchorage_is_termish() ) {
+
+			$resource_type = 'taxonomy';
+			$object_type = get_queried_object() -> taxonomy;
+			$object_id = get_queried_object() -> term_id;
+
+		// Or, if we're viewing a single post or page, get more specific.
+		} elseif( anchorage_is_singlish() ) {
+			
+			$object_id = get_the_ID();
+			$object_type = get_post_type();
+			$post_type_obj = get_post_type_object( $object_type );
+
+			// If it's a hierarchial post type, that's our resource type.
+			if( is_post_type_hierarchical( $object_type ) ) {
+				$resource_type = 'hierarchical_post_type';
+			
+			// If it's a custom post type, that's our resource.
+			} elseif( anchorage_is_custom_post_type( $object_type ) ) {
+				$resource_type = 'flat_custom_post_type';
+
+			} else {
+				$resource_type = 'flat_post_type';
+			}
+
+		// Of if it's a post type archive, that's our resource.
+		} elseif( is_post_type_archive() ) {
+			
+			$resource_type = 'post_type_archive';
+			$object_type = get_post_type();
+			$post_type_obj = get_post_type_object( $object_type );
+
 		}
 
+		// Start an array to hold the breadcrumbs, starting with a string to denote the homepage.
+		$crumb_array = array( 'home' );
+
+		// If it's a tax or nested post type, we can use the get_ancestors() function.
+		if( ( $resource_type == 'taxonomy' ) || ( $resource_type == 'hierarchical_post_type' ) ) {	
+			$get_ancestors = get_ancestors( $object_id, $object_type );
+		
+		// If it's a flat custom post type, we'll add a string to denote that.
+		} elseif( $resource_type == 'flat_custom_post_type' ) {
+			$crumb_array []= 'post_type_archive';
+		
+		// And if it's a flat standard post type, again we can use get_ancestors(), but we'll do so with the first category. 
+		} elseif( $resource_type == 'flat_post_type' ) {	
+			$post_categories = get_the_category(); 
+			$first_category = $post_categories[0];
+			$get_ancestors = get_ancestors( $first_category -> term_id, 'category' );
+			
+			// We also have to add that first category in at the end.
+			$get_ancestors []= $first_category -> term_id;
+
+		}
+		
+		// If we did a call to get_ancestors(), we want to remove empty elements, reverse the order, and merge it in with the rest of the breadcrumbs.
+		if( isset( $get_ancestors ) ) {
+			$get_ancestors = array_filter( $get_ancestors );
+			$get_ancestors = array_reverse( $get_ancestors );
+			$crumb_array = array_merge( $crumb_array, $get_ancestors );
+		}
+
+		// Add a string to denote the current page.
+		$crumb_array []= 'current';
+
+		/**
+		 * Let's see if the current view has child terms or child posts.
+		 */
+		$children = '';
+
+		// If we are browsing a term, look for child terms.
+		if( $resource_type == 'taxonomy' ) {
+			
+			$get_children = get_term_children( $object_id, $object_type );
+		
+			// If we find child terms, build them into an array.
+			if( is_array( $get_children ) ) {
+				foreach( $get_children as $c ) {
+					
+					$child = array();
+					$term = get_term( $c, $object_type );
+					$title = $term -> name;
+					$href = get_term_link( $term -> term_id, $object_type );
+					$child []= $title;
+					$child []= $href;
+					$children []= $child;
+				
+				}
+			}
+
+		// If we are browsing a post, look for child posts.
+		} elseif( $resource_type == 'hierarchical_post_type' ) {
+			
+			$args = array(
+				'post_parent' => $object_id,
+				'post_type'   => $object_type,
+				'posts_per_page' => get_option( 'posts_per_page' ),
+				'post_status' => 'publish'
+			); 
+			$get_children = get_children( $args );
+			
+			// If we found some child posts, build them into an array.
+			if( is_array( $get_children ) ) {
+				foreach( $get_children as $c ) {
+					$child = array();
+					$title = get_the_title( $c -> ID );
+					$href = get_permalink( $c -> ID );
+					$child []= $title;
+					$child []= $href;
+					$children []= $child;
+				}
+			}
+		}
+		
+		// If we had some children, add that to the crumbs.
+		if( ! empty( $get_children ) ) {
+			$crumb_array []= 'children';
+		}
+
+		// We'll put an arrow between each breadcrumb.
+		$arrow = anchorage_get_arrow( 'right', array( 'breadcrumbs-arrow' ), false );
+
+		// Grab a count of the ancestors so we know when to stop adding arrows.
+		$count = count( $crumb_array );
+
+		// For each parent, output a breacrumb link, to include microformat.		
+		$i = 0;
+		foreach ( $crumb_array as $crumb ) {
+
+			$crumb_link = '';
+			$crumb_title = '';
+			$this_crumb = '';
+
+			$i++;
+
+			// Provide a link to the home page.
+			if( $crumb == 'home' ) {
+
+				$crumb_title = esc_html__( 'Home', 'anchorage' );
+				$crumb_link = home_url();
+
+			// Provide the title of the current page, unlinked.
+			} elseif( $crumb == 'current' ) {
+
+				if( anchorage_is_singlish() ) {
+					$crumb_title = get_the_title();
+				
+				} elseif( is_404() ) {
+					$crumb_title = esc_html__( '404', 'anchorage' );
+				
+				} elseif( is_author() ) {
+					$crumb_title = get_the_author();				
+				
+				} elseif( is_search() ) {
+					$crumb_title = esc_html__( 'Search', 'anchorage' );
+				
+				} elseif( $resource_type == 'post_type_archive' ) {
+
+					$crumb_title = $post_type_obj -> labels -> name;
+
+				} else {
+					$term = get_queried_object();
+					$crumb_title = wp_kses_post( $term -> name );
+				}
+
+			// If this is the crumb for child links, output each child, comma-seperated.
+			} elseif( $crumb == 'children' ) {
+				if( is_array( $children ) ) {
+					
+					// Grab a comma.
+					$comma = esc_html__( ', ', 'anchorage' );
+					
+					$child_count = count( $children );
+					$child_i = 0;
+					foreach( $children as $child ) {
+						
+						$child_i++;
+						$crumb_title = $child[0];
+						$crumb_link = $child[1];
+						$this_crumb .= anchorage_get_breadcrumb( $crumb_title, $crumb_link );
+						
+						// If we're not at the end, add a comma.
+						if( $child_count != $child_i ) {
+							$this_crumb .= $comma;
+						}
+					}
+				}
+
+			// If this breadcrumb is not for one of our special strings, dig into it and output the correct data.
+			} else {
+
+				// If it's a taxonomy resource or a flat post type resource, then the breadcrumbs are term links.
+				if( ( $resource_type == 'taxonomy' ) || ( $resource_type == 'flat_post_type' ) ) {
+				
+					$obj = get_category( $crumb );
+					$crumb_title = $obj -> name;
+					$crumb_link = get_term_link( $obj -> term_id, 'category' );
+
+				// If it's a flat custom post type, just link back to the post type archive.
+				} elseif( $resource_type == 'flat_custom_post_type' ) {
+	
+					$crumb_title = $post_type_obj -> labels -> name;
+					$crumb_link = get_post_type_archive_link( $object_type );
+
+				// For anything else, grab the title and permalink.
+				} else {
+
+					$crumb_title = get_the_title( $crumb );
+					$crumb_link =  get_permalink( $crumb );
+				
+				}
+	
+			}
+
+			if( empty( $this_crumb ) ) {
+				$this_crumb = anchorage_get_breadcrumb( $crumb_title, $crumb_link );
+			}
+
+			$out .= $this_crumb;
+
+			// Unless we're at the end of the crumbs, add an arrow.
+			if( $i != $count ) {
+				$out .= $arrow;
+			}
+
+		}
+	
 		if( empty ( $out ) ) { return false; }
 
-		$out = "<nav itemscope itemtype='http://data-vocabulary.org/Breadcrumb' rel='navigation' class='ancestors'>$out</nav>";
+		$class = "breadcrumbs breadcrumbs-$resource_type";
 
+		$out .= anchorage_get_hard_rule();
+
+		// Wrap the breadcrumbs.
+		$out = "
+			<nav itemscope itemtype='http://data-vocabulary.org/Breadcrumb' rel='navigation' class='breadcrumbs breadcrumbs-$resource_type'>
+				$out
+			</nav>
+		";
+	
 		return $out;
 
 	}

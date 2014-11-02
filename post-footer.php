@@ -14,7 +14,7 @@
 
 <?php if( ! is_page() ) { ?>
 
-	<footer class="entry-meta inverse-shadow">
+	<footer class="content-holder entry-meta inverse-shadow">
 
 		<?php if ( comments_open() && ! post_password_required() ) { ?>
 

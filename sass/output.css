@@ -137,7 +137,7 @@ h6 {
   h6 {
     font-size: 12px; } }
 /* Margin Defaults */
-.entry-content .button, blockquote, dl, fieldset, form, h1, h2, h3, h4, h5, h6, p, ol, table, ul {
+.entry-content .button, blockquote, dl, fieldset, form, p, ol, table, ul, h1, h2, h3, h4, h5, h6 {
   margin-bottom: 23px; }
 
 /*Unicode char defaults*/
@@ -386,7 +386,10 @@ optgroup {
 /*Forms*/
 select, input[type="search"], input[type="url"], input[type="tel"], input[type="text"], input[type="email"], input[type="date"], input[type="password"], textarea {
   border-radius: 3px;
-  padding: 3px; }
+  padding: 3px;
+  width: 100%;
+  margin: 0 0 10px;
+  display: block; }
 
 fieldset {
   border-radius: 3px;
@@ -496,16 +499,14 @@ body {
 /* Desktop Chrome enforces a 400px min-width anyways. */
 .outer-wrapper {
   width: 100%;
-  /*min-width: $small_device;*/
+  min-width: 421px;
   clear: both; }
 
 .inner-wrapper {
   max-width: 723px;
   margin: 0 auto;
   display: block;
-  clear: both; }
-
-.inner-wrapper {
+  clear: both;
   padding: 0 23px; }
 
 /* Vertical Spacing */
@@ -515,6 +516,20 @@ body {
 .textwidget > :last-child, form > :last-child, form > :last-child :last-child, fieldset > :last-child, .wp-caption > :last-child, blockquote > :last-child, .content-holder > :last-child, .inner-wrapper > :last-child {
   margin-bottom: 0px;
   padding-bottom: 0px; }
+
+/**
+ * Padded boxes
+ */
+.accent-block, .accent-block:last-child, #respond, .editable-content form, .editable-content form:last-child {
+  padding: 23px;
+  clear: both;
+  border-radius: 3px; }
+
+.accent-block > * {
+  margin-bottom: 40px; }
+
+.accent-block > *:last-child {
+  margin-bottom: 0; }
 
 /**
  * For those inner wrappers who have all their children inline,
@@ -537,18 +552,23 @@ body {
 .has-halfs > :nth-child(2), .has-halfs > :nth-child(2) > * {
   text-align: right; }
 
-.archive-header, .archive-header.content-holder, .inverse-band, .outer-wrapper {
+.inverse-band, .outer-wrapper {
   padding: 23px 0; }
 
 .inverse-band {
   margin-bottom: 40px; }
 
+/**
+ * The loop is a little bit special and gets some extra spacing that we don't see elsewhere.
+ */
+.home #loop {
+  margin-top: 23px; }
+
 #loop {
-  margin-top: 23px;
   margin-bottom: 40px; }
 
 @media (max-width: 421px) {
-  #loop {
+  .home #loop {
     margin-top: 10px; } }
 /**
  * Sass for theme rules.
@@ -596,7 +616,7 @@ input.inverse-color:hover, input.inverse-color:focus, .inverse-color input:hover
 h1, h2, h3, h4, h5, h6, dt, th, label, [type='submit'], [type='image'], .button, button, .inverse-font, .entry-content blockquote cite {
   font-family: helvetica, arial, sans-serif; }
 
-body, .post-format-label, .blog-description-link .word_3, .blog-description-link .word_5 {
+body {
   font-family: georgia, times, sans-serif; }
 
 /* Text Shadowing */
@@ -702,7 +722,8 @@ img.alignnone {
   font-style: italic;
   font-weight: 300;
   text-align: center;
-  padding: 10px; }
+  padding: 10px;
+  line-height: 1.2em; }
 
 .wp-caption .wp-caption-text {
   padding: 3px 0 0; }
@@ -855,17 +876,17 @@ img.wp-smiley, .rsswidget img {
   margin-left: 10px; }
 
 /**
- * Widgets
+ * Searchform
  */
-.widget_search .searchform {
+.search-form {
   background: none;
   position: relative; }
 
-.widget_search .search-field {
+.search-field {
   width: 100%;
   display: block; }
 
-.searchform .screen-reader-text {
+.search-submit {
   width: auto;
   right: 0;
   top: 0; }
@@ -875,13 +896,16 @@ img.wp-smiley, .rsswidget img {
  * Main
  * =============================================================================
  */
-/* Archive Pages */
-.archive-header {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  border-radius: 3px; }
+/* Breadcrumbs */
+.breadcrumbs {
+  font-style: italic;
+  font-size: 90%;
+  line-height: 1.2em; }
 
+.breadcrumbs-link {
+  font-weight: 600; }
+
+/* Archive Pages */
 .archive-title {
   font-size: 15px;
   text-align: center;
@@ -974,16 +998,11 @@ img.wp-smiley, .rsswidget img {
 .editable-content form > h1:first-child, .editable-content form > h2:first-child, .editable-content form > h3:first-child, .editable-content form > h4:first-child, .editable-content form > h5:first-child, .editable-content form > h6:first-child {
   padding-top: 0; }
 
-#respond, .no-posts-wrapper, .inner-wrapper .no-posts-wrapper, .editable-content form, .editable-content form:last-child {
-  padding: 23px;
-  clear: both;
-  border-radius: 3px; }
-
 .editable-content label {
   display: block; }
 
 /* Buttons */
-.editable-content a.button, a.button, input.button, .button, [type='submit'], [type='image'], button {
+.editable-content a.button, a.button, input.button, .button a, .button, [type='submit'], [type='image'], button {
   text-decoration: none;
   line-height: 1.2em; }
 
@@ -1007,17 +1026,20 @@ img.wp-smiley, .rsswidget img {
 .gallery-item .gallery-caption {
   background-color: rgba(0, 0, 0, 0.7);
   color: white;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 1.2;
   margin: 0;
   padding: 6px 9px;
   position: absolute;
-  top: 80%;
+  bottom: 0;
   left: 0;
   text-align: left;
   width: 100%;
   z-index: 999; }
 
+@media (max-width: 421px) {
+  body .gallery .gallery-item {
+    width: 100%; } }
 .gallery-caption > br:first-child, .gallery-caption > br:last-child {
   display: none; }
 
@@ -1337,34 +1359,14 @@ img.wp-smiley, .rsswidget img {
   font-weight: 600; }
 
 /**
- * 404
- */
-.no-posts-search-input, .jump-nav {
-  width: 100%;
-  margin: 0 0 10px;
-  display: block; }
-
-.entry-content .no-posts-searchform {
-  background: none;
-  padding: 0;
-  position: relative; }
-
-.no-posts-search-input {
-  border: none; }
-
-.no-posts-searchform [type='submit'] {
-  position: absolute;
-  right: 0;
-  top: 0; }
-
-/**
  * Arrows
  */
 .arrow {
   text-decoration: none !important;
   background: transparent !important;
   font-family: "Lucida sans unicode";
-  display: inline-block; }
+  display: inline-block;
+  padding: 0 3px; }
 
 /**
  * Sass for state rules.

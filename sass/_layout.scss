@@ -42,7 +42,7 @@ body {
 /* Desktop Chrome enforces a 400px min-width anyways. */
 .outer-wrapper {
 	width: 100%;
-	/*min-width: $small_device;*/
+	min-width: $small_device;
 	clear: both;
 }
 
@@ -51,9 +51,6 @@ body {
 	margin: 0 auto;
 	display: block;
 	clear: both;
-}
-
-.inner-wrapper {
 	padding: 0 $large_padding;
 }
 
@@ -76,6 +73,26 @@ blockquote > :last-child,
 .inner-wrapper > :last-child {
 	margin-bottom: 0px;
 	padding-bottom: 0px;
+}
+
+/**
+ * Padded boxes
+ */
+.accent-block,
+.accent-block:last-child,
+#respond,
+.editable-content form,
+.editable-content form:last-child {
+	padding: $large_padding;
+	clear: both;
+	border-radius: $small_border-radius;
+}
+
+.accent-block > * {
+	margin-bottom: $x_large_margin;
+}
+.accent-block > *:last-child {
+	margin-bottom: 0;
 }
 
 /**
@@ -106,8 +123,6 @@ blockquote > :last-child,
 	text-align: right;
 }
 
-.archive-header,
-.archive-header.content-holder,
 .inverse-band,
 .outer-wrapper {
 	padding: $large_padding 0;
@@ -117,15 +132,20 @@ blockquote > :last-child,
 	margin-bottom: $x_large_margin;
 }
 
-#loop {
+/**
+ * The loop is a little bit special and gets some extra spacing that we don't see elsewhere.
+ */
+
+.home #loop {
 	margin-top: $large_margin;
+}
+
+#loop {
 	margin-bottom: $x_large_margin;
 }
 
-
-
 @media ( max-width: $small_device ) {
-	#loop {
+	.home #loop {
 		margin-top: $medium_margin;
 	}
 }

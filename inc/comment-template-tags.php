@@ -84,10 +84,12 @@ if ( ! function_exists( 'anchorage_the_comment_form' ) ) {
 	
 		$leave_a_comment = esc_html__( 'Leave a Comment', 'anchorage' );
 
+		$br = anchorage_get_hard_rule();
+
 		// There does not seem to be a way to return instead of echo.
 		comment_form(
 			array(
-				'title_reply' => "<span class='inverse-shadow'>$leave_a_comment</span>",
+				'title_reply' => "$leave_a_comment $br",
 				'comment_notes_before' => '',
 				'comment_notes_after'  => '',
 				'cancel_reply_link'    => '',
@@ -135,7 +137,7 @@ if( ! function_exists( 'anchorage_get_comments_pagination' ) ) {
 		if ( get_next_comments_link() ) {
 			$older_comments = esc_html__( 'Older Comments', 'anchorage' );
 			$arrow = anchorage_get_arrow( 'right', array(), false );
-			$next_text = "$older_comments&nbsp;$arrow";
+			$next_text = "$older_comments$arrow";
 			$next_link = get_next_comments_link( $next_text );
 			$next = "<span class='inverse-color next button button-minor next-comments'>$next_link</span>";
 		}
@@ -145,7 +147,7 @@ if( ! function_exists( 'anchorage_get_comments_pagination' ) ) {
 		if ( get_previous_comments_link() ) {
 			$newer_comments = esc_html__( 'Newer Comments', 'anchorage' );
 			$arrow = anchorage_get_arrow( 'left', array(), false );
-			$prev_text = "$arrow&nbsp;$newer_comments";
+			$prev_text = "$arrow$newer_comments";
 			$prev_link = get_previous_comments_link( $prev_text );
 			$prev = "<span class='inverse-color prev button button-minor previous-comments'>$prev_link</span>";
 		}

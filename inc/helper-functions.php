@@ -11,6 +11,103 @@
  */
 
 /**
+ * Wrap the crumb.
+ * @see https://schema.org/breadcrumb
+ */
+if( ! function_exists( 'anchorage_get_breadcrumb' ) ) {
+	function anchorage_get_breadcrumb( $crumb_title, $crumb_link ) {
+
+		$crumb_title = wp_kses_post( $crumb_title );
+		$crumb_link = esc_url( $crumb_link );
+
+		$out = "<span itemprop='title'>$crumb_title</span>";
+			
+		// Unless it's a crumb to the current page, link it.
+		if( ! empty( $crumb_link ) ) {
+			$out = "<a href='$crumb_link' class='breadcrumbs-link' itemprop='url'>$out</a>";
+		}
+
+		return $out;
+
+	}
+}
+
+/**
+ * Determine if a post type supports a taxonomy.
+ *
+ * @param  string $post_type The name of a post type.
+ * @return  boolean Returns true if the given post type supports the given taxonomy, else false.
+ */
+if( ! function_exists( 'anchorage_post_type_has_tax' ) ) {
+	function anchorage_post_type_has_tax( $post_type, $taxonomy_name ) {
+		
+		if( ( $post_type == 'post' ) && ( ( $taxonomy_name == 'post_tag' ) || ( $taxonomy_name == 'category' ) ) ) { return true; }
+		
+
+		$post_type_object = get_post_type_object( $post_type );
+		$taxonomies = $post_type_object -> taxonomies;
+		if( empty( $taxonomies ) ) { return false; }
+		if( in_array( $taxonomy_name, $taxonomies ) ) {
+			return true;
+		}
+		return false;
+	}
+}
+
+/**
+ * Determine if a post type is custom or not.
+ * 
+ * @param  string $post_type The name of a post type.
+ * @return  boolean Returns true if the given post type is custom, else false.
+ */
+if( ! function_exists( 'anchorage_is_custom_post_type' ) ) {
+	function anchorage_is_custom_post_type( $post_type ) {
+
+	    $all_custom_post_types = get_post_types( array ( '_builtin' => FALSE ) );
+
+	    // there are no custom post types
+	    if ( empty ( $all_custom_post_types ) ) {
+	        return false;
+	    }
+
+	    $custom_types = array_keys( $all_custom_post_types );
+	    
+	    if( in_array( $post_type, $custom_types ) ) {
+	    	return true;
+	    } 
+	    return false;
+	}
+}
+
+/**
+ * Determine if the current view is tax, tag, or cat.
+ *
+ * @return boolean Returns true if current view is tax, tag, or cat, otherwise false.
+ */
+if( ! function_exists( 'anchorage_is_termish' ) ) {
+	function anchorage_is_termish() {
+		if( is_tax() ||  is_tag() || is_category() ) {
+			return true;
+		}
+		return false;
+	}
+}
+
+/**
+ * Determine if the current view is single, singular, or page.
+ *
+ * @return boolean Returns true if is single, singular, or page, otherwise false.
+ */
+if( ! function_exists( 'anchorage_is_singlish' ) ) {
+	function anchorage_is_singlish() {
+		if( is_single() || is_singular() || is_page() ) {
+			return true;
+		}
+		return false;
+	}
+}
+
+/**
  * Get an HTML <hr /> with classes expected by our stylesheet.
  *
  * @param array $classes An array of HTML classes.
@@ -321,7 +418,7 @@ if( ! function_exists( 'anchorage_get_media_meta' ) ) {
 		// Wrap the whole thing for output.
 		$out="
 			<aside class='media-meta anchorage-toggle'>
-				<a class='button-minor button inverse-color closed anchorage-toggle-link' href='#'>$type $data $arrow</a>
+				<a class='button-minor button inverse-color closed anchorage-toggle-link' href='#'>$type $data$arrow</a>
 				<div class='media-meta-list anchorage-toggle-reveal'>$out</div>
 			</aside>
 		";
@@ -392,8 +489,6 @@ if( ! function_exists( 'anchorage_get_arrow' ) ) {
 		$classes = array_map( 'sanitize_html_class', $classes );
 		$classes = implode( ' ', $classes );
 		$classes = " class='$classes arrow' ";
-
-		$out = " $out ";
 
 		// If there's an href, wrap the arrow in a link.
 		$href = esc_attr( $href );

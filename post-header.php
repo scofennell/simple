@@ -18,18 +18,6 @@
 
 	<header class="entry-header content-holder">
 
-		<?php if ( is_page() ) { ?>
-
-			<?php
-			/**
-			 * Pages show a breadcrumbs menu back up the tree of child pages.
-			 */
-			?>
-
-			<?php echo anchorage_get_page_ancestors(); ?>
-
-		<?php } ?>
-
 		<h1 class="entry-title">
 		
 			<?php

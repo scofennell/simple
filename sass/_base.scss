@@ -87,16 +87,16 @@ blockquote,
 dl,
 fieldset,
 form,
+p,
+ol,
+table,
+ul,
 h1,
 h2,
 h3,
 h4,
 h5,
-h6,
-p,
-ol,
-table,
-ul {
+h6 {
 	margin-bottom: $large_margin;
 }
 
@@ -423,6 +423,9 @@ input[type="password"],
 textarea {
 	border-radius: $small_border_radius;
 	padding: $small_padding;
+	width: 100%;
+	margin: 0 0 $medium_margin;
+	display: block;
 }
 
 fieldset {

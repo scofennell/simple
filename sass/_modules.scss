@@ -79,6 +79,7 @@ figure,
 	font-weight: 300;
 	text-align: center;
 	padding: $medium_padding;
+	line-height: 1.2em;
 }
 
 .wp-caption .wp-caption-text {
@@ -284,20 +285,20 @@ img.wp-smiley,
 }
 
 /**
- * Widgets
+ * Searchform
  */
 
-.widget_search .searchform {
+.search-form {
 	background: none;
 	position: relative;
 }
 
-.widget_search .search-field {
+.search-field {
 	width: 100%;
 	display: block;
 }
 
-.searchform .screen-reader-text {
+.search-submit {
 	width: auto;
 	right: 0;
 	top: 0;
@@ -309,12 +310,19 @@ img.wp-smiley,
  * =============================================================================
  */
 
+/* Breadcrumbs */
+.breadcrumbs {
+	font-style: italic;
+	font-size: 90%;
+	line-height: 1.2em;
+}
+.breadcrumbs-link {
+	font-weight: 600;
+}
+
 /* Archive Pages */
 .archive-header {
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
-	border-radius: $small_border-radius;
+
 }
 .archive-title {
 	font-size: 15px;
@@ -435,16 +443,6 @@ img.wp-smiley,
 	}
 }
 
-#respond,
-.no-posts-wrapper,
-.inner-wrapper .no-posts-wrapper,
-.editable-content form,
-.editable-content form:last-child {
-	padding: $large_padding;
-	clear: both;
-	border-radius: $small_border-radius;
-}
-
 .editable-content label {
 	display: block;
 }
@@ -453,6 +451,7 @@ img.wp-smiley,
 .editable-content a.button,
 a.button,
 input.button,
+.button a,
 .button,
 [type='submit'],
 [type='image'],
@@ -484,16 +483,22 @@ button {
 .gallery-item .gallery-caption {
 	background-color: $translucent_color;
 	color: $inverse_color;
-	font-size: 14px;
-	line-height: 1.5;
+	font-size: 12px;
+	line-height: 1.2;
 	margin: 0;
 	padding: 6px 9px;
 	position: absolute;
-	top: 80%;
+	bottom: 0;
 	left: 0;
 	text-align: left;
 	width: 100%;
 	z-index: 999;
+}
+
+@media ( max-width: $small_device ) {
+	body .gallery .gallery-item {
+		width: 100%;
+	}
 }
 
 .gallery-caption > br:first-child,
@@ -922,39 +927,12 @@ button {
 	width: 100%;
 }
 
-
 .logged-in-as {
 	font-style: italic;
 }
 
 .logged-in-as a {
 	font-weight: 600;
-}
-
-/**
- * 404
- */
-.no-posts-search-input,
-.jump-nav {
-	width: 100%;
-	margin: 0 0 $medium_margin;
-	display: block;
-}
-
-.entry-content .no-posts-searchform {
-	background: none;
-	padding: 0;
-	position: relative;
-}
-
-.no-posts-search-input {
-	border: none;
-}
-
-.no-posts-searchform [type='submit'] {
-	position: absolute;
-	right: 0;
-	top: 0;
 }
 
 /**
@@ -965,4 +943,5 @@ button {
 	background: transparent !important;
 	font-family: "Lucida sans unicode";
 	display: inline-block;
+	padding: 0 $small_padding;
 }

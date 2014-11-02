@@ -35,12 +35,14 @@
 		
 		<?php anchorage_header_menu( 'primary-menu' ); ?>
 
-		<?php if( is_archive() || is_search() || is_404() ) { ?>
+		<?php if( ! is_home() ) { ?>
 
 			<section class='outer-wrapper'>
 	
 				<div class='inner-wrapper'>
 	
+					<?php echo anchorage_get_breadcrumbs(); ?>
+
 					<?php echo anchorage_get_archive_header(); ?>
 		
 				</div>
